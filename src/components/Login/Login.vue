@@ -74,7 +74,7 @@ export default {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             if(this.ruleForm2.account=='admin1'&&this.ruleForm2.pass=='123456'){
-                this.$router.push('/index/managerslist')
+                this.$router.push('/index/estatemanagement')
             }else{
                 this.$message({
                   message: '账号或者密码错误',

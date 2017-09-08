@@ -5,7 +5,7 @@
     
     <el-breadcrumb separator="/" style="float:left:margin-top:14px">
       <i class="fa fa-home" style="float:left;font-size:16px;color:#324157;position:relative;margin-right:3px;top:-2px"></i>
-      <el-breadcrumb-item to="/index/managerslist">首页</el-breadcrumb-item>
+      <el-breadcrumb-item to="/index/estatemanagement">首页</el-breadcrumb-item>
       <el-breadcrumb-item>{{secondLevel}}</el-breadcrumb-item>
       <el-breadcrumb-item>{{threeLevel}}</el-breadcrumb-item>
     </el-breadcrumb>

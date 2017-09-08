@@ -15,16 +15,40 @@ const Index=function(resolve){
         resolve(require('../components/Index/Index'))
     })
 }
-//雇主管理
-const ManagersList=function(resolve){
+//楼盘
+const EstateManagement=function(resolve){
     require.ensure([],function(){
-        resolve(require('../components/ManagersList/ManagersList'))
+        resolve(require('../components/EstateManagement/EstateManagement'))
+    })
+} 
+
+const EstateAdd=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/EstateAdd/EstateAdd'))
+    })
+}
+//订单管理
+const CooperOrders=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/CooperOrders/CooperOrders'))
     })
 }
 
 
+//活动管理
+const ActivityManagement=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/ActivityManagement/ActivityManagement'))
+    })
+}
 
+//用户管理
 
+const UserList=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/UserList/UserList'))
+    })
+}
 
 export default new Router({
     mode: 'hash',
@@ -40,10 +64,27 @@ export default new Router({
             component:Index,
             children:[
                 {
-                  path:'/index/managerslist',
-                  component:ManagersList
+                  path:'/index/estatemanagement',
+                  component:EstateManagement
+                },
+                {
+                  path:'/index/estateadd',
+                  component:EstateAdd
+                },
+                {
+                  path:'/index/cooperorders',
+                  component:CooperOrders
+                },
+                {
+                  path:'/index/activitymanagement',
+                  component:ActivityManagement
+                },
+                {
+                  path:'/index/userlist',
+                  component:UserList
                 },
             ]
         }
     ]
 })
+
