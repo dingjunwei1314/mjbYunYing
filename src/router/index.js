@@ -34,7 +34,18 @@ const CooperOrders=function(resolve){
     })
 }
 
-
+//文章管理
+const Posts=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/Posts/posts'))
+    })
+}
+//新建文章
+const NewText=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/Posts/newtext'))
+    })
+}
 //活动管理
 const ActivityManagement=function(resolve){
     require.ensure([],function(){
@@ -82,6 +93,14 @@ export default new Router({
                 {
                   path:'/index/userlist',
                   component:UserList
+                },
+                {
+                    path:'/index/posts',
+                    component:Posts
+                },
+                {
+                    path:'/index/newText',
+                    component:NewText
                 },
             ]
         }
