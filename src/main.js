@@ -1,26 +1,22 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from './store/index'
+import axios from './common/axios'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
-import './common/css/common.css'
-import axios from './common/js/axios'
-import {url} from './common/js/urlLocation'
-import setFontsize from './common/js/setFontsize'
-import fastclick from 'fastclick'
-setFontsize();
-fastclick.attach(document.body);
-Vue.prototype.$http=axios;
-Vue.prototype.$url=url;
-Vue.use(ElementUI);
-Vue.config.productionTip = false;
+import VueQuillEditor from 'vue-quill-editor'
 
-/* eslint-disable no-new */
+Vue.use(VueQuillEditor);
+Vue.use(ElementUI);
+Vue.config.productionTip = false
+Vue.prototype.$http = axios;
+Vue.prototype.$echarts = echarts;
 new Vue({
   el: '#app',
   router,
+  store,
   template: '<App/>',
   components: { App }
-});
+})
+var bus =new Vue();

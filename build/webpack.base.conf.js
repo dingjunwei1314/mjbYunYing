@@ -23,6 +23,7 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
+      'vendor':path.resolve(__dirname, '../src/assets/js/vendor'),
     }
   },
   module: {
@@ -60,6 +61,10 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
+      },
+      {
+        test: /\.exec\.js$/,
+        use: [ 'script-loader' ]
       }
     ]
   }
