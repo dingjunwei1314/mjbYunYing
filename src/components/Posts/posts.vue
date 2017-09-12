@@ -16,7 +16,7 @@
                         </el-select>
                         <el-input v-model="input" placeholder="请输入内容" class="postsInputSeek"></el-input>
                         <span>分类：</span>
-                        <el-select v-model="classValue" placeholder="请选择"  style="width:80px;">
+                        <el-select v-model="classValue" placeholder="请选择"  style="width:120px;">
                             <el-option
                                     v-for="item in classOptions"
                                     :key="item.value"
@@ -52,28 +52,29 @@
                             </el-option>
                         </el-select>
                     </div>
-                    <div class="bao" style="">
-                            <span class="demonstration">发布时间</span>
-                            <el-date-picker
-                                    v-model="value2"
-                                    align="right"
-                                    type="date"
-                                    placeholder="选择日期"
-                                    :picker-options="pickerOptions1">
-                            </el-date-picker>
-                            <span class="demonstration">至</span>
-                            <el-date-picker
-                                    v-model="value2"
-                                    align="right"
-                                    type="date"
-                                    placeholder="选择日期"
-                                    :picker-options="pickerOptions1">
-                            </el-date-picker>
+                    <div class="bao" style="display: flex;justify-content: space-around">
+                      <div>
+                        <span class="demonstration">发布时间</span>
+                        <el-date-picker
+                          v-model="value2"
+                          align="right"
+                          type="date"
+                          placeholder="选择日期"
+                          :picker-options="pickerOptions1">
+                        </el-date-picker>
+                        <span class="demonstration">至</span>
+                        <el-date-picker
+                          v-model="value2"
+                          align="right"
+                          type="date"
+                          placeholder="选择日期"
+                          :picker-options="pickerOptions1">
+                        </el-date-picker>
+                      </div>
+
                         <div>
                             <span style="line-height:36px;float:left;">区域：</span>
-                            <vue-address2>
-
-                            </vue-address2>
+                          <AreaAll :area="filterForm"></AreaAll>
                         </div>
                     </div>
 
@@ -84,93 +85,94 @@
             </div>
         </div>
         <div class="postsSeekBtn">
-            <p>
+            <p style="padding-bottom: 10px">
                 <router-link to="/index/newtext"><el-button type="primary">发布文章</el-button></router-link>
             </p>
-            <div>
+              <div style="width:100%;height:250px;overflow: scroll">
                 <el-table
-                        ref="multipleTable"
-                        :data="tableData3"
-                        border
-                        tooltip-effect="dark"
-                        style="width: 100%"
-                        @selection-change="handleSelectionChange">
-                    <el-table-column
-                            type="selection"
-                            width="55">
-                    </el-table-column>
-                    <el-table-column
-                            label="ID"
-                            width="120">
-                        <template scope="scope">{{ scope.row.date }}</template>
-                    </el-table-column>
-                    <el-table-column
-                            prop="name"
-                            label="标题"
-                            width="120">
-                    </el-table-column>
-                    <el-table-column
-                            prop="address"
-                            label="文章分类"
+                  ref="multipleTable"
+                  :data="tableData3"
+                  border
+                  tooltip-effect="dark"
+                  style="width: 100%"
+                  @selection-change="handleSelectionChange">
+                  <el-table-column
+                    type="selection"
+                    width="50">
+                  </el-table-column>
+                  <el-table-column
+                    label="ID"
+                    width="100">
+                    <template scope="scope">{{ scope.row.date }}</template>
+                  </el-table-column>
+                  <el-table-column
+                    prop="name"
+                    label="标题"
+                    width="120">
+                  </el-table-column>
+                  <el-table-column
+                    prop="address"
+                    label="文章分类"
 
-                            show-overflow-tooltip>
-                    </el-table-column>
-                    <el-table-column
-                            prop=""
-                            label="发布城市"
-                            show-overflow-tooltip>
-                    </el-table-column>
-                    <el-table-column
-                            prop=""
-                            label="发布时间"
-                            show-overflow-tooltip>
-                    </el-table-column>
-                    <el-table-column
-                            prop=""
-                            label="头条"
-                            show-overflow-tooltip>
-                    </el-table-column>
-                    <el-table-column
-                            prop=""
-                            label="置顶"
-                            show-overflow-tooltip>
-                    </el-table-column>
-                    <el-table-column
-                            prop=""
-                            label="发布人"
-                            show-overflow-tooltip>
-                    </el-table-column>
-                    <el-table-column
-                            prop=""
-                            label="文章来源"
-                            show-overflow-tooltip>
-                    </el-table-column>
-                    <el-table-column
-                            prop=""
-                            label="状态"
-                            show-overflow-tooltip>
-                    </el-table-column>
-                    <el-table-column width="260px" label="操作">
-                        <template scope="scope" >
-                            <el-button
-                                    size="small"
-                                    @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                            <el-button
-                                    size="small"
-                                    type="danger"
-                                    @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-                            <el-button
-                                    size="small"
-                                    type="primary"
-                                    @click="handleDelete(scope.$index, scope.row)">查看</el-button>
-                            <el-button
-                                    size="small"
-                                    type="danger"
-                                    @click="handleDelete(scope.$index, scope.row)">下线</el-button>
-                        </template>
-                    </el-table-column>
+                    show-overflow-tooltip>
+                  </el-table-column>
+                  <el-table-column
+                    prop=""
+                    label="发布城市"
+                    show-overflow-tooltip>
+                  </el-table-column>
+                  <el-table-column
+                    prop=""
+                    label="发布时间"
+                    show-overflow-tooltip>
+                  </el-table-column>
+                  <el-table-column
+                    prop=""
+                    label="头条"
+                    show-overflow-tooltip>
+                  </el-table-column>
+                  <el-table-column
+                    prop=""
+                    label="置顶"
+                    show-overflow-tooltip>
+                  </el-table-column>
+                  <el-table-column
+                    prop=""
+                    label="发布人"
+                    show-overflow-tooltip>
+                  </el-table-column>
+                  <el-table-column
+                    prop=""
+                    label="文章来源"
+                    show-overflow-tooltip>
+                  </el-table-column>
+                  <el-table-column
+                    prop=""
+                    label="状态"
+                    show-overflow-tooltip>
+                  </el-table-column>
+                  <el-table-column width="260px" label="操作">
+                    <template scope="scope" >
+                      <el-button
+                        size="small"
+                        @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                      <el-button
+                        size="small"
+                        type="danger"
+                        @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                      <el-button
+                        size="small"
+                        type="primary"
+                        @click="handleDelete(scope.$index, scope.row)">查看</el-button>
+                      <el-button
+                        size="small"
+                        type="danger"
+                        @click="handleDelete(scope.$index, scope.row)">下线</el-button>
+                    </template>
+                  </el-table-column>
                 </el-table>
-            </div>
+              </div>
+
             <div class="blockPage">
                 <el-button type="danger">批量删除</el-button>
                 <el-pagination
@@ -188,18 +190,34 @@
 
 <script>
     import Subnav from '../Subnav/Subnav.vue'
-    import vueAddress2 from './city.vue'
+//    import vueAddress2 from './city.vue'
+    import AreaAll from '../Common/AreaAll/AreaAll'
     export default {
         name:'Posts',
         components:{
             Subnav,
-            vueAddress2
+//            vueAddress2,
+            AreaAll
         },
         data() {
             return {
                 secondLevel:'文章管理',
                 threeLevel:'文章管理',
                 input: '',
+              currentPage1:1,
+              filterForm: {
+                name:'',
+                developers:'',
+                time:'',
+                rental_return:'',
+                sheng:'',
+                shi:'',
+                qu:'',
+                cooper_buy:'',
+                strict_select:'',
+                state:'',
+                id:''
+              },
                 seekOptions: [{
                     value: '选项1',
                     label: 'ID'
@@ -288,20 +306,20 @@
                 value1: '',
                 value2: '',
                 tableData3: [{
-                    date: '2016-05-03',
+                    date: '',
                     name: '王小虎',
                     address: '上海市普陀区金沙江路 1518 弄',
 
                 }, {
-                    date: '2016-05-02',
+                    date: '',
                     name: '王小虎',
                     address: '上海市普陀区金沙江路 1518 弄'
                 }, {
-                    date: '2016-05-04',
+                    date: '',
                     name: '王小虎',
                     address: '上海市普陀区金沙江路 1518 弄'
                 }, {
-                    date: '2016-05-01',
+                    date: '',
                     name: '王小虎',
                     address: '上海市普陀区金沙江路 1518 弄'
                 }],
@@ -330,6 +348,17 @@
                     that.$store.dispatch('mainLoadingAction',false);
                 },300)
             },
+          handleSelectionChange(){
+
+          },
+          handleSizeChange(){
+            console.log(`每页 ${val} 条`);
+          },
+          handleCurrentChange(){
+            console.log(`当前页: ${val}`);
+          },
+
+
         },
         mounted(){
             this.$store.dispatch('mainLoadingAction',true);
@@ -357,16 +386,15 @@
             border: 1px solid darkgray;margin:20px;
         }
         .postsSeek .postsOption{
-            width:10%;
+            width:12%;
         }
         .postsSeek .postsInputSeek{
             width:20%;
         }
         .postsSeek .bao{
             width:100%;
-            display: inline-block;
-            margin: 5px;
-
+           display: inline-block;
+            margin-top: 15px;
         }
         .postsSeek{
             display: flex;
@@ -375,7 +403,12 @@
         .inquireBtn button{
             width:150px;
             height:50px;
-            margin-top: 40px;
+
+        }
+        .inquireBtn{
+          line-height: 50px;
+          padding-top: 24px;
+          padding-bottom: 24px;
         }
         .postsSeekBtn{
             border: 1px solid darkgray;margin:20px;
@@ -383,6 +416,8 @@
         }
         .blockPage{
             display: flex;
-            padding: 10px;
+          justify-content: space-between;
+            padding: 20px;
         }
+
 </style>

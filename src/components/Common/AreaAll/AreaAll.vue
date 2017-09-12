@@ -1,26 +1,26 @@
 <template>
-    
-      <div style="display:inline-block;" class="area_wap">
-        <el-form-item style="display:inline-block;width:125px">
+
+      <div style="display:flex;" class="area_wap">
+        <!--<el-form-item style="display:inline-block;width:125px">-->
           <el-select clearable v-model="new_area.sheng" placeholder="省" @change="area_change">
             <el-option v-for="(item,index) in area_arr" :key="index" :label="item.name" :value="item.name"></el-option>
           </el-select>
-        </el-form-item>
-      
-        <el-form-item style="display:inline-block;width:125px;margin-left:10px;">
+        <!--</el-form-item>-->
+
+        <!--<el-form-item style="display:inline-block;width:125px;margin-left:10px;">-->
           <el-select clearable v-model="new_area.shi" placeholder="市" @change="city_area_change">
             <el-option v-for="(item,index) in city_area_arr" :key="index" :label="item.name" :value="item.name"></el-option>
           </el-select>
-        </el-form-item>
-      
-        <el-form-item v-if="isshowqu" style="display:inline-block;width:125px;margin-left:10px;">
-          <el-select clearable v-model="new_area.qu" placeholder="区">
+        <!--</el-form-item>-->
+
+        <!--<el-form-item v-if="isshowqu" style="display:inline-block;width:125px;margin-left:10px;">-->
+          <el-select v-if="isshowqu" clearable v-model="new_area.qu" placeholder="区">
             <el-option v-for="(item,index) in area_area_arr" :key="index" :label="item" :value="item"></el-option>
           </el-select>
-        </el-form-item>
-      
+        <!--</el-form-item>-->
+
       </div>
- 
+
 </template>
 <script>
 import area_arr from './js/area';
@@ -47,7 +47,7 @@ export default {
       }
     },
     computed:{
-      
+
     },
     methods: {
       area_change(val){
@@ -82,12 +82,15 @@ export default {
       }
     },
     mounted(){
-      
+
     }
   }
 </script>
 
 <style scoped>
-  .area_wap{display: inline-block;}
+  .area_wap{}
   .area_wap .lable_span{line-height: 36px;font-size: 14px;color: #777;padding-left: 5px;}
+  .el-select{
+    width:130px;
+  }
 </style>

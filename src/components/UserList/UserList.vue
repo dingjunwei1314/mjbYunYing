@@ -3,27 +3,27 @@
     <Subnav :secondLevel="secondLevel" :threeLevel="threeLevel" @refresh="refresh"></Subnav>
 
     <div style="padding:20px" class="search_wap">
-      
+
       <el-row style="min-height:60px">
         <el-col :span="20">
           <el-form :inline="true" style=""  @keyup.native.enter="onSearchSubmit" :model="filterForm" class="demo-form-inline">
-           
-              
+
+
             <el-form-item label="用户id">
               <el-input   v-model="filterForm.id" placeholder="用户id"></el-input>
             </el-form-item>
-           
+
             <el-form-item label="手机号">
               <el-input  v-model="filterForm.phone" placeholder="手机号"></el-input>
             </el-form-item>
-             
+
             <el-form-item label="状态">
               <el-select clearable v-model="filterForm.rental_return" placeholder="状态">
                 <el-option label="正常" value="1"></el-option>
                 <el-option label="锁定" value="0"></el-option>
               </el-select>
             </el-form-item>
-            
+
             <el-form-item label="注册时间">
               <el-date-picker
                 v-model="registe_time"
@@ -42,15 +42,15 @@
           </el-form>
         </el-col>
         <el-col :span="4" style="text-align:right">
-         
+
             <el-button type="primary" @click="onSearchSubmit">搜索会员</el-button>
         </el-col>
       </el-row>
-  
+
 
       <div class="tabletopbar">
         <span>所有数据：共</span> <span style="color:#111">{{tableData.total}}</span> <span>条</span>
-        <span style="margin-left:20px">查询结果：共</span> 
+        <span style="margin-left:20px">查询结果：共</span>
         <span style="color:#111">{{tableData.total}}</span> <span>条</span>
       </div>
       <el-table
@@ -101,7 +101,7 @@
           label="租金返还">
         </el-table-column>
         <el-table-column
-          prop="rental_return_number" 
+          prop="rental_return_number"
           min-width="60"
           label="租金返还">
         </el-table-column>
@@ -120,7 +120,7 @@
           </template>
         </el-table-column>
       </el-table>
-      
+
       <el-pagination
         v-show="tableData.total>0"
         style="margin: 0 auto;text-align:center;margin-top:20px"
@@ -131,7 +131,7 @@
         :total="tableData.total">
       </el-pagination>
     </div>
-    
+
     <BigDialog dialogTitle="合作买房" @dialogCancel="dialogCancel" @dialogConfirm="dialogConfirm" :dialogFormVisible="dialogFormVisible">
       <div slot="dia_body" class="dia_body">
         <el-form ref="form" :model="addNewForm" label-width="150px" style="margin:0px auto;width:620px">
@@ -179,15 +179,14 @@
             <el-input style="width:220px" type="email" v-model="dia_data.rental_return_number"></el-input>&nbsp元/每月
           </el-form-item>
         </el-form>
-      </div>  
+      </div>
     </BigDialog>
-  
-    
+
+
   </div>
 </template>
 
 <script>
-import {pro_arr,city_arr} from '../../common/pc.js'
 import Subnav from '../Subnav/Subnav'
 import BigDialog from '../Common/BigDialog/BigDialog'
 import exportExcel from '../../common/exportExcel'
@@ -220,7 +219,7 @@ export default {
           id:''
         },
         dia_data:{
-          
+
         },
         addNewForm: {
           sex: '',
@@ -228,7 +227,7 @@ export default {
           pass:'',
           phpone:'',
           email:'',
-          role: '', 
+          role: '',
           desc: ''
         },
         tableData: {
@@ -240,10 +239,10 @@ export default {
       };
     },
     filters:{
-     
+
     },
     computed:{
-                                        
+
     },
     created(){
       this.getdata()
@@ -263,15 +262,15 @@ export default {
         })
       },
       pro_change(val){
-    
+
         let _index=this.pro_arr.indexOf(val)
-      
+
         if(_index==-1){
           this.c_city_arr=[]
         }else{
           this.c_city_arr=this.city_arr[_index]
         }
-      
+
       },
       onSearchSubmit(){
         this.currentPage=1;
@@ -314,17 +313,17 @@ export default {
         var that=this
         setTimeout(function(){
           that.$store.dispatch('mainLoadingAction',false);
-        },300)        
-      },    
+        },300)
+      },
     },
     mounted(){
-      
+
       this.$store.dispatch('mainLoadingAction',true);
       this.$store.dispatch('defaultIndexAction','/index/userlist');
       var that=this
       setTimeout(function(){
         that.$store.dispatch('mainLoadingAction',false);
-      },300) 
+      },300)
     }
   }
 </script>

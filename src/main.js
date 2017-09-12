@@ -7,7 +7,6 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 import VueQuillEditor from 'vue-quill-editor'
 
-
 Vue.use(VueQuillEditor);
 Vue.use(ElementUI);
 Vue.config.productionTip = false

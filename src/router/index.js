@@ -72,6 +72,18 @@ const ActivityManagement=function(resolve){
     })
 }
 
+//资讯管理
+const ConsultAdmin=function(resolve){
+  require.ensure([],function(){
+    resolve(require('../components/consultAdmin/consultAdmin'))
+  })
+}
+//资讯详情
+const CounsultParticulars=function(resolve){
+  require.ensure([],function(){
+    resolve(require('../components/consultAdmin/counsultParticulars'))
+  })
+}
 //用户管理
 
 const UserList=function(resolve){
@@ -80,6 +92,20 @@ const UserList=function(resolve){
     })
 }
 
+//账户管理
+const AccountAdmin = function (resolve) {
+    require.ensure([],function () {
+      resolve(require('../components/accountAdmin/accountAdmin'))
+    })
+}
+
+//角色管理
+
+const RoleAdmin = function (resolve) {
+    require.ensure([],function () {
+      resolve(require('../components/accountAdmin/roleAdmin'))
+    })
+}
 export default new Router({
     mode: 'hash',
     base: __dirname,
@@ -132,6 +158,22 @@ export default new Router({
                 {
                   path:'/index/newText',
                   component:NewText
+                },
+                {
+                  path:'/index/accountAdmin',
+                  component:AccountAdmin
+                },
+                {
+                  path:'/index/roleAdmin',
+                  component:RoleAdmin
+                },
+                {
+                  path:'/index/consultAdmin',
+                  component:ConsultAdmin
+                },
+                {
+                  path:'/index/counsultParticulars',
+                  component:CounsultParticulars
                 },
             ]
         }

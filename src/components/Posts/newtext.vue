@@ -113,8 +113,12 @@
                     type: [],
                     resource: '',
                     desc: '',
-                    fileList2: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]
                 },
+              fileList2:[{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
+              textValue:'',
+              content:'',
+              editorOption:'',
+              textarea2:'',
                 rules: {
                     name: [
                         { required: true, message: '请输入活动名称', trigger: 'blur' },
@@ -169,7 +173,19 @@
             },
             handlePreview(file) {
                 console.log(file);
+            },
+          refresh(){
+            this.$store.dispatch('mainLoadingAction',true);
+            this.getdata()
+            this.currentPage=1;
+            for(var i in this.filterForm){
+              this.filterForm[i]=''
             }
+            var that=this
+            setTimeout(function(){
+              that.$store.dispatch('mainLoadingAction',false);
+            },300)
+          },
         },
         mounted(){
             this.$store.dispatch('mainLoadingAction',true);
