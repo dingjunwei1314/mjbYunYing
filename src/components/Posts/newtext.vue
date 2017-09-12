@@ -189,7 +189,7 @@
         },
         mounted(){
             this.$store.dispatch('mainLoadingAction',true);
-            this.$store.dispatch('defaultIndexAction','/index/newtext');
+            this.$store.dispatch('defaultIndexAction','/index/posts');
             var that=this
             setTimeout(function(){
                 that.$store.dispatch('mainLoadingAction',false);

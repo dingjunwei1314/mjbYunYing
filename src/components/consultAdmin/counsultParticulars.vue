@@ -15,8 +15,8 @@
     },
     data(){
       return{
-        secondLevel:'资讯管理',
-        threeLevel:'资讯详情',
+        secondLevel:'咨询管理',
+        threeLevel:'咨询详情',
       }
     },
     methods:{
@@ -35,7 +35,7 @@
     },
     mounted(){
       this.$store.dispatch('mainLoadingAction',true);
-      this.$store.dispatch('defaultIndexAction','/index/posts');
+      this.$store.dispatch('defaultIndexAction','/index/counsultParticulars');
       var that=this;
       setTimeout(function(){
         that.$store.dispatch('mainLoadingAction',false);

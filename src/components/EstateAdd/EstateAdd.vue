@@ -877,7 +877,7 @@ export default {
         let _this=this;
         var map = new AMap.Map('container',{
             resizeEnable: true,
-            zoom: 8,
+            zoom: 6,
             center: _this.center
         });
         AMap.plugin(['AMap.ToolBar','AMap.Scale','AMap.OverView'],

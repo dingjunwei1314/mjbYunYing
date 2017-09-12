@@ -116,7 +116,7 @@
         </el-table-column>
         <el-table-column label="操作">
           <template scope="scope">
-            <router-link to="/index/estatemanagement">
+            <router-link to="/index/estateadd">
             <el-button
               size="small"
               type="danger"
@@ -206,7 +206,7 @@
     },
     mounted(){
       this.$store.dispatch('mainLoadingAction',true);
-      this.$store.dispatch('defaultIndexAction','/index/posts');
+      this.$store.dispatch('defaultIndexAction','/index/consultAdmin');
       var that=this;
       setTimeout(function(){
         that.$store.dispatch('mainLoadingAction',false);
