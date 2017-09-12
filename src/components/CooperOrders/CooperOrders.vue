@@ -26,24 +26,13 @@
              
             </div>
             <el-form-item label="楼盘名称">
-                <el-input  v-model="filterForm.houres_name" placeholder="楼盘名称"></el-input>
-              </el-form-item>
-              <!-- <el-form-item label="省">
-                <el-select clearable @change="pro_change" v-model="filterForm.sheng" placeholder="省">
-                  <el-option v-for="(item,index) in pro_arr" :key="index" :label="item" :value="item"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="市">
-                <el-select clearable v-model="filterForm.shi" placeholder="市">
-                  <el-option v-for="(item,index) in c_city_arr" :key="index" :label="item" :value="item"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="区">
-                <el-select clearable v-model="filterForm.qu" placeholder="区">
-                  <el-option label="是" value="1"></el-option>
-                  
-                </el-select>
-            </el-form-item> -->
+              <el-input  v-model="filterForm.houres_name" placeholder="楼盘名称"></el-input>
+            </el-form-item>
+
+            <el-form-item label="区域">
+              <AreaAll  :area="filterForm"></AreaAll> 
+            </el-form-item>
+            
             <el-form-item label="租金返还">
               <el-select clearable v-model="filterForm.rental_return" placeholder="不限">
                 <el-option label="是" value="1"></el-option>
@@ -53,12 +42,10 @@
           </el-form>
         </el-col>
         <el-col :span="4" style="text-align:right">
-         
             <el-button type="primary" @click="onSearchSubmit">查询</el-button>
         </el-col>
       </el-row>
   
-
       <div class="tabletopbar">
         <span>所有数据：共</span> <span style="color:#111">{{tableData.total}}</span> <span>条</span>
         <span style="margin-left:20px">查询结果：共</span> 
@@ -145,7 +132,7 @@
     
     <BigDialog dialogTitle="合作买房" @dialogCancel="dialogCancel" @dialogConfirm="dialogConfirm" :dialogFormVisible="dialogFormVisible">
       <div slot="dia_body" class="dia_body">
-        <el-form ref="form" :model="addNewForm" label-width="150px" style="margin:0px auto;width:620px">
+        <el-form ref="form" :model="dia_data" label-width="150px" style="margin:0px auto;width:620px">
           <el-form-item label="报名编号：" prop="sex">
             {{dia_data.registration_number}}
           </el-form-item>
@@ -198,19 +185,19 @@
 </template>
 
 <script>
-
+import AreaAll from '../Common/AreaAll/AreaAll'
 import Subnav from '../Subnav/Subnav'
 import BigDialog from '../Common/BigDialog/BigDialog'
-import exportExcel from '../../common/exportExcel'
+
 export default {
     name:'managers',
     components:{
       Subnav,
-      BigDialog
+      BigDialog,
+      AreaAll
     },
     data() {
       return {
-      
         currentPage:1,
         dialogFormVisible:false,
         secondLevel:'楼盘管理',
@@ -255,9 +242,9 @@ export default {
           id:''
         },
         dia_data:{
-          
-        },
-        addNewForm: {
+          sheng:'',
+          shi:'',
+          qu:'',
           sex: '',
           name: '',
           pass:'',
@@ -320,7 +307,15 @@ export default {
         this.getdata()
       },
       handleEdit(index,row){
-        this.dia_data=_.cloneDeep(row);
+         this.$http('/cooperorderdetail').then(function(res){
+          console.log(res)
+          if(res.data.code==1000){
+            _this.tableData=res.data.data;
+          }
+          _this.is_loading_tab=false;
+        }).catch(function(err){
+          console.log(err)
+        })
         this.dialogFormVisible=true;
       },
       dialogCancel(){

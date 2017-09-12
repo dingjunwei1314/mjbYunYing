@@ -1,23 +1,23 @@
 <template>
     
       <div style="display:inline-block;" class="area_wap">
-        <el-form-item style="display:inline-block;width:125px">
-          <el-select clearable v-model="new_area.sheng" placeholder="省" @change="area_change">
+       
+          <el-select  style="width:140px" :disabled="isdisabled" clearable v-model="new_area.sheng" placeholder="省" @change="area_change">
             <el-option v-for="(item,index) in area_arr" :key="index" :label="item.name" :value="item.name"></el-option>
           </el-select>
-        </el-form-item>
+     
       
-        <el-form-item style="display:inline-block;width:125px;margin-left:10px;">
-          <el-select clearable v-model="new_area.shi" placeholder="市" @change="city_area_change">
+        
+          <el-select  style="width:140px" :disabled="isdisabled" clearable v-model="new_area.shi" placeholder="市" @change="city_area_change">
             <el-option v-for="(item,index) in city_area_arr" :key="index" :label="item.name" :value="item.name"></el-option>
           </el-select>
-        </el-form-item>
+       
       
-        <el-form-item v-if="isshowqu" style="display:inline-block;width:125px;margin-left:10px;">
-          <el-select clearable v-model="new_area.qu" placeholder="区">
+       
+          <el-select style="width:140px" v-if="isshowqu" :disabled="isdisabled" clearable v-model="new_area.qu" placeholder="区">
             <el-option v-for="(item,index) in area_area_arr" :key="index" :label="item" :value="item"></el-option>
           </el-select>
-        </el-form-item>
+       
       
       </div>
  
@@ -35,6 +35,10 @@ export default {
       isshowqu:{
         type:Boolean,
         default:true
+      },
+      isdisabled:{
+        type:Boolean,
+        default:false
       }
 
     },

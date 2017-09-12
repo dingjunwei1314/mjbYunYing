@@ -1,5 +1,5 @@
 <template>
-  <div class="managers">
+  <div class="userlist">
     <Subnav :secondLevel="secondLevel" :threeLevel="threeLevel" @refresh="refresh"></Subnav>
 
     <div style="padding:20px" class="search_wap">
@@ -26,14 +26,14 @@
             
             <el-form-item label="注册时间">
               <el-date-picker
-                v-model="registe_time"
+                v-model="filterForm.registe_time"
                 type="date"
                 placeholder="注册时间">
               </el-date-picker>
             </el-form-item>
 
             <el-form-item label="信息完善">
-              <el-select clearable v-model="filterForm.rental_return" placeholder="信息完善">
+              <el-select clearable v-model="filterForm.information_compete" placeholder="信息完善">
                 <el-option label="是" value="1"></el-option>
                 <el-option label="否" value="0"></el-option>
               </el-select>
@@ -61,18 +61,22 @@
         tooltip-effect="dark"
         style="width: 100%;font-size:12px!important;">
         <el-table-column
-          prop="registration_number"
-          label="报名编号"
-          width="100">
+          type="selection"
+          width="55">
         </el-table-column>
         <el-table-column
           prop="id"
-          label="楼盘id"
+          label="ID"
           width="80">
         </el-table-column>
         <el-table-column
           prop="name"
-          label="用户名"
+          label="昵称"
+          min-width="60">
+        </el-table-column>
+        <el-table-column
+          prop="sex"
+          label="性别"
           min-width="60">
         </el-table-column>
         <el-table-column
@@ -81,34 +85,24 @@
           min-width="80">
         </el-table-column>
         <el-table-column
-          prop="reservation_number"
-          label="预约号"
+          prop="wechat_number"
+          label="微信号"
           min-width="60">
         </el-table-column>
         <el-table-column
           prop="address"
-          label="楼盘所在地"
+          label="所在省市"
           min-width="80">
         </el-table-column>
         <el-table-column
-          prop="houres_name"
-          label="楼盘"
-          min-width="80">
+          prop="register_time"
+          min-width="100"
+          label="注册时间">
         </el-table-column>
         <el-table-column
-          prop="rental_return"
-          min-width="80"
-          label="租金返还">
-        </el-table-column>
-        <el-table-column
-          prop="rental_return_number" 
-          min-width="60"
-          label="租金返还">
-        </el-table-column>
-        <el-table-column
-          prop="time"
-          width="100"
-          label="报名时间">
+          prop="last_login_time"
+          min-width="100"
+          label="最后一次登陆时间">
         </el-table-column>
         <el-table-column
           min-width="100"
@@ -131,96 +125,85 @@
         :total="tableData.total">
       </el-pagination>
     </div>
-    
-    <BigDialog dialogTitle="合作买房" @dialogCancel="dialogCancel" @dialogConfirm="dialogConfirm" :dialogFormVisible="dialogFormVisible">
+     
+    <BigDialog dialogTitle="用户详情" @dialogCancel="dialogCancel" @dialogConfirm="dialogConfirm" :dialogFormVisible="dialogFormVisible">
       <div slot="dia_body" class="dia_body">
         <el-form ref="form" :model="addNewForm" label-width="150px" style="margin:0px auto;width:620px">
-          <el-form-item label="报名编号：" prop="sex">
-            {{dia_data.registration_number}}
+         
+          <el-form-item label="头像：">
+            <img style="width:50px;height:50px" :src="dia_data.img_src" alt="">
           </el-form-item>
-          <el-form-item label="用户id：" prop="name">
+
+          <el-form-item label="ID：">
             {{dia_data.id}}
           </el-form-item>
-          <el-form-item label="用户名：" prop="pass">
+          <el-form-item label="昵称：">
             {{dia_data.name}}
           </el-form-item>
 
-          <el-form-item label="手机号：" prop="phpone">
+          <el-form-item label="手机号：">
             {{dia_data.phone}}
           </el-form-item>
 
-          <el-form-item label="预约号：" prop="email">
-            {{dia_data.reservation_number}}
+          <el-form-item label="微信号：">
+            {{dia_data.wechat_number}}
           </el-form-item>
 
-          <el-form-item label="预约号使用次数：" prop="email">
-            第一次
+          <el-form-item label="性别：">
+            {{dia_data.sex}}
           </el-form-item>
 
-          <el-form-item label="报名楼盘：" prop="email">
-            {{dia_data.houres_name}}
-          </el-form-item>
-
-          <el-form-item label="所在省市区：" prop="email">
+          <el-form-item label="所在城市：">
             {{dia_data.address}}
           </el-form-item>
 
-          <el-form-item label="报名时间：" prop="email">
-            {{dia_data.time}}
+          <el-form-item label="注册时间：">
+            {{dia_data.register_time}}
           </el-form-item>
 
-          <el-form-item label="租金返还：" style="margin-bottom:5px!important">
-            <el-select style="width:220px" v-model="dia_data.rental_return" placeholder="请选择角色">
-              <el-option label="是" value="1"></el-option>
-              <el-option label="否" value="0"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="租金返还金额：" prop="email">
-            <el-input style="width:220px" type="email" v-model="dia_data.rental_return_number"></el-input>&nbsp元/每月
+          <el-form-item label="密码：">
+            <el-button type="text">重置密码</el-button>
           </el-form-item>
         </el-form>
       </div>  
     </BigDialog>
   
-    
   </div>
 </template>
-
 <script>
-import {pro_arr,city_arr} from '../../common/pc.js'
+
 import Subnav from '../Subnav/Subnav'
 import BigDialog from '../Common/BigDialog/BigDialog'
 import exportExcel from '../../common/exportExcel'
 export default {
-    name:'managers',
+    name:'userlist',
     components:{
       Subnav,
       BigDialog
     },
     data() {
       return {
-        pro_arr,
-        city_arr,
-        c_city_arr:[],
         currentPage:1,
         dialogFormVisible:false,
         secondLevel:'用户管理',
         threeLevel:'用户管理',
-        registe_time:'',
         filterForm: {
-          name:'',
-          registration_number:'',
-          reservation_number:'',
-          houres_name:'',
+          id:'',
+          registe_time:'',
+          information_compete:'',
           phone:'',
           rental_return:'',
-          sheng:'',
-          shi:'',
-          qu:'',
-          id:''
         },
         dia_data:{
-          
+          img_src: '',
+          id: '',
+          address: '',
+          name: '',
+          sex: '',
+          phone: '',
+          wechat_number: '',
+          register_time: '',
+          last_login_time: ''
         },
         addNewForm: {
           sex: '',
@@ -252,7 +235,7 @@ export default {
       getdata(){
         let _this=this;
         _this.is_loading_tab=true;
-        this.$http('/cooperorders').then(function(res){
+        this.$http('/userlist',{},_this.filterForm).then(function(res){
           console.log(res)
           if(res.data.code==1000){
             _this.tableData=res.data.data;
@@ -261,17 +244,6 @@ export default {
         }).catch(function(err){
           console.log(err)
         })
-      },
-      pro_change(val){
-    
-        let _index=this.pro_arr.indexOf(val)
-      
-        if(_index==-1){
-          this.c_city_arr=[]
-        }else{
-          this.c_city_arr=this.city_arr[_index]
-        }
-      
       },
       onSearchSubmit(){
         this.currentPage=1;
@@ -285,24 +257,24 @@ export default {
         this.getdata()
       },
       handleEdit(index,row){
-        this.dia_data=_.cloneDeep(row);
-        this.dialogFormVisible=true;
+        let _this=this,
+            data={id:row.id};
+        this.$http('/userdetail',{},data).then(function(res){
+          console.log(res)
+          if(res.data.code==1000){
+            _this.dia_data=res.data.data;
+            _this.dialogFormVisible=true;
+          }
+        }).catch(function(err){
+          console.log(err)
+        })
+        
       },
       dialogCancel(){
         this.dialogFormVisible=false;
       },
       dialogConfirm(){
-        for(var i in this.tableData.list){
-          if(this.tableData.list[i].id==this.dia_data.id){
-            this.tableData.list[i].rental_return=this.dia_data.rental_return==1? '是' : '否';
-            this.tableData.list[i].rental_return_number=this.dia_data.rental_return_number;
-          }
-        }
         this.dialogFormVisible=false;
-        this.$message({
-          message: '修改成功',
-          type: 'success'
-        });
       },
       refresh(){
         this.$store.dispatch('mainLoadingAction',true);
@@ -318,7 +290,6 @@ export default {
       },    
     },
     mounted(){
-      
       this.$store.dispatch('mainLoadingAction',true);
       this.$store.dispatch('defaultIndexAction','/index/userlist');
       var that=this
