@@ -152,7 +152,7 @@
           </el-form-item>
 
           <el-form-item label="预约号使用次数：" prop="email">
-            第一次
+            第{{dia_data.number}}次
           </el-form-item>
 
           <el-form-item label="报名楼盘：" prop="email">
@@ -307,27 +307,23 @@ export default {
         this.getdata()
       },
       handleEdit(index,row){
-         this.$http('/cooperorderdetail').then(function(res){
+        let _this=this;
+        this.$http('/cooperorderdetail').then(function(res){
           console.log(res)
           if(res.data.code==1000){
-            _this.tableData=res.data.data;
+            _this.dia_data=res.data.data;
+            _this.dialogFormVisible=true;
           }
-          _this.is_loading_tab=false;
         }).catch(function(err){
           console.log(err)
         })
-        this.dialogFormVisible=true;
+       
       },
       dialogCancel(){
         this.dialogFormVisible=false;
       },
       dialogConfirm(){
-        for(var i in this.tableData.list){
-          if(this.tableData.list[i].id==this.dia_data.id){
-            this.tableData.list[i].rental_return=this.dia_data.rental_return==1? '是' : '否';
-            this.tableData.list[i].rental_return_number=this.dia_data.rental_return_number;
-          }
-        }
+        this.getdata()
         this.dialogFormVisible=false;
         this.$message({
           message: '修改成功',

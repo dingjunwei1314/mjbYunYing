@@ -9,7 +9,6 @@
             <p class="tit">
               楼盘基本属性
             </p>
-            
             <el-form :model="add_new_estate_form" :rules="add_new_estate_form_rule" ref="add_new_estate_form_ref" label-width="100px" class="demo-dynamic" style="width:60%;margin-left:15%;margin-top:40px">
                
               <el-form-item label="区域" :required="true">
@@ -571,15 +570,13 @@
 import Pdfonline from '../Common/Pdfonline/Pdfonline'
 import AreaAll from '../Common/AreaAll/AreaAll'
 import Subnav from '../Subnav/Subnav'
-
-import exportExcel from '../../common/exportExcel'
+import coordinatearr from '../../common/coordinate'
 export default {
     name:'activitymanagment',
     components:{
       Subnav,
       AreaAll,
-      Pdfonline,
-      
+      Pdfonline
     },
     data() {
       var validateTitle = (rule, value, callback) => {
@@ -655,6 +652,7 @@ export default {
       };
 
       return {
+        coordinatearr,
         pdfsrc:'/static/pdf.pdf',
         isshowpdf:false,
         is_loading_baogao_tab:false,
@@ -782,7 +780,8 @@ export default {
             { validator: scopeValidateZbpt, trigger: 'blur' }
           ],
         },
-        markers:[]      
+        markers:[],
+        center:[116.480983, 40.0958],      
       };
     },
     filters:{
@@ -792,11 +791,21 @@ export default {
                                
     },
     watch:{
-      area:{
+      'area':{
         handler:function(val){
           console.log(val)
         },
         deep:true
+      },
+      'add_new_estate_form.sheng':{
+        handler:function(val){
+          for(let i in this.coordinatearr){
+            if(this.coordinatearr[i].pro==val){
+              this.center=this.coordinatearr[i].coordinate
+            }
+          }
+          this.init_map()
+        }
       }
     },
     created(){
@@ -865,11 +874,11 @@ export default {
         this.is_show_map=!this.is_show_map
       },
       init_map(){
-        let _this=this
+        let _this=this;
         var map = new AMap.Map('container',{
             resizeEnable: true,
             zoom: 8,
-            center: [116.480983, 40.0958]
+            center: _this.center
         });
         AMap.plugin(['AMap.ToolBar','AMap.Scale','AMap.OverView'],
             function(){
@@ -878,9 +887,6 @@ export default {
                 map.addControl(new AMap.Scale());
                 
                 map.addControl(new AMap.OverView({isOpen:true}));
-
-                map.addControl(new AMap.Geolocation());
-
                
         });
         map.on('click', function (e) {
@@ -1049,8 +1055,6 @@ export default {
       },   
     },
     mounted(){
-      
-      
       this.init_map()
       this.$store.dispatch('mainLoadingAction',true);
       this.$store.dispatch('defaultIndexAction','/index/estatemanagement');
