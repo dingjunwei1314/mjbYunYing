@@ -36,10 +36,10 @@
     <el-submenu index="5">
       <template slot="title">
         <i class="fa fa-user-o" style="margin-right:10px"></i>
-        <span slot="title">资讯管理</span>
+        <span slot="title">咨询管理</span>
       </template>
-      <el-menu-item index="/index/consultAdmin">资讯管理</el-menu-item>
-      <el-menu-item index="/index/counsultParticulars">资讯详情</el-menu-item>
+      <el-menu-item index="/index/consultAdmin">咨询管理</el-menu-item>
+      <el-menu-item index="/index/counsultParticulars">咨询详情</el-menu-item>
     </el-submenu>
       <el-submenu index="6">
         <template slot="title">

@@ -142,8 +142,8 @@
     data(){
       return{
         input:'',
-        secondLevel:'资讯管理',
-        threeLevel:'资讯管理',
+        secondLevel:'咨询管理',
+        threeLevel:'咨询管理',
         name:'已完成',
         textValue:'',
         pickerOptions1:'',
