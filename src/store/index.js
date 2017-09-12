@@ -10,7 +10,9 @@ let state = {
         flex:' 0 0 160px'
     },
     mainLoading:false,
-    defaultIndex:''
+    defaultIndex:'',
+    provinceValue:"全国",
+    cityValue:"全国"
 };
 
 const mutations = {
@@ -22,6 +24,10 @@ const mutations = {
     },
     changedefaultIndex:function(state,n){
         state.defaultIndex=n
+    },
+    SETPROVINCEVAlUE(state) {
+      state.provinceValue = 1;
+      state.cityValue = "东城区"
     }
 };
 
@@ -36,6 +42,9 @@ const actions = {
     defaultIndexAction:function({commit},n){
         commit('changedefaultIndex',n)
     },
+    setProvinceValue:function({commit}) {
+    commit('SETPROVINCEVAlUE')
+  }
 };
 
 
@@ -48,6 +57,12 @@ const getters = {
     },
     GetDefaultIndex:function(){
         return state.defaultIndex
+    },
+    getProvinceValue : function() {
+      return state.provinceValue
+    },
+    getCityValue : function() {
+      return state.cityValue
     }
 };
 

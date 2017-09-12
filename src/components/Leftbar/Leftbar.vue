@@ -1,6 +1,6 @@
 <template>
-    
-      
+
+
   <el-menu :router="router" :default-active="defaultIndex" class="el-menu-vertical-demo leftbar" @open="handleOpen" @close="handleClose" :unique-opened=true style="overflow-x:hidden" :style="navStyle">
       <el-submenu index="1">
         <template slot="title">
@@ -19,13 +19,13 @@
         </template>
         <el-menu-item index="/index/cooperorders">合作买房</el-menu-item>
       </el-submenu>
-      <el-submenu index="3">
-        <template slot="title">
-          <i class="fa fa-user-o" style="margin-right:10px"></i>
-          <span slot="title">文章管理</span>
-        </template>
-        <el-menu-item index="3-1">文章管理</el-menu-item>
-      </el-submenu>
+    <el-submenu index="3">
+      <template slot="title">
+        <i class="fa fa-user-o" style="margin-right:10px"></i>
+        <span slot="title">文章管理</span>
+      </template>
+      <el-menu-item index="/index/posts">文章管理</el-menu-item>
+    </el-submenu>
       <el-submenu index="4">
         <template slot="title">
           <i class="fa fa-user-o" style="margin-right:10px"></i>
@@ -38,8 +38,8 @@
           <i class="fa fa-user-o" style="margin-right:10px"></i>
           <span slot="title">用户管理</span>
         </template>
-        <el-menu-item index="/index/userlist">用户管理</el-menu-item> 
-        <el-menu-item index="">买房意向管理</el-menu-item> 
+        <el-menu-item index="/index/userlist">用户管理</el-menu-item>
+        <el-menu-item index="">买房意向管理</el-menu-item>
         <el-menu-item index="">消息管理</el-menu-item>
       </el-submenu>
       <el-submenu index="6">
@@ -49,11 +49,11 @@
         </template>
         <el-menu-item index="">角色管理</el-menu-item>
         <el-menu-item index="">账户管理</el-menu-item>
-       
+
       </el-submenu>
   </el-menu>
-        
-   
+
+
 </template>
 
 <script>
@@ -81,7 +81,7 @@ export default {
       },
     },
     mounted(){
-      
+
     }
   }
 </script>
