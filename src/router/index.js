@@ -27,25 +27,32 @@ const EstateAdd=function(resolve){
         resolve(require('../components/EstateAdd/EstateAdd'))
     })
 }
-//订单管理
+
+const RankingList=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/RankingList/RankingList'))
+    })
+}
+
+const CityHouseScore=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/CityHouseScore/CityHouseScore'))
+    })
+}
+
+const ExpectingBuildings=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/ExpectingBuildings/ExpectingBuildings'))
+    })
+}
+//订单管理 
 const CooperOrders=function(resolve){
     require.ensure([],function(){
         resolve(require('../components/CooperOrders/CooperOrders'))
     })
 }
 
-//文章管理
-const Posts=function(resolve){
-    require.ensure([],function(){
-        resolve(require('../components/Posts/posts'))
-    })
-}
-//新建文章
-const NewText=function(resolve){
-    require.ensure([],function(){
-        resolve(require('../components/Posts/newtext'))
-    })
-}
+
 //活动管理
 const ActivityManagement=function(resolve){
     require.ensure([],function(){
@@ -81,6 +88,18 @@ export default new Router({
                 {
                   path:'/index/estateadd',
                   component:EstateAdd
+                },  
+                {
+                  path:'/index/rankinglist',
+                  component:RankingList  
+                },
+                {
+                  path:'/index/cityhousescore',
+                  component:CityHouseScore  
+                },
+                {
+                  path:'/index/expectingbuildings',
+                  component:ExpectingBuildings  
                 },
                 {
                   path:'/index/cooperorders',
@@ -93,14 +112,6 @@ export default new Router({
                 {
                   path:'/index/userlist',
                   component:UserList
-                },
-                {
-                    path:'/index/posts',
-                    component:Posts
-                },
-                {
-                    path:'/index/newText',
-                    component:NewText
                 },
             ]
         }

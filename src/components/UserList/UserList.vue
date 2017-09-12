@@ -10,7 +10,7 @@
            
               
             <el-form-item label="用户id">
-              <el-input   v-model="filterForm.id" placeholder="楼盘id"></el-input>
+              <el-input   v-model="filterForm.id" placeholder="用户id"></el-input>
             </el-form-item>
            
             <el-form-item label="手机号">
@@ -18,7 +18,7 @@
             </el-form-item>
              
             <el-form-item label="状态">
-              <el-select clearable v-model="filterForm.rental_return" placeholder="不限">
+              <el-select clearable v-model="filterForm.rental_return" placeholder="状态">
                 <el-option label="正常" value="1"></el-option>
                 <el-option label="锁定" value="0"></el-option>
               </el-select>
@@ -28,12 +28,12 @@
               <el-date-picker
                 v-model="registe_time"
                 type="date"
-                placeholder="选择日期">
+                placeholder="注册时间">
               </el-date-picker>
             </el-form-item>
 
             <el-form-item label="信息完善">
-              <el-select clearable v-model="filterForm.rental_return" placeholder="不限">
+              <el-select clearable v-model="filterForm.rental_return" placeholder="信息完善">
                 <el-option label="是" value="1"></el-option>
                 <el-option label="否" value="0"></el-option>
               </el-select>
@@ -43,7 +43,7 @@
         </el-col>
         <el-col :span="4" style="text-align:right">
          
-            <el-button type="primary" @click="onSearchSubmit">查询</el-button>
+            <el-button type="primary" @click="onSearchSubmit">搜索会员</el-button>
         </el-col>
       </el-row>
   

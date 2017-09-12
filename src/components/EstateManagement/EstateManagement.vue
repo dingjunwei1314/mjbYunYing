@@ -6,7 +6,7 @@
       
       <el-row style="min-height:150px">
         <el-col :span="20">
-          <el-form :inline="true" style=""  @keyup.native.enter="onSearchSubmit" :model="filterForm" class="demo-form-inline">
+          <el-form :inline="true" style="" :model="filterForm" class="demo-form-inline">
             <div>
               <el-form-item label="楼盘id">
                 <el-input   v-model="filterForm.id" placeholder="楼盘id"></el-input>
@@ -17,22 +17,7 @@
               <el-form-item label="开发商">
                 <el-input  v-model="filterForm.developers" placeholder="开发商"></el-input>
               </el-form-item>
-              <el-form-item label="省">
-                <el-select clearable @change="pro_change" v-model="filterForm.sheng" placeholder="省">
-                  <el-option v-for="(item,index) in pro_arr" :key="index" :label="item" :value="item"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="市">
-                <el-select clearable v-model="filterForm.shi" placeholder="市">
-                  <el-option v-for="(item,index) in c_city_arr" :key="index" :label="item" :value="item"></el-option>
-                </el-select>
-              </el-form-item>
-              <!-- <el-form-item label="区">
-                <el-select clearable v-model="filterForm.qu" placeholder="区">
-                  <el-option label="是" value="1"></el-option>
-                  
-                </el-select>
-              </el-form-item> -->
+              <AreaAll :area="filterForm"></AreaAll> 
             </div>
 
             <el-form-item label="严选">
@@ -184,63 +169,23 @@
       </el-pagination>
     </div>
 
-    <BigDialog dialogTitle="添加管理员" @dialogCancel="dialogCancel" @dialogConfirm="dialogConfirm" :dialogFormVisible="dialogFormVisible">
-      <div slot="dia_body">
-        <el-form ref="form" :model="addNewForm" :rules="addNewFormRules" label-width="80px" style="margin:0px auto;width:500px">
-          <el-form-item label="性别" prop="sex">
-            <el-radio-group v-model="addNewForm.sex">
-              <el-radio label="男"></el-radio>
-              <el-radio label="女"></el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="用户" prop="name">
-            <el-input v-model="addNewForm.name"></el-input>
-          </el-form-item>
-          <el-form-item label="密码" prop="pass">
-            <el-input type="password" v-model="addNewForm.pass"></el-input>
-          </el-form-item>
-
-          <el-form-item label="手机" prop="phpone">
-            <el-input v-model="addNewForm.phpone"></el-input>
-          </el-form-item>
-
-          <el-form-item label="邮箱" prop="email">
-            <el-input type="email" v-model="addNewForm.email"></el-input>
-          </el-form-item>
-
-          <el-form-item label="角色">
-            <el-select v-model="addNewForm.role" placeholder="请选择角色">
-              <el-option label="部门主任" value="部门主任"></el-option>
-              <el-option label="老板" value="老板"></el-option>
-            </el-select>
-          </el-form-item>
-          
-          <el-form-item label="备注">
-            <el-input type="textarea" v-model="addNewForm.desc"></el-input>
-          </el-form-item>
-        </el-form>
-      </div>  
-    </BigDialog>
+   
     
   </div>
 </template>
 
 <script>
-import {pro_arr,city_arr} from '../../common/pc.js'
+import AreaAll from '../Common/AreaAll/AreaAll'
 import Subnav from '../Subnav/Subnav'
-import BigDialog from '../Common/BigDialog/BigDialog'
-import exportExcel from '../../common/exportExcel'
+
 export default {
     name:'managers',
     components:{
       Subnav,
-      BigDialog
+      AreaAll,
     },
     data() {
       return {
-        pro_arr,
-        city_arr,
-        c_city_arr:[],
         currentPage:1,
         secondLevel:'楼盘',
         threeLevel:'楼盘管理',
@@ -290,34 +235,7 @@ export default {
         },
         is_loading_tab:false,
         multipleSelection: [],
-        dialogFormVisible: false,
-        addNewForm: {
-          sex: '',
-          name: '',
-          pass:'',
-          phpone:'',
-          email:'',
-          role: '', 
-          desc: ''
-        },
-        addNewFormRules:{
-          sex: [
-            { required: true, message: '请选择性别', trigger: 'blur' }
-          ],
-          name: [
-            { required: true, message: '请输入用户名', trigger: 'blur' }
-          ],
-          pass: [
-            { required: true, message: '请输入密码', trigger: 'blur' }
-          ],
-          phpone: [
-            { required: true, message: '请输入手机号', trigger: 'blur' }
-          ],
-          email: [
-            { required: true, message: '请输入邮箱', trigger: 'blur' }
-          ]
-        },
-        formLabelWidth: '120px'
+      
       };
     },
     filters:{
@@ -343,17 +261,6 @@ export default {
           console.log(err)
         })
       },
-      pro_change(val){
-    
-        let _index=this.pro_arr.indexOf(val)
-      
-        if(_index==-1){
-          this.c_city_arr=[]
-        }else{
-          this.c_city_arr=this.city_arr[_index]
-        }
-      
-      },
       onSearchSubmit(){
         this.currentPage=1;
         this.getdata();
@@ -365,8 +272,6 @@ export default {
         this.currentPage=page;
         this.getdata()
       },
-     
-     
       refresh(){
         this.$store.dispatch('mainLoadingAction',true);
         var that=this
@@ -375,29 +280,28 @@ export default {
         },300)        
       },
       addNew(){
-        this.dialogFormVisible=true;
+        this.$router.push({path:'/index/estateadd'})
       },
       handleSelectionChange(val){
         this.multipleSelection = val;
-        console.log(this.multipleSelection)
       },
       handleEdit(index, row) {
         console.log(index, row);
       },
       handleDelete(index, row) {
-        this.$confirm('确认删除吗?', '提示', {
+        let _this=this;
+        this.$confirm('确认下线吗?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.tableData.splice(this.tableData.indexOf(row),1);
-          this.onSearchSubmit()
-          this.$message({
+          _this.onSearchSubmit()
+          _this.$message({
             type: 'success',
             message: '删除成功!'
           });
         }).catch(() => {
-          this.$message({
+          _this.$message({
             type: 'info',
             message: '已取消删除'
           });          
@@ -435,72 +339,7 @@ export default {
           }); 
         }
         
-      },
-      dialogCancel(){
-        this.dialogFormVisible=false;
-        this.clearAddForm()
-      },
-      dialogConfirm(){
-        if(this.addNewForm.sex==''){
-          this.$message({
-            message: '请选择性别',
-            type: 'warning'
-          });
-          return
-        }
-        if(this.addNewForm.name==''){
-          this.$message({
-            message: '用户名不能为空',
-            type: 'warning'
-          });
-          return
-        }
-        if(this.addNewForm.pass==''){
-          this.$message({
-            message: '初始密码不能为空',
-            type: 'warning'
-          });
-          return
-        }
-        if(this.addNewForm.phpone==''){
-          this.$message({
-            message: '手机号不能为空',
-            type: 'warning'
-          });
-          return
-        }
-        if(this.addNewForm.email==''){
-          this.$message({
-            message: '邮箱不能为空',
-            type: 'warning'
-          });
-          return
-        }
-        var joinDate=new Date(),
-            joinDateMonth=(joinDate.getMonth()+1)<10? '0'+(joinDate.getMonth()+1) : (joinDate.getMonth()+1),
-            joinDateDay=joinDate.getDate()<10? '0'+joinDate.getDate() : joinDate.getDate(),
-            standardJoinDate=joinDate.getFullYear()+'-'+joinDateMonth+'-'+joinDateDay,
-            new_data={
-              id:this.tableData.length+100,
-              use:'是',
-              date:standardJoinDate,
-              phpone:this.addNewForm.phpone,
-              email:this.addNewForm.email,
-              name: this.addNewForm.name,
-              role: this.addNewForm.role
-            };
-
-        this.tableData.push(new_data)
-        this.dialogFormVisible=false;
-        this.onSearchSubmit()
-        this.clearAddForm()
-      },
-      clearAddForm(){
-        for(var i in this.addNewForm){
-          this.addNewForm[i]=''
-        }
-      },
-         
+      }         
     },
     mounted(){
       
