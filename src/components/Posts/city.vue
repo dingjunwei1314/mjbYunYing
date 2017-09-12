@@ -4,8 +4,13 @@
             <el-col :span="5">
                 <el-select v-model="province" placeholder="请选择" filterable @change="provinceChange">
                     <el-option
+<<<<<<< HEAD
                             v-for="(key,item) in provinceOptions"
                             :key="item.value"
+=======
+                            :key="index"
+                            v-for="(item,index) in provinceOptions"
+>>>>>>> 146183db1db4633020c5b793d55e0de805eb6c8c
                             :label="item.label"
                             :value="item.value">
                     </el-option>
@@ -14,8 +19,13 @@
             <el-col :span="5">
                 <el-select v-model="city" placeholder="请选择" filterable>
                     <el-option
+<<<<<<< HEAD
                             v-for="(key,item) in cityOptions"
                             :key="item.value"
+=======
+                            :key="index"
+                            v-for="(item,index) in cityOptions"
+>>>>>>> 146183db1db4633020c5b793d55e0de805eb6c8c
                             :label="item.label"
                             :value="item.value">
                     </el-option>

@@ -91,6 +91,17 @@ const UserList=function(resolve){
         resolve(require('../components/UserList/UserList'))
     })
 }
+const IntentUserList=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/IntentUserList/IntentUserList'))
+    })
+}
+
+const MessageManagement=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/MessageManagement/MessageManagement'))
+    })
+}
 
 //账户管理
 const AccountAdmin = function (resolve) {
@@ -150,6 +161,14 @@ export default new Router({
                 {
                   path:'/index/userlist',
                   component:UserList
+                },
+                {
+                path:'/index/intentuserlist',
+                component:IntentUserList
+                },
+                {
+                path:'/index/messagemanagement',
+                component:MessageManagement
                 },
                 {
                   path:'/index/posts',

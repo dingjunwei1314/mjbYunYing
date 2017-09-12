@@ -63,7 +63,7 @@
         </el-table-column>
       </el-table>
       <el-button type="primary" size="small" @click="hide_or_show_add(true)">添加活动轮播图</el-button>
-      <el-button type="primary" size="small" @click="handle_some(1)">批量删除</el-button>
+      <el-button type="danger" size="small" @click="handle_some(1)">批量删除</el-button>
       <el-button type="primary" size="small" @click="handle_some(2)">批量更新</el-button>
     </div>
     

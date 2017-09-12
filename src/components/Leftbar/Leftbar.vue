@@ -47,8 +47,8 @@
           <span slot="title">用户管理</span>
         </template>
         <el-menu-item index="/index/userlist">用户管理</el-menu-item>
-        <el-menu-item index="">买房意向管理</el-menu-item>
-        <el-menu-item index="">消息管理</el-menu-item>
+        <el-menu-item index="/index/intentuserlist">买房意向管理</el-menu-item>
+        <el-menu-item index="/index/messagemanagement">消息管理</el-menu-item>
       </el-submenu>
       <el-submenu index="7">
         <template slot="title">
