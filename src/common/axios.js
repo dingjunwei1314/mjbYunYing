@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export default function(url='',data={},params={},headers={},method='get'){
+export default function(url='',data={},params,headers,method='get'){
     console.log(localStorage.token)
     let token=localStorage.token,baseURL=''
     if(token==undefined||token==''){
