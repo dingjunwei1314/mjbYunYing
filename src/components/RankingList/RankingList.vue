@@ -108,15 +108,15 @@
       <div slot="dia_body" class="dia_body">
         <el-form ref="form" :model="pgbAddAllData.phbAddForm" label-width="200px" style="margin:0px auto;width:620px">
 
-<<<<<<< HEAD
+<!--<<<<<<< HEAD-->
 
 
-=======
+<!--=======-->
           <el-form-item label="排行榜名称：">
             <el-input v-model="pgbAddAllData.phbAddForm.name" style="width:195px"  auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="区域：">
-            <AreaAll :isshowqu="false" :area="pgbAddAllData.phbAddForm"></AreaAll> 
+            <AreaAll :isshowqu="false" :area="pgbAddAllData.phbAddForm"></AreaAll>
           </el-form-item>
           <el-form-item  v-for="(item,index) in pgbAddAllData.phbAddForm.range" :key="index">
             <span slot="label">添加楼盘NO{{index+1}}</span>
@@ -132,7 +132,7 @@
             </el-select>
           </el-form-item>
         </el-form>
-      </div>  
+      </div>
     </BigDialog>
 >>>>>>> ba8694653681a1915abe2543bb6b507fc13f835f
   </div>
@@ -164,9 +164,9 @@ export default {
           total:0,
           list:[]
         },
-<<<<<<< HEAD
+//<<<<<<< HEAD
         is_loading_tab:false,
-=======
+//=======
         pgbAddAllData:{
           phbdialogFormVisible:true,
           phbAddForm:{
@@ -177,8 +177,8 @@ export default {
           }
 
         },
-        is_loading_tab:false,      
->>>>>>> ba8694653681a1915abe2543bb6b507fc13f835f
+        is_loading_tab:false,
+//>>>>>>> ba8694653681a1915abe2543bb6b507fc13f835f
       };
     },
     filters:{
@@ -278,15 +278,15 @@ export default {
             message: '请先勾选'
           });
         }
-<<<<<<< HEAD
-=======
-        
+//<<<<<<< HEAD
+//=======
+
       },
       phbdialogCancel(){
 
-      },        
+      },
       phbdialogConfirm(){
->>>>>>> ba8694653681a1915abe2543bb6b507fc13f835f
+//>>>>>>> ba8694653681a1915abe2543bb6b507fc13f835f
 
       }
     },
