@@ -245,6 +245,8 @@ export default {
           }
         }
       },
+
+      
       addmore(){
         this.pgbAddAllData.phbAddForm.range.push(...['','','','',''])
       },
