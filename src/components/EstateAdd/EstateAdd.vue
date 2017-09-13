@@ -4,7 +4,6 @@
     <div style="padding:20px">
       <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
         <el-tab-pane label="楼盘基本信息" name="first">
-          
           <div class="first_item_1">
             <p class="tit">
               楼盘基本属性
@@ -347,7 +346,438 @@
             <el-button>取消</el-button>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="楼盘相册" name="third">角色管理</el-tab-pane>
+        <el-tab-pane label="楼盘相册" name="third">
+          <el-tabs v-model="activeName2">
+            <el-tab-pane label="户型图" name="first">
+              <div v-show="hxAllData.is_show_hx_main">
+                <el-button type="primary" style="margin-bottom:10px" @click="show_add_hx_from(false)" size="small">添加户型图</el-button>
+                <el-table
+                  v-loading="hxAllData.is_loading_tab"
+                  :data="hxAllData.hxtableData.list"
+                  border
+                  tooltip-effect="dark"
+                  style="width: 100%;font-size:12px!important;">
+                  <el-table-column
+                    label="图片"
+                    min-width="100">
+                    <template scope="scope">
+                      <img style="width:100px;height:50px;margin-top:10px;" :src="scope.row.img_src"/>   
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    prop="area"
+                    label="面积"
+                    min-width="80">
+                  </el-table-column>
+                  <el-table-column
+                    prop="house_type"
+                    label="户型"
+                    min-width="80">
+                  </el-table-column>
+                  <el-table-column
+                    prop="desc"
+                    label="描述"
+                    min-width="100">                
+                  </el-table-column>
+                  <el-table-column
+                    prop="sale_state"
+                    label="销售状态"
+                    min-width="60">
+                  </el-table-column>
+                  <el-table-column
+                    prop="state"
+                    min-width="60"
+                    label="状态">
+                  </el-table-column>
+                  <el-table-column
+                    prop="time"
+                    min-width="80"
+                    label="发布时间">
+                  </el-table-column>
+                  <el-table-column
+                    min-width="200"
+                    label="操作">
+                    <template scope="scope">
+                    <el-button
+                      size="small"
+                      @click="handleEdit(scope.$index, scope.row)">查看</el-button>
+                    <el-button
+                      size="small"
+                      @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                      <el-button
+                      size="small"
+                      @click="handleEdit(scope.$index, scope.row)">删除</el-button>
+                    <el-button
+                      size="small"
+                      type="danger"
+                      @click="handleDelete(scope.$index, scope.row)">下线</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </div>
+              <div v-if="!hxAllData.is_show_hx_main">
+                <el-form :model="hxAllData.addNewHouseType" :rules="hxAllData.addNewHouseTypeRule" ref="addNewHouseTypeRef" label-width="100px" class="demo-dynamic" style="width:60%;margin-left:15%;margin-top:40px"> 
+                  <el-form-item label="标题" style="width:400px" :required="true" prop="title">
+                    <el-input v-model="hxAllData.addNewHouseType.title" auto-complete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item label="户型" style="width:800px" :required="true"  prop="housetype1">
+                    <el-select :clearable="true" style="width:100px" v-model="hxAllData.addNewHouseType.housetype1" placeholder="室">
+                      <el-option label="一室" value="1"></el-option>
+                      <el-option label="二室" value="2"></el-option>
+                      <el-option label="三室" value="3"></el-option>
+                      <el-option label="四室" value="4"></el-option>
+                      <el-option label="五室" value="5"></el-option>
+                      <el-option label="六室" value="6"></el-option>
+                      <el-option label="七室及以上" value="7"></el-option>
+                    </el-select>
+                    <el-select :clearable="true" style="width:100px" v-model="hxAllData.addNewHouseType.housetype2" placeholder="厅">
+                      <el-option label="一厅" value="1"></el-option>
+                      <el-option label="二厅" value="2"></el-option>
+                      <el-option label="三厅" value="3"></el-option>
+                      <el-option label="四厅及以上" value="4"></el-option>
+                    </el-select>
+                    <el-select :clearable="true" style="width:100px" v-model="hxAllData.addNewHouseType.housetype3" placeholder="厨">
+                      <el-option label="一厨" value="1"></el-option>
+                      <el-option label="二厨" value="2"></el-option>
+                      <el-option label="三厨及以上" value="3"></el-option>
+                    </el-select>
+                    <el-select :clearable="true" style="width:100px" v-model="hxAllData.addNewHouseType.housetype4" placeholder="卫">
+                      <el-option label="一卫" value="1"></el-option>
+                      <el-option label="二卫" value="2"></el-option>
+                      <el-option label="三卫" value="3"></el-option>
+                      <el-option label="四卫及以上" value="4"></el-option>
+                    </el-select>
+                  </el-form-item>
+
+                  <el-form-item label="面积区间" :required="true"  prop="areaMin">
+                    <el-input v-model="hxAllData.addNewHouseType.areaMin" style="width:100px"  auto-complete="off"></el-input>
+                    <span style="color:#999;font-size:12px">-</span>
+                    <el-input v-model="hxAllData.addNewHouseType.areaMax" style="width:100px"  auto-complete="off"></el-input>
+                    <span style="color:#999;font-size:12px">如果该户型只有一种面积，面积填入第一个输入框</span>
+                  </el-form-item>
+
+                  <el-form-item label="朝向" :required="true"   prop="orientation">
+                    <el-select :clearable="true"	 v-model="hxAllData.addNewHouseType.orientation" placeholder="朝向">
+                      <el-option label="南北" value="1"></el-option>
+                      <el-option label="东西" value="2"></el-option>
+                    </el-select>
+                  </el-form-item>
+
+                  <el-form-item label="描述"  prop="desc">
+                    <el-input style="width:300px" v-model="hxAllData.addNewHouseType.desc" type="textarea"  auto-complete="off"></el-input>
+                  </el-form-item>
+
+                  <el-form-item label="总价区间" :required="true"  prop="priceMin">
+                    <el-input v-model="hxAllData.addNewHouseType.priceMin" style="width:100px"  auto-complete="off"></el-input>
+                    <span style="color:#999;font-size:12px">-</span>
+                    <el-input v-model="hxAllData.addNewHouseType.priceMax" style="width:100px"  auto-complete="off"></el-input>
+                    <span style="color:#999;font-size:12px">如果该户型只有一种价格，价格填入第一个输入框</span>
+                  </el-form-item>
+
+                  <el-form-item label="销售状态" :required="true" prop="sale_state">
+                    <el-radio-group v-model="hxAllData.addNewHouseType.sale_state">
+                      <el-radio :label="1">在售</el-radio>
+                      <el-radio :label="2">待售</el-radio>
+                      <el-radio :label="3">售罄</el-radio>
+                    </el-radio-group>
+                  </el-form-item>
+
+                  <el-form-item label="总套数"  prop="totalNumber">
+                    <el-input style="width:300px" v-model="hxAllData.addNewHouseType.totalNumber"  auto-complete="off"></el-input>
+                  </el-form-item>
+
+                  <el-form-item  label="可售套数"  prop="saleNumber">
+                    <el-input style="width:300px" v-model="hxAllData.addNewHouseType.saleNumber"  auto-complete="off"></el-input>
+                  </el-form-item>
+
+                  <el-form-item label="待售套数"  prop="notsaleNumber">
+                    <el-input style="width:300px" v-model="hxAllData.addNewHouseType.notsaleNumber"  auto-complete="off"></el-input>
+                  </el-form-item>
+
+                  <el-form-item label="套数占比"  prop="salepercent">
+                    <el-input style="width:300px" v-model="hxAllData.addNewHouseType.salepercent"  auto-complete="off"></el-input>
+                  </el-form-item>
+                  
+                  <el-form-item label="标签" :required="true"  prop="tags">
+                    <el-checkbox-group v-model="hxAllData.addNewHouseType.tags">
+                      <el-checkbox label="1">南北通透</el-checkbox>
+                      <el-checkbox label="2">干湿分离</el-checkbox>
+                      <el-checkbox label="3">动静分离</el-checkbox>
+                      <el-checkbox label="4">全明户型</el-checkbox>
+                      <el-checkbox label="5">私密性好</el-checkbox>
+                      <el-checkbox label="6">格局方正</el-checkbox>
+                    </el-checkbox-group>
+                  </el-form-item>
+
+                  <el-form-item label="上传">
+                    <el-dialog v-model="hxAllData.dialogVisible" size="tiny">
+                      <img width="100%" :src="hxAllData.dialogImageUrl" alt="">
+                    </el-dialog>
+                    <el-upload
+                      class="upload-demo"
+                      ref="uploadhx"
+                      action="https://jsonplaceholder.typicode.com/posts/"
+                      :on-change="hx_updata_change"
+                      :on-preview="handlePreviewhx"
+                      :on-remove="handleRemovehx"
+                      :file-list="hxAllData.fileList"
+                      list-type="picture-card"
+                      :auto-upload="false">
+                      <i class="el-icon-plus"></i>
+                    </el-upload>
+                  </el-form-item>
+                </el-form>
+                <div style="margin-bottom:50px">
+                  <el-button style="margin-left:300px" type="primary" @click="hx_updata_sure('addNewHouseTypeRef')">确认</el-button>
+                  <el-button @click="show_add_hx_from(true)">取消</el-button>
+                </div>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="实景图" name="second">
+              <div v-show="sjAllData.is_show_sj_main">
+                <el-button type="primary" style="margin-bottom:10px" @click="show_add_sj_from(false)" size="small">添加实景图</el-button>
+                <el-table
+                  :data="sjAllData.sjtableData.list"
+                  border
+                  tooltip-effect="dark"
+                  style="width: 100%;font-size:12px!important;">
+                  <el-table-column
+                    label="图片"
+                    min-width="100">
+                    <template scope="scope">
+                      <img style="width:100px;height:50px;margin-top:10px;" v-if="scope.row.img_src[0]" :src="scope.row.img_src[0]"/> 
+                      <img style="width:100px;height:50px;margin-top:10px;" v-if="scope.row.img_src[1]" :src="scope.row.img_src[1]"/> 
+                      <img style="width:100px;height:50px;margin-top:10px;" v-if="scope.row.img_src[2]" :src="scope.row.img_src[2]"/>   
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    prop="time"
+                    min-width="80"
+                    label="拍摄时间">
+                  </el-table-column>
+                  <el-table-column
+                    min-width="100"
+                    label="操作">
+                    <template scope="scope">
+                    <el-button
+                      size="small"
+                      @click="handleEdit(scope.$index, scope.row)">查看</el-button>
+                    <el-button
+                      size="small"
+                      @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                      <el-button
+                      size="small"
+                      @click="handleEdit(scope.$index, scope.row)">删除</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </div>
+              <div v-if="!sjAllData.is_show_sj_main">
+                <el-form :model="sjAllData.addNewsjType" label-width="100px" class="demo-dynamic" style="width:60%;margin-left:15%;margin-top:40px"> 
+                  <el-form-item label="拍摄时间" style="width:400px" :required="true" prop="title">
+                    <el-date-picker
+                      v-model="sjAllData.addNewsjType.time"
+                      type="date"
+                      placeholder="拍摄时间">
+                    </el-date-picker>
+                  </el-form-item>
+
+                  <el-form-item label="上传">
+                    <el-dialog v-model="sjAllData.dialogVisible" size="tiny">
+                      <img width="100%" :src="sjAllData.dialogImageUrl" alt="">
+                    </el-dialog>
+                    <el-upload
+                      class="upload-demo"
+                      ref="uploadhx"
+                      action="https://jsonplaceholder.typicode.com/posts/"
+                      :on-change="sj_updata_change"
+                      :on-preview="handlePreviewsj"
+                      :on-remove="handleRemovesj"
+                      :file-list="sjAllData.fileList"
+                      list-type="picture-card"
+                      :auto-upload="false">
+                      <i class="el-icon-plus"></i>
+                    </el-upload>
+                  </el-form-item>
+                </el-form>
+                <div style="margin-bottom:50px">
+                  <el-button style="margin-left:300px" type="primary" @click="sj_updata_sure()">确认</el-button>
+                  <el-button @click="show_add_sj_from(true)">取消</el-button>
+                </div>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="效果图" name="third" style="padding:0px 20px">
+              <p style="color:#313131;margin-bottom:10px;">效果图</p>
+              <el-dialog v-model="dialogVisible1" size="tiny">
+                <img width="100%" :src="dialogImageUrl1" alt="">
+              </el-dialog>
+              <el-upload
+                class="upload-demo"
+                ref="upload1"
+                action="https://jsonplaceholder.typicode.com/posts/"
+                :on-preview="handlePreview1"
+                :on-remove="handleRemove(1)"
+                :file-list="fileList1"
+                list-type="picture-card"
+                :auto-upload="false">
+                <i class="el-icon-plus"></i>
+              </el-upload>
+              <div>
+                <el-button size="small" type="success" @click="submitUpload(1)">
+                  确认上传
+                </el-button>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="样板间" name="fourth">
+              <div v-show="ybjAllData.is_show_ybj_main">
+                <el-button type="primary" style="margin-bottom:10px" @click="show_add_ybj_from(false)" size="small">添加样板间</el-button>
+                <el-table
+                  :data="ybjAllData.ybjtableData.list"
+                  border
+                  tooltip-effect="dark"
+                  style="width: 100%;font-size:12px!important;">
+                  <el-table-column
+                    label="图片"
+                    min-width="100">
+                    <template scope="scope">
+                      <img style="width:100px;height:50px;margin-top:10px;" v-if="scope.row.img_src[0]" :src="scope.row.img_src[0]"/> 
+                      <img style="width:100px;height:50px;margin-top:10px;" v-if="scope.row.img_src[1]" :src="scope.row.img_src[1]"/> 
+                      <img style="width:100px;height:50px;margin-top:10px;" v-if="scope.row.img_src[2]" :src="scope.row.img_src[2]"/>   
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    prop="title"
+                    min-width="80"
+                    label="标题">
+                  </el-table-column>
+                  <el-table-column
+                    prop="time"
+                    min-width="80"
+                    label="拍摄时间">
+                  </el-table-column>
+                  <el-table-column
+                    min-width="100"
+                    label="操作">
+                    <template scope="scope">
+                    <el-button
+                      size="small"
+                      @click="handleEdit(scope.$index, scope.row)">查看</el-button>
+                    <el-button
+                      size="small"
+                      @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                      <el-button
+                      size="small"
+                      @click="handleEdit(scope.$index, scope.row)">删除</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </div>
+              <div v-if="!ybjAllData.is_show_ybj_main">
+                <el-form :model="ybjAllData.addNewybjType" label-width="100px" class="demo-dynamic" style="width:60%;margin-left:15%;margin-top:40px"> 
+                  <el-form-item label="标题" :required="true" prop="name">
+                     <el-input v-model="ybjAllData.addNewybjType.name" style="width:195px"  auto-complete="off"></el-input>
+                  </el-form-item>
+
+                  <el-form-item label="拍摄时间" style="width:400px" :required="true" prop="time">
+                    <el-date-picker
+                      v-model="ybjAllData.addNewybjType.time"
+                      type="date"
+                      placeholder="拍摄时间">
+                    </el-date-picker>
+                  </el-form-item>
+
+                  <el-form-item label="上传">
+                    <el-dialog v-model="ybjAllData.dialogVisible" size="tiny">
+                      <img width="100%" :src="ybjAllData.dialogImageUrl" alt="">
+                    </el-dialog>
+                    <el-upload
+                      class="upload-demo"
+                      ref="uploadhx"
+                      action="https://jsonplaceholder.typicode.com/posts/"
+                      :on-change="ybj_updata_change"
+                      :on-preview="handlePreviewybj"
+                      :on-remove="handleRemoveybj"
+                      :file-list="ybjAllData.fileList"
+                      list-type="picture-card"
+                      :auto-upload="false">
+                      <i class="el-icon-plus"></i>
+                    </el-upload>
+                  </el-form-item>
+                </el-form>
+                <div style="margin-bottom:50px">
+                  <el-button style="margin-left:300px" type="primary" @click="ybj_updata_sure">确认</el-button>
+                  <el-button @click="show_add_ybj_from(true)">取消</el-button>
+                </div>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="规划图" name="five" style="padding:0px 20px">
+              <p style="color:#313131;margin-bottom:10px;">规划图</p>
+              <el-dialog v-model="dialogVisible2" size="tiny">
+                <img width="100%" :src="dialogImageUrl2" alt="">
+              </el-dialog>
+              <el-upload
+                class="upload-demo"
+                ref="upload2"
+                action="https://jsonplaceholder.typicode.com/posts/"
+                :on-preview="handlePreview2"
+                :on-remove="handleRemove(2)"
+                :file-list="fileList2"
+                list-type="picture-card"
+                :auto-upload="false">
+                <i class="el-icon-plus"></i>
+              </el-upload>
+              <div>
+                <el-button size="small" type="success" @click="submitUpload(2)">
+                  确认上传
+                </el-button>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="交通图" name="six" style="padding:0px 20px">
+              <p style="color:#313131;margin-bottom:10px;">交通图</p>
+              <el-dialog v-model="dialogVisible3" size="tiny">
+                <img width="100%" :src="dialogImageUrl3" alt="">
+              </el-dialog>
+              <el-upload
+                class="upload-demo"
+                ref="upload3"
+                action="https://jsonplaceholder.typicode.com/posts/"
+                :on-preview="handlePreview3"
+                :on-remove="handleRemove(3)"
+                :file-list="fileList3"
+                list-type="picture-card"
+                :auto-upload="false">
+                <i class="el-icon-plus"></i>
+              </el-upload>
+              <div>
+                <el-button size="small" type="success" @click="submitUpload(3)">
+                  确认上传
+                </el-button>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="缩略图" name="seven" style="padding:0px 20px">
+              <p style="color:#313131;margin-bottom:10px;">缩略图</p>
+              <el-dialog v-model="dialogVisible4" size="tiny">
+                <img width="100%" :src="dialogImageUrl4" alt="">
+              </el-dialog>
+              <el-upload
+                class="upload-demo"
+                ref="upload4"
+                action="https://jsonplaceholder.typicode.com/posts/"
+                :on-preview="handlePreview4"
+                :on-remove="handleRemove(4)"
+                :file-list="fileList4"
+                list-type="picture-card"
+                :auto-upload="false">
+                <i class="el-icon-plus"></i>
+              </el-upload>
+              <div>
+                <el-button size="small" type="success" @click="submitUpload(4)">
+                  确认上传
+                </el-button>
+              </div>
+            </el-tab-pane>
+          </el-tabs>
+        </el-tab-pane>
         <el-tab-pane label="楼盘报告" name="fourth" style="padding:20px">
           <div v-show="!is_show_updata_repeat_swi">
             <el-button type="primary" @click="is_show_updata_repeat(true)">添加报告</el-button>
@@ -448,7 +878,7 @@
                 min-width="60">
               </el-table-column>
               <el-table-column
-                prop="ghsj"
+                prop="ghybj"
                 label="规划设计"
                 width="150">
               </el-table-column>
@@ -649,8 +1079,56 @@ export default {
         }else{
           callback();
         }
+      }; 
+      var validatehxTitle = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入标题'));
+        }else{
+          callback();
+        }
+      }; 
+      var validatehxHousetype1 = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入户型'));
+        }else{
+          callback();
+        }
+      };  
+      var validatehxAreaMin = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入面积区间'));
+        }else{
+          callback();
+        }
+      }; 
+      var validatehxOrientation = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入朝向'));
+        }else{
+          callback();
+        }
+      }; 
+      var validatehxPriceMin = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入价格区间'));
+        }else{
+          callback();
+        }
+      }; 
+      var validatehxSale_state = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入销售状态'));
+        }else{
+          callback();
+        }
       };
-
+      var validatehxTags = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请选择标签'));
+        }else{
+          callback();
+        }
+      };
       return {
         coordinatearr,
         pdfsrc:'/static/pdf.pdf',
@@ -664,6 +1142,89 @@ export default {
           {id:1,time:'2017-9-11',gczl:'9',ghsj:'9',ghls:'8',zbpt:'7',reporter:'djw'},
           {id:2,time:'2017-9-12',gczl:'1',ghsj:'1',ghls:'1',zbpt:'1',reporter:'hhh'}
         ],
+        
+        hxAllData:{
+          dialogVisible:false,
+          is_show_hx_main:true,
+          is_loading_hx_tab:false,
+          dialogImageUrl:'',
+          fileList:[],
+          updatafiles:[],
+          addNewHouseType:{
+            title:'',
+            housetype1:'',
+            housetype2:'',
+            housetype3:'',
+            housetype4:'',
+            areaMin:'',
+            areaMax:'',
+            orientation:'',
+            desc:'',
+            priceMin:'',
+            priceMax:'',
+            sale_state:'',
+            totalNumber:'',
+            saleNumber:'',
+            notsaleNumber:'',
+            salepercent:'',
+            tags:[],
+          },
+          addNewHouseTypeRule:{
+            title: [
+              { validator: validatehxTitle, trigger: 'blur' }
+            ],
+            housetype1: [
+              { validator: validatehxHousetype1, trigger: 'blur' }
+            ], 
+            areaMin:[
+              { validator: validatehxAreaMin, trigger: 'blur' }
+            ],
+            orientation:[
+              { validator: validatehxOrientation, trigger: 'blur' }
+            ],
+            priceMin:[
+              { validator: validatehxPriceMin, trigger: 'blur' }
+            ],
+            sale_state:[
+              { validator: validatehxSale_state, trigger: 'blur' }
+            ],
+            tags:[
+              { validator: validatehxTags, trigger: 'blur' }
+            ],
+          },
+          hxtableData:{
+            list:[]
+          },
+        },
+        sjAllData:{
+          dialogVisible:false,
+          dialogImageUrl:'',
+          fileList:[],
+          updatafiles:[],
+          is_loading_sj_tab:false,
+          is_show_sj_main:true,
+          sjtableData:{
+            list:[]
+          },
+          addNewsjType:{
+            time:''
+          }
+        },
+        ybjAllData:{
+          dialogVisible:false,
+          dialogImageUrl:'',
+          fileList:[],
+          updatafiles:[],
+          is_loading_ybj_tab:false,
+          is_show_ybj_main:true,
+          ybjtableData:{
+            list:[]
+          },
+          addNewybjType:{
+            name:'',
+            time:'',
+          }
+        },
         add_new_repeat_form:{
           name:'',
           type:'',
@@ -691,6 +1252,19 @@ export default {
         is_loading_score_tab:false,
         is_show_map:false,
         activeName:"first",
+        activeName2:'first',
+        dialogVisible1:false,
+        dialogImageUrl1:'',
+        fileList1:[{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
+        dialogVisible2:false,
+        dialogImageUrl2:'',
+        fileList2:[{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
+        dialogVisible3:false,
+        dialogImageUrl3:'',
+        fileList3:[{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
+        dialogVisible4:false,
+        dialogImageUrl4:'',
+        fileList4:[{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
         secondLevel:'楼盘管理',
         threeLevel:'添加楼盘',
         add_new_estate_form:{
@@ -811,6 +1385,9 @@ export default {
     },
     created(){
       this.getdata()
+      this.gethxdata()
+      this.getsjdata()
+      this.getybjdata()
     },
     methods: {
       getdata(){
@@ -822,6 +1399,45 @@ export default {
             _this.tableData=res.data.data;
           }
           _this.is_loading_tab=false;
+        }).catch(function(err){
+          console.log(err)
+        })
+      },
+      gethxdata(){
+        let _this=this;
+        _this.hxAllData.is_loading_hx_tab=true;
+        this.$http('/hxlist').then(function(res){
+          console.log(res)
+          if(res.data.code==1000){
+            _this.hxAllData.hxtableData=res.data.data;
+          }
+          _this.hxAllData.is_loading_hx_tab=false;
+        }).catch(function(err){
+          console.log(err)
+        })
+      },
+      getsjdata(){
+        let _this=this;
+        _this.sjAllData.is_loading_sj_tab=true;
+        this.$http('/sjlist').then(function(res){
+          console.log(res)
+          if(res.data.code==1000){
+            _this.sjAllData.sjtableData=res.data.data;
+          }
+          _this.sjAllData.is_loading_sj_tab=false;
+        }).catch(function(err){
+          console.log(err)
+        })
+      },
+      getybjdata(){
+        let _this=this;
+        _this.ybjAllData.is_loading_ybj_tab=true;
+        this.$http('/ybjlist').then(function(res){
+          console.log(res)
+          if(res.data.code==1000){
+            _this.ybjAllData.ybjtableData=res.data.data;
+          }
+          _this.ybjAllData.is_loading_ybj_tab=false;
         }).catch(function(err){
           console.log(err)
         })
@@ -908,7 +1524,7 @@ export default {
         this.additionalInformationForm.id_arr.push({id:''})
       },
       is_show_updata_repeat(swi){
-        this.is_show_updata_repeat_swi=swi
+        this.is_show_updata_repeat_swi=swi;
       },
       is_show_score(swi){
         this.is_show_score_swi=swi;
@@ -1039,7 +1655,6 @@ export default {
         });
       },
       sure_updata(){
-
       },
       refresh(){
         this.$store.dispatch('mainLoadingAction',true);
@@ -1053,7 +1668,168 @@ export default {
       }, 
       handleClick(){
 
+      }, 
+      handleRemove(file, fileList,type) {
+        console.log(file, fileList);
+      },
+      handleRemovehx(file, fileList){
+        console.log(file);
+      },
+      handlePreviewhx(file){
+        this.hxAllData.dialogImageUrl=file.url;
+        this.hxAllData.dialogVisible=true;
       },   
+      handlePreviewsj(file){
+        this.sjAllData.dialogImageUrl=file.url;
+        this.sjAllData.dialogVisible=true;
+      },  
+      handlePreviewybj(file){
+        this.ybjAllData.dialogImageUrl=file.url;
+        this.ybjAllData.dialogVisible=true;
+      },  
+      hx_updata_change(file,fileList){
+        this.hxAllData.updatafiles=fileList;
+      },
+      sj_updata_change(file,fileList){
+        this.sjAllData.updatafiles=fileList;
+      },
+      ybj_updata_change(file,fileList){
+        this.ybjAllData.updatafiles=fileList;
+      },
+      handlePreview1(file){
+          this.dialogImageUrl1=file.url;
+          this.dialogVisible1=true;
+      },
+      handlePreview2(file){
+          this.dialogImageUrl2=file.url;
+          this.dialogVisible2=true;
+      },
+      handlePreview3(file){
+          this.dialogImageUrl3=file.url;
+          this.dialogVisible3=true;
+      },
+      handlePreview4(file){
+          this.dialogImageUrl4=file.url;
+          this.dialogVisible4=true;
+      },
+      submitUpload(type){
+        if(type==1){
+          this.$refs.upload1.submit();
+        }else if(this.type==2){
+          this.$refs.upload2.submit();
+        }else if(this.type==3){
+          this.$refs.upload3.submit();
+        }else{
+          this.$refs.upload4.submit();
+        }
+      },
+      show_add_hx_from(swi){
+        this.hxAllData.is_show_hx_main=swi;
+        this.hxAllData.updatafiles=[];
+        for(let i in this.hxAllData.addNewHouseType){
+          if(i=='tags'){
+            this.hxAllData.addNewHouseType[i]=[]
+          }else{
+            this.hxAllData.addNewHouseType[i]=''
+          }
+        }
+      },
+      show_add_sj_from(swi){
+        this.sjAllData.is_show_sj_main=swi;
+        this.sjAllData.updatafiles=[];
+        for(let i in this.sjAllData.addNewsjType){
+          if(i=='tags'){
+            this.sjAllData.addNewsjType[i]=[]
+          }else{
+            this.sjAllData.addNewsjType[i]=''
+          }
+        }
+      },
+      show_add_ybj_from(swi){
+        this.ybjAllData.is_show_ybj_main=swi;
+        this.ybjAllData.updatafiles=[];
+        for(let i in this.ybjAllData.addNewybjType){
+          if(i=='tags'){
+            this.ybjAllData.addNewybjType[i]=[]
+          }else{
+            this.ybjAllData.addNewybjType[i]=''
+          }
+        }
+      },
+      hx_updata_sure(formName){
+        let _this=this;
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            console.log(this.hxAllData.updatafiles);
+            _this.hxAllData.is_show_hx_main=true;
+            _this.gethxdata();
+            _this.$message({
+              type: 'success',
+              message: '已添加'
+            });   
+            let param = new FormData(); 
+            if(_this.hxAllData.updatafiles.length>0){
+              for(let i in _this.hxAllData.updatafiles){
+                param.append('hximg',_this.hxAllData.updatafiles[i].raw.name)
+              }
+            }
+            console.log(param.get('hximg'));
+            for(let j in _this.hxAllData.addNewHouseType){
+              param.append(j,_this.hxAllData.addNewHouseType[j])
+            }
+            console.log(param.get('title'));
+            let config = {
+              'Content-Type':'multipart/form-data'
+            };  //添加请求头
+            this.$http('/xxx',{},param,config,'post')
+            .then(response=>{
+              console.log(response.data);
+            })      
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        })
+      }, 
+      sj_updata_sure(){
+        let _this=this;
+        if(_this.sjAllData.addNewsjType.time==''){
+          _this.$message({
+            type: 'warning',
+            message: '请选择时间'
+          });
+          return;
+        }
+        _this.sjAllData.is_show_sj_main=true;
+        _this.getsjdata();
+        _this.$message({
+          type: 'success',
+          message: '已添加'
+        });  
+      },
+      ybj_updata_sure(){
+        let _this=this;
+        if(_this.ybjAllData.addNewybjType.name==''){
+          _this.$message({
+            type: 'warning',
+            message: '请输入标题'
+          });
+          return;
+        }
+        if(_this.ybjAllData.addNewybjType.time==''){
+          _this.$message({
+            type: 'warning',
+            message: '请选择时间'
+          });
+          return;
+        }
+        _this.ybjAllData.is_show_ybj_main=true;
+        _this.getybjdata();
+        _this.$message({
+          type: 'success',
+          message: '已添加'
+        });  
+      }
     },
     mounted(){
       this.init_map()
@@ -1076,7 +1852,7 @@ export default {
   height: 0
 }
 .slide-leave,.slide-enter-to{
-  height: 100px
+  height: 100px;
 }
 .first_item_1,.first_item_2,.first_item_3{border: 1px solid #eee;margin:20px;}
 .first_item_1 .tit,.first_item_2 .tit,.first_item_3 .tit{height: 30px;background: rgba(32,160,255,.8);color: white;line-height: 30px;font-size: 12px;padding: 0px 20px; }
@@ -1086,4 +1862,5 @@ export default {
 <style>
   .estateadd  .el-table th>.cell{text-align: center;}
   .estateadd  .el-table .cell{text-align: center;}
+  /* .estateadd .el-upload--picture-card{width: 40px;height: 40px;line-height: 50px} */
 </style>

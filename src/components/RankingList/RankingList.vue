@@ -25,8 +25,11 @@
             <el-button type="primary" @click="addNew">排行榜排序</el-button>
         </el-col>
       </el-row>
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> ba8694653681a1915abe2543bb6b507fc13f835f
       <div class="tabletopbar">
         <span>所有数据：共</span> <span style="color:#111">{{tableData.total}}</span> <span>条</span>
         <span style="margin-left:20px">查询结果：共</span>
@@ -101,21 +104,50 @@
         :total="tableData.total">
       </el-pagination>
     </div>
+    <BigDialog dialogTitle="新建排行榜" @dialogCancel="phbdialogCancel" @dialogConfirm="phbdialogConfirm" :dialogFormVisible="pgbAddAllData.phbdialogFormVisible">
+      <div slot="dia_body" class="dia_body">
+        <el-form ref="form" :model="pgbAddAllData.phbAddForm" label-width="200px" style="margin:0px auto;width:620px">
+
+<<<<<<< HEAD
 
 
-
+=======
+          <el-form-item label="排行榜名称：">
+            <el-input v-model="pgbAddAllData.phbAddForm.name" style="width:195px"  auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="区域：">
+            <AreaAll :isshowqu="false" :area="pgbAddAllData.phbAddForm"></AreaAll> 
+          </el-form-item>
+          <el-form-item  v-for="(item,index) in pgbAddAllData.phbAddForm.range" :key="index">
+            <span slot="label">添加楼盘NO{{index+1}}</span>
+            <el-select v-model="pgbAddAllData.phbAddForm.range[index]" placeholder="请选择">
+              <el-option
+                label="楼盘1"
+                value="1">
+              </el-option>
+              <el-option
+                label="楼盘2"
+                value="2">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </div>  
+    </BigDialog>
+>>>>>>> ba8694653681a1915abe2543bb6b507fc13f835f
   </div>
 </template>
 
 <script>
 import AreaAll from '../Common/AreaAll/AreaAll'
 import Subnav from '../Subnav/Subnav'
-
+import BigDialog from '../Common/BigDialog/BigDialog'
 export default {
     name:'RankingList',
     components:{
       Subnav,
       AreaAll,
+      BigDialog
     },
     data() {
       return {
@@ -132,7 +164,21 @@ export default {
           total:0,
           list:[]
         },
+<<<<<<< HEAD
         is_loading_tab:false,
+=======
+        pgbAddAllData:{
+          phbdialogFormVisible:true,
+          phbAddForm:{
+            name:'',
+            sheng:'',
+            shi:'',
+            range:['','','','','','','','','','']
+          }
+
+        },
+        is_loading_tab:false,      
+>>>>>>> ba8694653681a1915abe2543bb6b507fc13f835f
       };
     },
     filters:{
@@ -232,6 +278,15 @@ export default {
             message: '请先勾选'
           });
         }
+<<<<<<< HEAD
+=======
+        
+      },
+      phbdialogCancel(){
+
+      },        
+      phbdialogConfirm(){
+>>>>>>> ba8694653681a1915abe2543bb6b507fc13f835f
 
       }
     },
