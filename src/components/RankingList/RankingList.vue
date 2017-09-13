@@ -3,14 +3,14 @@
     <Subnav :secondLevel="secondLevel" :threeLevel="threeLevel" @refresh="refresh"></Subnav>
 
     <div style="padding:20px" class="search_wap">
-      
+
       <el-row style="min-height:100px">
         <el-col :span="18">
-          <el-form :inline="true" style="" :model="filterForm" class="demo-form-inline">         
+          <el-form :inline="true" style="" :model="filterForm" class="demo-form-inline">
             <el-form-item label="楼盘名称">
               <el-input  v-model="filterForm.name" placeholder="楼盘名称"></el-input>
             </el-form-item>
-            <AreaAll :isshowqu="false" :area="filterForm"></AreaAll> 
+            <AreaAll :isshowqu="false" :area="filterForm"></AreaAll>
              <el-form-item label="状态" style="margin-left:10px">
               <el-select clearable v-model="filterForm.state" placeholder="不限">
                 <el-option label="在线" value="1"></el-option>
@@ -25,11 +25,11 @@
             <el-button type="primary" @click="addNew">排行榜排序</el-button>
         </el-col>
       </el-row>
-  
+
 
       <div class="tabletopbar">
         <span>所有数据：共</span> <span style="color:#111">{{tableData.total}}</span> <span>条</span>
-        <span style="margin-left:20px">查询结果：共</span> 
+        <span style="margin-left:20px">查询结果：共</span>
         <span style="color:#111">{{tableData.total}}</span> <span>条</span>
       </div>
       <el-table
@@ -52,9 +52,9 @@
           prop="housenumber"
           label="包含楼盘数"
           min-width="80">
-        </el-table-column>       
+        </el-table-column>
         <el-table-column
-          prop="state" 
+          prop="state"
           min-width="60"
           label="状态">
         </el-table-column>
@@ -102,8 +102,8 @@
       </el-pagination>
     </div>
 
-   
-    
+
+
   </div>
 </template>
 
@@ -132,14 +132,14 @@ export default {
           total:0,
           list:[]
         },
-        is_loading_tab:false,      
+        is_loading_tab:false,
       };
     },
     filters:{
-     
+
     },
     computed:{
-                                        
+
     },
     created(){
       this.getdata()
@@ -171,7 +171,7 @@ export default {
         var that=this
         setTimeout(function(){
           that.$store.dispatch('mainLoadingAction',false);
-        },300)        
+        },300)
       },
       addNew(){
         this.$router.push({path:'/index/estateadd'})
@@ -189,7 +189,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          _this.onSearchSubmit()
+          _this.onSearchSubmit();
           _this.$message({
             type: 'success',
             message: '删除成功!'
@@ -198,11 +198,11 @@ export default {
           _this.$message({
             type: 'info',
             message: '已取消删除'
-          });          
+          });
         });
       },
       batchDelete(){
-        
+
         if(this.multipleSelection.length>0){
 
           this.$confirm('确认删除吗?', '提示', {
@@ -211,7 +211,7 @@ export default {
             type: 'warning'
           }).then(() => {
             for(let i in this.multipleSelection){
-              this.tableData.splice(this.tableData.indexOf(this.multipleSelection[i]),1)   
+              this.tableData.splice(this.tableData.indexOf(this.multipleSelection[i]),1)
             }
             this.onSearchSubmit()
             this.multipleSelection=[];
@@ -223,26 +223,26 @@ export default {
             this.$message({
               type: 'info',
               message: '已取消删除'
-            });          
+            });
           });
 
         }else{
           this.$message({
             type: 'info',
             message: '请先勾选'
-          }); 
+          });
         }
-        
-      }         
+
+      }
     },
     mounted(){
-      
+
       this.$store.dispatch('mainLoadingAction',true);
       this.$store.dispatch('defaultIndexAction','/index/rankinglist');
       var that=this
       setTimeout(function(){
         that.$store.dispatch('mainLoadingAction',false);
-      },300) 
+      },300)
     }
   }
 </script>
