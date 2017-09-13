@@ -111,17 +111,16 @@
           </el-form-item>
           <el-form-item  v-for="(item,index) in pgbAddAllData.phbAddForm.range" :key="index">
             <span slot="label">添加楼盘NO{{index+1}}</span>
-            <el-select v-model="pgbAddAllData.phbAddForm.range[index]" placeholder="请选择">
+            <el-select :clearable="true" v-model="pgbAddAllData.phbAddForm.range[index]" placeholder="请选择">
               <el-option
-                label="楼盘1"
-                value="1">
-              </el-option>
-              <el-option
-                label="楼盘2"
-                value="2">
+                v-for="(item,index) in pgbAddAllData.houselist"
+                :key="index"
+                :label="item.name"
+                :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
+          <el-button style="margin-left:100px" @click="addmore" type="text">继续添加楼盘</el-button>
         </el-form>
       </div>  
     </BigDialog>
@@ -155,7 +154,8 @@ export default {
           list:[]
         },
         pgbAddAllData:{
-          phbdialogFormVisible:true,
+          phbdialogFormVisible:false,
+          houselist:[],
           phbAddForm:{
             name:'',
             sheng:'',
@@ -173,6 +173,24 @@ export default {
     computed:{
                                         
     },
+    watch:{
+      'pgbAddAllData.phbAddForm.sheng':{
+        handler:function(val){
+          this.gethouselistdata()
+          for(let i in this.pgbAddAllData.phbAddForm.range){
+            this.pgbAddAllData.phbAddForm.range[i]=''
+          }
+        }
+      },
+      'pgbAddAllData.phbAddForm.shi':{
+        handler:function(val){
+          this.gethouselistdata()
+          for(let i in this.pgbAddAllData.phbAddForm.range){
+            this.pgbAddAllData.phbAddForm.range[i]=''
+          }
+        }
+      }
+    },
     created(){
       this.getdata()
     },
@@ -186,6 +204,17 @@ export default {
             _this.tableData=res.data.data;
           }
           _this.is_loading_tab=false;
+        }).catch(function(err){
+          console.log(err)
+        })
+      },
+      gethouselistdata(){
+        let _this=this;
+        this.$http('/houselist').then(function(res){
+          console.log(res)
+          if(res.data.code==1000){
+            _this.pgbAddAllData.houselist=res.data.data;
+          }
         }).catch(function(err){
           console.log(err)
         })
@@ -206,7 +235,18 @@ export default {
         },300)        
       },
       addNew(){
-        this.$router.push({path:'/index/estateadd'})
+        this.pgbAddAllData.houselist=[];
+        this.pgbAddAllData.phbdialogFormVisible=true;
+        for(let i in this.pgbAddAllData.phbAddForm){
+          if(i=='range'){
+            this.pgbAddAllData.phbAddForm[i]=['','','','','','','','','','']
+          }else{
+            this.pgbAddAllData.phbAddForm[i]=''
+          }
+        }
+      },
+      addmore(){
+        this.pgbAddAllData.phbAddForm.range.push(...['','','','',''])
       },
       handleSelectionChange(val){
         this.multipleSelection = val;
@@ -267,10 +307,32 @@ export default {
         
       },
       phbdialogCancel(){
-
+        this.pgbAddAllData.phbdialogFormVisible=false;
       },        
       phbdialogConfirm(){
-
+        if(this.pgbAddAllData.phbAddForm.name==''){
+          this.$message({
+            type: 'warning',
+            message: '请填写标题!'
+          });
+          return;
+        }
+        if(this.pgbAddAllData.phbAddForm.sheng==''){
+          this.$message({
+            type: 'warning',
+            message: '请选择区域!'
+          });
+          return;
+        }
+        if(this.pgbAddAllData.phbAddForm.range[0]==''){
+          this.$message({
+            type: 'warning',
+            message: '请选择排序!'
+          });
+          return;
+        }
+        this.pgbAddAllData.phbdialogFormVisible=false;
+        this.gethouselistdata()
       }
     },
     mounted(){
