@@ -804,6 +804,7 @@ export default {
               this.center=this.coordinatearr[i].coordinate
             }
           }
+          console.log(this.center)
           this.init_map()
         }
       }

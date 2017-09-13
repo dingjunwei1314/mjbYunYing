@@ -80,7 +80,7 @@ let coordinatearr=[
     coordinate:[119.36,33.01]
   },
   {
-    pro:'宁夏省',
+    pro:'宁夏',
     coordinate:[106.15,37.32]
   },
   {
@@ -102,6 +102,14 @@ let coordinatearr=[
   {
     pro:'内蒙古',
     coordinate:[114.41,43.46]
+  },
+  {
+    pro:'新疆',
+    coordinate:[87.68,	43.77	]
+  },
+  {
+    pro:'西藏',
+    coordinate:[91.11,	29.97		]
   }
 ]
 export default coordinatearr;
