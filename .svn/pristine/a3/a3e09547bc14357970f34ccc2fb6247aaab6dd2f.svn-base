@@ -1,0 +1,46 @@
+<template>
+  <div class="managers">
+    <Subnav :secondLevel="secondLevel" :threeLevel="threeLevel" @refresh="refresh"></Subnav>  
+    项目监控
+  </div>
+</template>
+
+<script>
+import Subnav from '../Subnav/Subnav'
+export default {
+    name:'managers',
+    components:{
+      Subnav
+    },
+    data() {
+      return {
+        secondLevel:'项目管理',
+        threeLevel:'项目监控'
+      }
+    },
+    methods: {
+      refresh(){
+        this.$store.dispatch('mainLoadingAction',true);
+        var that=this
+        setTimeout(function(){
+          that.$store.dispatch('mainLoadingAction',false);
+        },300)
+      }
+    },
+    mounted(){
+      this.$store.dispatch('mainLoadingAction',true);
+      this.$store.dispatch('defaultIndexAction','/index/projectsmonitor');
+      var that=this
+      setTimeout(function(){
+        that.$store.dispatch('mainLoadingAction',false);
+      },300)
+    }
+  }
+</script>
+
+<style scoped>
+
+.header{background: #eef1f6;height: 40px;padding: 0px 20px;font-size: 13px;border-bottom: 1px solid #ccc;}
+.el-breadcrumb{float: left;margin-top: 14px}
+.el-button{padding: 5px 8px}
+</style>
