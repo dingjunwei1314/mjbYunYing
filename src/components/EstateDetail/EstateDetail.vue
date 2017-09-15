@@ -319,7 +319,6 @@
         <el-tab-pane label="楼盘相册" name="third">
           <el-tabs v-model="activeName2">
             <el-tab-pane label="户型图" name="first">
-              
               <el-table
                 v-loading="hxAllData.is_loading_tab"
                 :data="hxAllData.hxtableData.list"
@@ -373,7 +372,6 @@
                   </template>
                 </el-table-column>
               </el-table>
-             
             </el-tab-pane>
             <el-tab-pane label="实景图" name="second">
              
@@ -530,8 +528,8 @@
         </el-tab-pane>
         <el-tab-pane label="楼盘报告" name="fourth" style="padding:20px">
           <el-table
-            v-loading="is_loading_baogao_tab"
-            :data="repeat_tableData"
+            v-loading="is_loading_repeat_tab"
+            :data="repeat_data.list"
             border
             tooltip-effect="dark"
             style="width: 100%;font-size:12px!important;text-align:center;margin-top:20px">
@@ -580,7 +578,7 @@
           <div v-show="!is_show_score_swi">
             <el-table
               v-loading="is_loading_score_tab"
-              :data="score_tableData"
+              :data="score_data.list"
               border
               tooltip-effect="dark"
               style="font-size:12px!important;margin-top:20px">
@@ -665,26 +663,34 @@
         </el-tab-pane>
         <el-tab-pane label="楼盘设置" name="six">
           <el-form  label-width="150px" class="demo-dynamic" style="width:60%;margin-left:15%;margin-top:20px">
-              <el-form-item label="是否推荐至首页"  prop="gczl">
-                是
+              <el-form-item label="是否推荐至首页："  prop="gczl">
+                <span v-if="house_setting_form.tjsy==''">--</span>
+                <span v-if="house_setting_form.tjsy==1">是</span>
+                <span v-if="house_setting_form.tjsy==2">否</span>
               </el-form-item>
-              <el-form-item label="首页排序">
-               1
+              <el-form-item label="首页排序：">
+                <span v-if="house_setting_form.stpx==''">--</span>
+                <span v-else>{{house_setting_form.stpx}}</span>
               </el-form-item>
-              <el-form-item label="楼盘置顶">
-                是
+              <el-form-item label="楼盘置顶：">
+                <span v-if="house_setting_form.lpzd==''">--</span>
+                <span v-if="house_setting_form.lpzd==1">是</span>
+                <span v-if="house_setting_form.lpzd==2">否</span>
               </el-form-item>
-              <el-form-item label="加入严选">
-                是
-                
+              <el-form-item label="加入严选：">
+                <span v-if="house_setting_form.jryx==''">--</span>
+                <span v-if="house_setting_form.jryx==1">是</span>
+                <span v-if="house_setting_form.jryx==2">否</span>
               </el-form-item>
-              <el-form-item label="合作买房" prop="zbpt">
-                是
-                
+              <el-form-item label="合作买房：">
+                <span v-if="house_setting_form.hzmf==''">--</span>
+                <span v-if="house_setting_form.hzmf==1">是</span>
+                <span v-if="house_setting_form.hzmf==2">否</span>
               </el-form-item>
-              <el-form-item label="租金返还">
-                是
-               
+              <el-form-item label="租金返还：">
+                <span v-if="house_setting_form.zjfh==''">--</span>
+                <span v-if="house_setting_form.zjfh==1">是</span>
+                <span v-if="house_setting_form.zjfh==2">否</span>
               </el-form-item>
             </el-form>
            
@@ -712,15 +718,7 @@ export default {
         coordinatearr,
         pdfsrc:'/static/pdf.pdf',
         isshowpdf:false,
-        is_loading_baogao_tab:false,
         is_show_score_swi:false,
-        repeat_tableData:[
-          {id:1,name:'xx报告',type:'工程质量',state:'下线',time:'2017-9-10',reporter:'丁军伟'}
-        ],
-        score_tableData:[
-          {id:1,time:'2017-9-11',gczl:'9',ghsj:'9',ghls:'8',zbpt:'7',reporter:'djw'},
-          {id:2,time:'2017-9-12',gczl:'1',ghsj:'1',ghls:'1',zbpt:'1',reporter:'hhh'}
-        ],
         hxAllData:{
           dialogVisible:false,
           is_show_hx_main:true,
@@ -874,6 +872,13 @@ export default {
           dqqd:'',
           id_arr:[{id:''},{id:''}]
         },
+        repeat_data:{
+          list:[]
+        },
+        is_loading_repeat_tab:false,
+        score_data:{
+          list:[]
+        },
         markers:[],
         center:[116.480983, 40.0958],      
       };
@@ -890,6 +895,9 @@ export default {
     created(){
       this.getbasicdata()
       this.getinfodata()
+      this.getrepeatdata()
+      this.getscoredata()
+      this.getsettingdata()
       this.gethxdata()
       this.getsjdata()
       this.getybjdata()
@@ -922,15 +930,38 @@ export default {
           console.log(err)
         })
       },
-      getdata(){
+      //获取楼盘报告请求
+      getrepeatdata(){
         let _this=this;
-        _this.is_loading_tab=true;
-        this.$http('/activitymanagement').then(function(res){
+        this.$http('/repeat').then(function(res){
           console.log(res)
           if(res.data.code==1000){
-            _this.tableData=res.data.data;
+            _this.repeat_data=res.data.data;
           }
-          _this.is_loading_tab=false;
+        }).catch(function(err){
+          console.log(err)
+        })
+      },
+      //获取楼盘评分请求
+      getscoredata(){
+        let _this=this;
+        this.$http('/score').then(function(res){
+          console.log(res)
+          if(res.data.code==1000){
+            _this.score_data=res.data.data;
+          }
+        }).catch(function(err){
+          console.log(err)
+        })
+      },
+      //获取楼盘设置请求
+      getsettingdata(){
+        let _this=this;
+        this.$http('/setting').then(function(res){
+          console.log(res)
+          if(res.data.code==1000){
+            _this.house_setting_form=res.data.data;
+          }
         }).catch(function(err){
           console.log(err)
         })
@@ -1034,7 +1065,7 @@ export default {
         }else{
           _this.$confirm('确认上线/下线吗?', '提示', {
             confirmButtonText: '确定',
-            cancelButtonText: '取消',
+            cancelButtonText: '取消',  
             type: 'warning'
           }).then(() => {
             _this.$message({

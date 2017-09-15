@@ -106,6 +106,18 @@
     components:{
       Subnav,
     },
+    data(){
+      return{
+        secondLevel:'角色管理',
+        threeLevel:'新建角色',
+        checkAll: true,
+        checkedCities: ['上海', '北京'],
+        // cities: cityOptions,
+        isIndeterminate: true,
+        textarea:'',
+        checked:true
+      }
+    },
     methods:{
       refresh(){
         this.$store.dispatch('mainLoadingAction',true);
@@ -138,31 +150,19 @@
           });
         });
       },
-      handleCheckAllChange(event) {
-        this.checkedCities = event.target.checked ? cityOptions : [];
-        this.isIndeterminate = false;
-      },
+      // handleCheckAllChange(event) {
+      //   this.checkedCities = event.target.checked ? cityOptions : [];
+      //   this.isIndeterminate = false;
+      // },
       handleCheckedCitiesChange(value) {
         let checkedCount = value.length;
         this.checkAll = checkedCount === this.cities.length;
         this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length;
       }
     },
-    data(){
-      return{
-        secondLevel:'角色管理',
-        threeLevel:'新建角色',
-        checkAll: true,
-        checkedCities: ['上海', '北京'],
-        cities: cityOptions,
-        isIndeterminate: true,
-        textarea:'',
-        checked:true
-      }
-    },
     mounted(){
       this.$store.dispatch('mainLoadingAction',true);
-      this.$store.dispatch('defaultIndexAction','/index/posts');
+      this.$store.dispatch('defaultIndexAction','/index/accountAdmin');
       var that=this;
       setTimeout(function(){
         that.$store.dispatch('mainLoadingAction',false);
@@ -171,7 +171,7 @@
   }
 </script>
 
-<style>
+<style scoped>
   .createAdminTop{
     border: 1px solid darkgray;margin:20px;
   }

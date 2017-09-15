@@ -62,7 +62,7 @@
     data(){
       return{
         secondLevel:'账户管理',
-        threeLevel:'管理员管理',
+        threeLevel:'新建管理员',
         radio:'1',
         filterForm: {
           name:'',
@@ -134,7 +134,7 @@
     },
     mounted(){
       this.$store.dispatch('mainLoadingAction',true);
-      this.$store.dispatch('defaultIndexAction','/index/posts');
+      this.$store.dispatch('defaultIndexAction','/index/accountAdmin');
       var that=this;
       setTimeout(function(){
         that.$store.dispatch('mainLoadingAction',false);
@@ -142,7 +142,7 @@
     }
   }
 </script>
-<style>
+<style scoped>
   .createNewAdmin{
     border: 1px solid darkgray;margin:20px;
   }

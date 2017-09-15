@@ -146,10 +146,10 @@
             @click="handleEdit(scope.$index, scope.row,2)">编辑</el-button>
             <el-button
             size="small"
-            @click="handleEdit(scope.$index, scope.row,2)">添加报告</el-button>
+            @click="handleEdit(scope.$index, scope.row,3)">添加报告</el-button>
             <el-button
             size="small"
-            @click="handleEdit(scope.$index, scope.row,2)">添加评分</el-button>
+            @click="handleEdit(scope.$index, scope.row,4)">添加评分</el-button>
           <el-button
             size="small"
             type="danger"
@@ -288,12 +288,16 @@ export default {
         if(type==1){
           this.$router.push({path:'/index/estatedetail'})
         }else if(type==2){
-          this.$router.push({path:'/index/estateedit'})
+          this.$router.push({path:'/index/estateedit',query:{type:1}})
+        }else if(type==3){
+          this.$router.push({path:'/index/estateedit',query:{type:2}})
+        }else if(type==4){
+          this.$router.push({path:'/index/estateedit',query:{type:3}})
         }
       },
       handleDelete(index, row) {
         let _this=this;
-        this.$confirm('确认下线吗?', '提示', {
+        this.$confirm('确认上线/下线吗?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -301,12 +305,12 @@ export default {
           _this.onSearchSubmit()
           _this.$message({
             type: 'success',
-            message: '删除成功!'
+            message: '操作成功!'
           });
         }).catch(() => {
           _this.$message({
             type: 'info',
-            message: '已取消删除'
+            message: '已取消'
           });          
         });
       },

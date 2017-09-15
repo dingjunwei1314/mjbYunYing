@@ -119,7 +119,7 @@
     },
     mounted(){
       this.$store.dispatch('mainLoadingAction',true);
-      this.$store.dispatch('defaultIndexAction','/index/posts');
+      this.$store.dispatch('defaultIndexAction','/index/roleAdmin');
       var that=this;
       setTimeout(function(){
         that.$store.dispatch('mainLoadingAction',false);
@@ -128,7 +128,7 @@
   }
 </script>
 
-<style>
+<style scoped>
   .roleAdminTop{
     border: 1px solid darkgray;margin:20px;
   }

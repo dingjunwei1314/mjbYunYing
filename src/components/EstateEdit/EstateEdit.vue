@@ -14,14 +14,14 @@
                 <AreaAll :area="add_new_estate_form"></AreaAll> 
               </el-form-item>
               <el-form-item label="标题" style="width:400px" :required="true" prop="title">
-                <el-input v-model="add_new_estate_form.title" auto-complete="off"></el-input>
+                <el-input v-model="add_new_estate_form.title" placeholder="标题" auto-complete="off"></el-input>
               </el-form-item>
               <el-form-item label="楼盘别名" style="width:400px"  prop="alias">
-                <el-input v-model="add_new_estate_form.alias" auto-complete="off"></el-input>
+                <el-input v-model="add_new_estate_form.alias"  placeholder="楼盘别名" auto-complete="off"></el-input>
               </el-form-item>
 
               <el-form-item label="描述"  prop="desc">
-                <el-input v-model="add_new_estate_form.desc" style="width:70%" type="textarea" auto-complete="off"></el-input>
+                <el-input v-model="add_new_estate_form.desc" placeholder="描述"  style="width:70%" type="textarea" auto-complete="off"></el-input>
               </el-form-item>
 
               <el-form-item label="物业类型" :required="true" prop="type">
@@ -46,7 +46,7 @@
                 <el-date-picker
                   v-model="add_new_estate_form.openingDate"
                   type="date"
-                  placeholder="选择日期">
+                  placeholder="开盘日期">
                 </el-date-picker>
                 <span style="color:#999;font-size:12px">主要是以开盘说明为准，这里用于开盘日历及列表排序</span>
               </el-form-item>
@@ -55,12 +55,12 @@
                 <el-date-picker
                   v-model="add_new_estate_form.handoverDate"
                   type="date"
-                  placeholder="选择日期">
+                  placeholder="交房日期">
                 </el-date-picker>
               </el-form-item>
 
               <el-form-item label="均价"  prop="averagePrice">
-                <el-input v-model="add_new_estate_form.averagePrice" style="width:100px" auto-complete="off"></el-input>
+                <el-input v-model="add_new_estate_form.averagePrice" placeholder="均价" style="width:100px" auto-complete="off"></el-input>
                 <span style="color:#999;font-size:12px">单位是：元/M2,不填写为待定;</span>
               </el-form-item>
              
@@ -108,7 +108,7 @@
               </el-form-item>
 
               <el-form-item label="产权年限" style="width:200px"  prop="year">
-                <el-input v-model="add_new_estate_form.year" auto-complete="off"></el-input>
+                <el-input v-model="add_new_estate_form.year" placeholder="产权年限" auto-complete="off"></el-input>
               </el-form-item>
 
               <el-form-item label="楼盘特色标签"   prop="feature">
@@ -132,7 +132,7 @@
             
             <el-form :model="add_new_estate_form"   label-width="100px" class="demo-dynamic" style="width:60%;margin-left:15%;margin-top:40px">
               <el-form-item label="地铁" style="width:400px"  prop="metro">
-                <el-input v-model="add_new_estate_form.metro" auto-complete="off"></el-input>
+                <el-input v-model="add_new_estate_form.metro" placeholder="地铁" auto-complete="off"></el-input>
               </el-form-item>
               <el-form-item label="环线"  prop="loopLine">
                 <el-radio-group v-model="add_new_estate_form.loopLine">
@@ -146,19 +146,31 @@
                 </el-radio-group>
               </el-form-item>
               <el-form-item label="楼盘地址" style="width:400px"  prop="buildingAddress">
-                <el-input v-model="add_new_estate_form.buildingAddress" auto-complete="off"></el-input>
+                <el-input v-model="add_new_estate_form.buildingAddress"  placeholder="楼盘地址" auto-complete="off"></el-input>
               </el-form-item>
-              <el-form-item label="接待时间" style="width:400px">
-                
-                  <el-time-picker
-                    is-range
-                    v-model="add_new_estate_form.recepationtime"
-                    placeholder="选择时间范围">
-                  </el-time-picker>
-              
+              <el-form-item label="接待时间">
+                <el-time-select
+                  placeholder="开始时间"
+                  v-model="add_new_estate_form.starttime"
+                  :picker-options="{
+                    start: '08:30',
+                    step: '00:15',
+                    end: '18:30'
+                  }">
+                </el-time-select>
+                <el-time-select
+                  placeholder="结束时间"
+                  v-model="add_new_estate_form.endtime"
+                  :picker-options="{
+                    start: '08:30',
+                    step: '00:15',
+                    end: '18:30',
+                    minTime: add_new_estate_form.starttime
+                  }">
+                </el-time-select>
               </el-form-item>
               <el-form-item label="交通路线" style="width:400px"  prop="trafficRoute">
-                <el-input v-model="add_new_estate_form.trafficRoute" type="textarea" auto-complete="off"></el-input>
+                <el-input v-model="add_new_estate_form.trafficRoute" placeholder="交通路线" type="textarea" auto-complete="off"></el-input>
               </el-form-item>
               <el-form-item label="地图" style="width:200px">
                 <div id="container" tabindex="0" style="width:800px;height:400px"></div>
@@ -173,34 +185,34 @@
             
             <el-form :model="add_new_estate_form"  label-width="100px" class="demo-dynamic" style="width:60%;margin-left:15%;margin-top:40px">
               <el-form-item label="售楼电话" style="width:400px"  prop="sailphone">
-                <el-input v-model="add_new_estate_form.sailphone" auto-complete="off"></el-input>
+                <el-input v-model="add_new_estate_form.sailphone" placeholder="售楼电话" auto-complete="off"></el-input>
               </el-form-item>
               <el-form-item label="售楼地址" style="width:400px"  prop="sailaddress">
-                <el-input v-model="add_new_estate_form.sailaddress" auto-complete="off"></el-input>
+                <el-input v-model="add_new_estate_form.sailaddress" placeholder="售楼地址" auto-complete="off"></el-input>
               </el-form-item>
               <el-form-item label="物业费" style="width:400px"  prop="propertyfee">
-                <el-input v-model="add_new_estate_form.propertyfee" auto-complete="off"></el-input>
+                <el-input v-model="add_new_estate_form.propertyfee" placeholder="物业费" auto-complete="off"></el-input>
               </el-form-item>
               <el-form-item label="物业公司" style="width:400px"  prop="propertycompany">
-                <el-input v-model="add_new_estate_form.propertycompany" auto-complete="off"></el-input>
+                <el-input v-model="add_new_estate_form.propertycompany" placeholder="物业公司" auto-complete="off"></el-input>
               </el-form-item>
               <el-form-item label="楼盘开发商" style="width:600px"  prop="buildBuild">
-                <el-input v-model="add_new_estate_form.buildBuild" auto-complete="off"></el-input>
+                <el-input v-model="add_new_estate_form.buildBuild" placeholder="楼盘开发商" auto-complete="off"></el-input>
               </el-form-item>
               <el-form-item label="预售许可证书" style="width:600px"  prop="ys">
-                <el-input v-model="add_new_estate_form.ys" auto-complete="off"></el-input>
+                <el-input v-model="add_new_estate_form.ys"  placeholder="预售许可证书" auto-complete="off"></el-input>
               </el-form-item>
               <el-form-item label="发证时间" style="width:600px"  prop="fz">
               
                 <el-date-picker
                   v-model="add_new_estate_form.fz"
                   type="date"
-                  placeholder="选择日期"
+                  placeholder="发证时间"
                  >
                 </el-date-picker>
               </el-form-item>
               <el-form-item label="绑定楼栋" style="width:600px"  prop="bd">
-                <el-input v-model="add_new_estate_form.bd" type="textarea" auto-complete="off"></el-input>
+                <el-input v-model="add_new_estate_form.bd"  placeholder="绑定楼栋" type="textarea" auto-complete="off"></el-input>
               </el-form-item>
             </el-form>
           </div>
@@ -350,7 +362,7 @@
               <div v-show="hxAllData.is_show_hx_main">
                 <el-button type="primary" style="margin-bottom:10px" @click="show_add_hx_from(false)" size="small">添加户型图</el-button>
                 <el-table
-                  v-loading="hxAllData.is_loading_tab"
+                  v-loading="hxAllData.is_loading_hx_tab"
                   :data="hxAllData.hxtableData.list"
                   border
                   tooltip-effect="dark"
@@ -398,17 +410,17 @@
                     <template scope="scope">
                     <el-button
                       size="small"
-                      @click="handleEdit(scope.$index, scope.row)">查看</el-button>
+                      @click="handleHx(scope.$index, scope.row,1)">查看</el-button>
                     <el-button
                       size="small"
-                      @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                      @click="handleHx(scope.$index, scope.row,2)">编辑</el-button>
                       <el-button
                       size="small"
-                      @click="handleEdit(scope.$index, scope.row)">删除</el-button>
+                      @click="handleHx(scope.$index, scope.row,3)">删除</el-button>
                     <el-button
                       size="small"
                       type="danger"
-                      @click="handleDelete(scope.$index, scope.row)">下线</el-button>
+                      @click="handleHx(scope.$index, scope.row,4)">下线</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -416,10 +428,10 @@
               <div v-if="!hxAllData.is_show_hx_main">
                 <el-form :model="hxAllData.addNewHouseType" :rules="hxAllData.addNewHouseTypeRule" ref="addNewHouseTypeRef" label-width="100px" class="demo-dynamic" style="width:60%;margin-left:15%;margin-top:40px"> 
                   <el-form-item label="标题" style="width:400px" :required="true" prop="title">
-                    <el-input v-model="hxAllData.addNewHouseType.title" auto-complete="off"></el-input>
+                    <el-input :disabled="hxAllData.isdisabled" v-model="hxAllData.addNewHouseType.title" auto-complete="off"></el-input>
                   </el-form-item>
                   <el-form-item label="户型" style="width:800px" :required="true"  prop="housetype1">
-                    <el-select :clearable="true" style="width:100px" v-model="hxAllData.addNewHouseType.housetype1" placeholder="室">
+                    <el-select :disabled="hxAllData.isdisabled" :clearable="true" style="width:100px" v-model="hxAllData.addNewHouseType.housetype1" placeholder="室">
                       <el-option label="一室" value="1"></el-option>
                       <el-option label="二室" value="2"></el-option>
                       <el-option label="三室" value="3"></el-option>
@@ -428,18 +440,18 @@
                       <el-option label="六室" value="6"></el-option>
                       <el-option label="七室及以上" value="7"></el-option>
                     </el-select>
-                    <el-select :clearable="true" style="width:100px" v-model="hxAllData.addNewHouseType.housetype2" placeholder="厅">
+                    <el-select :disabled="hxAllData.isdisabled" :clearable="true" style="width:100px" v-model="hxAllData.addNewHouseType.housetype2" placeholder="厅">
                       <el-option label="一厅" value="1"></el-option>
                       <el-option label="二厅" value="2"></el-option>
                       <el-option label="三厅" value="3"></el-option>
                       <el-option label="四厅及以上" value="4"></el-option>
                     </el-select>
-                    <el-select :clearable="true" style="width:100px" v-model="hxAllData.addNewHouseType.housetype3" placeholder="厨">
+                    <el-select :disabled="hxAllData.isdisabled" :clearable="true" style="width:100px" v-model="hxAllData.addNewHouseType.housetype3" placeholder="厨">
                       <el-option label="一厨" value="1"></el-option>
                       <el-option label="二厨" value="2"></el-option>
                       <el-option label="三厨及以上" value="3"></el-option>
                     </el-select>
-                    <el-select :clearable="true" style="width:100px" v-model="hxAllData.addNewHouseType.housetype4" placeholder="卫">
+                    <el-select :disabled="hxAllData.isdisabled" :clearable="true" style="width:100px" v-model="hxAllData.addNewHouseType.housetype4" placeholder="卫">
                       <el-option label="一卫" value="1"></el-option>
                       <el-option label="二卫" value="2"></el-option>
                       <el-option label="三卫" value="3"></el-option>
@@ -448,32 +460,32 @@
                   </el-form-item>
 
                   <el-form-item label="面积区间" :required="true"  prop="areaMin">
-                    <el-input v-model="hxAllData.addNewHouseType.areaMin" style="width:100px"  auto-complete="off"></el-input>
+                    <el-input :disabled="hxAllData.isdisabled" v-model="hxAllData.addNewHouseType.areaMin" style="width:100px"  auto-complete="off"></el-input>
                     <span style="color:#999;font-size:12px">-</span>
-                    <el-input v-model="hxAllData.addNewHouseType.areaMax" style="width:100px"  auto-complete="off"></el-input>
+                    <el-input :disabled="hxAllData.isdisabled" v-model="hxAllData.addNewHouseType.areaMax" style="width:100px"  auto-complete="off"></el-input>
                     <span style="color:#999;font-size:12px">如果该户型只有一种面积，面积填入第一个输入框</span>
                   </el-form-item>
 
                   <el-form-item label="朝向" :required="true"   prop="orientation">
-                    <el-select :clearable="true"	 v-model="hxAllData.addNewHouseType.orientation" placeholder="朝向">
+                    <el-select :disabled="hxAllData.isdisabled" :clearable="true"	 v-model="hxAllData.addNewHouseType.orientation" placeholder="朝向">
                       <el-option label="南北" value="1"></el-option>
                       <el-option label="东西" value="2"></el-option>
                     </el-select>
                   </el-form-item>
 
                   <el-form-item label="描述"  prop="desc">
-                    <el-input style="width:300px" v-model="hxAllData.addNewHouseType.desc" type="textarea"  auto-complete="off"></el-input>
+                    <el-input :disabled="hxAllData.isdisabled" style="width:300px" v-model="hxAllData.addNewHouseType.desc" type="textarea"  auto-complete="off"></el-input>
                   </el-form-item>
 
                   <el-form-item label="总价区间" :required="true"  prop="priceMin">
-                    <el-input v-model="hxAllData.addNewHouseType.priceMin" style="width:100px"  auto-complete="off"></el-input>
+                    <el-input :disabled="hxAllData.isdisabled" v-model="hxAllData.addNewHouseType.priceMin" style="width:100px"  auto-complete="off"></el-input>
                     <span style="color:#999;font-size:12px">-</span>
-                    <el-input v-model="hxAllData.addNewHouseType.priceMax" style="width:100px"  auto-complete="off"></el-input>
+                    <el-input :disabled="hxAllData.isdisabled" v-model="hxAllData.addNewHouseType.priceMax" style="width:100px"  auto-complete="off"></el-input>
                     <span style="color:#999;font-size:12px">如果该户型只有一种价格，价格填入第一个输入框</span>
                   </el-form-item>
 
                   <el-form-item label="销售状态" :required="true" prop="sale_state">
-                    <el-radio-group v-model="hxAllData.addNewHouseType.sale_state">
+                    <el-radio-group :disabled="hxAllData.isdisabled" v-model="hxAllData.addNewHouseType.sale_state">
                       <el-radio :label="1">在售</el-radio>
                       <el-radio :label="2">待售</el-radio>
                       <el-radio :label="3">售罄</el-radio>
@@ -481,29 +493,29 @@
                   </el-form-item>
 
                   <el-form-item label="总套数"  prop="totalNumber">
-                    <el-input style="width:300px" v-model="hxAllData.addNewHouseType.totalNumber"  auto-complete="off"></el-input>
+                    <el-input :disabled="hxAllData.isdisabled" style="width:300px" v-model="hxAllData.addNewHouseType.totalNumber"  auto-complete="off"></el-input>
                   </el-form-item>
 
                   <el-form-item  label="可售套数"  prop="saleNumber">
-                    <el-input style="width:300px" v-model="hxAllData.addNewHouseType.saleNumber"  auto-complete="off"></el-input>
+                    <el-input :disabled="hxAllData.isdisabled" style="width:300px" v-model="hxAllData.addNewHouseType.saleNumber"  auto-complete="off"></el-input>
                   </el-form-item>
 
                   <el-form-item label="待售套数"  prop="notsaleNumber">
-                    <el-input style="width:300px" v-model="hxAllData.addNewHouseType.notsaleNumber"  auto-complete="off"></el-input>
+                    <el-input :disabled="hxAllData.isdisabled" style="width:300px" v-model="hxAllData.addNewHouseType.notsaleNumber"  auto-complete="off"></el-input>
                   </el-form-item>
 
                   <el-form-item label="套数占比"  prop="salepercent">
-                    <el-input style="width:300px" v-model="hxAllData.addNewHouseType.salepercent"  auto-complete="off"></el-input>
+                    <el-input :disabled="hxAllData.isdisabled" style="width:300px" v-model="hxAllData.addNewHouseType.salepercent"  auto-complete="off"></el-input>
                   </el-form-item>
                   
                   <el-form-item label="标签" :required="true"  prop="tags">
-                    <el-checkbox-group v-model="hxAllData.addNewHouseType.tags">
-                      <el-checkbox label="1">南北通透</el-checkbox>
-                      <el-checkbox label="2">干湿分离</el-checkbox>
-                      <el-checkbox label="3">动静分离</el-checkbox>
-                      <el-checkbox label="4">全明户型</el-checkbox>
-                      <el-checkbox label="5">私密性好</el-checkbox>
-                      <el-checkbox label="6">格局方正</el-checkbox>
+                    <el-checkbox-group :disabled="hxAllData.isdisabled" v-model="hxAllData.addNewHouseType.tags">
+                      <el-checkbox :label="1">南北通透</el-checkbox>
+                      <el-checkbox :label="2">干湿分离</el-checkbox>
+                      <el-checkbox :label="3">动静分离</el-checkbox>
+                      <el-checkbox :label="4">全明户型</el-checkbox>
+                      <el-checkbox :label="5">私密性好</el-checkbox>
+                      <el-checkbox :label="6">格局方正</el-checkbox>
                     </el-checkbox-group>
                   </el-form-item>
 
@@ -537,6 +549,7 @@
                 <el-table
                   :data="sjAllData.sjtableData.list"
                   border
+                  v-loading="sjAllData.is_loading_sj_tab"
                   tooltip-effect="dark"
                   style="width: 100%;font-size:12px!important;">
                   <el-table-column
@@ -559,13 +572,13 @@
                     <template scope="scope">
                     <el-button
                       size="small"
-                      @click="handleEdit(scope.$index, scope.row)">查看</el-button>
+                      @click="handleSj(scope.$index, scope.row,1)">查看</el-button>
                     <el-button
                       size="small"
-                      @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                      @click="handleSj(scope.$index, scope.row,2)">编辑</el-button>
                       <el-button
                       size="small"
-                      @click="handleEdit(scope.$index, scope.row)">删除</el-button>
+                      @click="handleSj(scope.$index, scope.row,3)">删除</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -574,6 +587,7 @@
                 <el-form :model="sjAllData.addNewsjType" label-width="100px" class="demo-dynamic" style="width:60%;margin-left:15%;margin-top:40px"> 
                   <el-form-item label="拍摄时间" style="width:400px" :required="true" prop="title">
                     <el-date-picker
+                      :disabled="sjAllData.isdisabled"
                       v-model="sjAllData.addNewsjType.time"
                       type="date"
                       placeholder="拍摄时间">
@@ -632,6 +646,7 @@
                 <el-table
                   :data="ybjAllData.ybjtableData.list"
                   border
+                   v-loading="ybjAllData.is_loading_ybj_tab"
                   tooltip-effect="dark"
                   style="width: 100%;font-size:12px!important;">
                   <el-table-column
@@ -659,13 +674,13 @@
                     <template scope="scope">
                     <el-button
                       size="small"
-                      @click="handleEdit(scope.$index, scope.row)">查看</el-button>
+                      @click="handleYbj(scope.$index, scope.row,1)">查看</el-button>
                     <el-button
                       size="small"
-                      @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                      @click="handleYbj(scope.$index, scope.row,2)">编辑</el-button>
                       <el-button
                       size="small"
-                      @click="handleEdit(scope.$index, scope.row)">删除</el-button>
+                      @click="handleYbj(scope.$index, scope.row,3)">删除</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -673,11 +688,12 @@
               <div v-if="!ybjAllData.is_show_ybj_main">
                 <el-form :model="ybjAllData.addNewybjType" label-width="100px" class="demo-dynamic" style="width:60%;margin-left:15%;margin-top:40px"> 
                   <el-form-item label="标题" :required="true" prop="name">
-                     <el-input v-model="ybjAllData.addNewybjType.name" style="width:195px"  auto-complete="off"></el-input>
+                     <el-input :disabled="ybjAllData.isdisabled" v-model="ybjAllData.addNewybjType.name" style="width:195px"  auto-complete="off"></el-input>
                   </el-form-item>
 
                   <el-form-item label="拍摄时间" style="width:400px" :required="true" prop="time">
                     <el-date-picker
+                      :disabled="ybjAllData.isdisabled"
                       v-model="ybjAllData.addNewybjType.time"
                       type="date"
                       placeholder="拍摄时间">
@@ -780,8 +796,8 @@
           <div v-show="!is_show_updata_repeat_swi">
             <el-button type="primary" @click="is_show_updata_repeat(true)">添加报告</el-button>
             <el-table
-              v-loading="is_loading_baogao_tab"
-              :data="repeat_tableData"
+              v-loading="is_loading_repeat_tab"
+              :data="repeat_data.list"
               border
               tooltip-effect="dark"
               style="width: 100%;font-size:12px!important;text-align:center;margin-top:20px">
@@ -816,17 +832,17 @@
                 <template scope="scope">
                   <el-button
                     size="small"
-                    @click="handleEdit(scope.$index, scope.row,1)">
+                    @click="handleRepeat(scope.$index, scope.row,1)">
                     上线
                   </el-button>
                   <el-button
                   size="small"
-                  @click="handleEdit(scope.$index, scope.row,2)">
+                  @click="handleRepeat(scope.$index, scope.row,2)">
                     预览
                   </el-button>
                   <el-button
                   size="small"
-                  @click="handleEdit(scope.$index, scope.row,3)">
+                  @click="handleRepeat(scope.$index, scope.row,3)">
                     删除
                   </el-button>
                 </template>
@@ -861,7 +877,7 @@
             <el-button type="primary" @click="is_show_score(true)">更新评分</el-button>
             <el-table
               v-loading="is_loading_score_tab"
-              :data="score_tableData"
+              :data="score_data.list"
               border
               tooltip-effect="dark"
               style="font-size:12px!important;margin-top:20px">
@@ -876,7 +892,7 @@
                 min-width="60">
               </el-table-column>
               <el-table-column
-                prop="ghybj"
+                prop="ghsj"
                 label="规划设计"
                 width="150">
               </el-table-column>
@@ -916,36 +932,36 @@
           <div v-if="is_show_score_swi">
             <el-form  :model="add_new_score_form" :rules="add_new_score_form_rule" ref="add_new_score_form_ref" label-width="100px" class="demo-dynamic" style="width:60%;margin-left:15%;margin-top:20px">
               <el-form-item label="工程质量"  prop="gczl">
-                <el-input style="width:300px" :disabled="is_score_form_disabled" v-model="add_new_score_form.gczl" auto-complete="off"></el-input>
+                <el-input style="width:300px" v-model="add_new_score_form.gczl" auto-complete="off"></el-input>
                 <span style="font-size:12px;color:#999;">例：8或8.2</span>
               </el-form-item>
               <el-form-item label="评分概述">
-                <el-input style="width:500px" :disabled="is_score_form_disabled" type="textarea" v-model="add_new_score_form.gczl_detail" auto-complete="off"></el-input>
+                <el-input style="width:500px" type="textarea" v-model="add_new_score_form.gczl_detail" auto-complete="off"></el-input>
               </el-form-item>
               <el-form-item label="规划设计" prop="ghsj">
-                <el-input style="width:300px" :disabled="is_score_form_disabled" v-model="add_new_score_form.ghsj" auto-complete="off"></el-input>
+                <el-input style="width:300px" v-model="add_new_score_form.ghsj" auto-complete="off"></el-input>
                 <span style="font-size:12px;color:#999;">例：8或8.2</span>
               </el-form-item>
               <el-form-item label="评分概述">
-                <el-input style="width:500px" :disabled="is_score_form_disabled" type="textarea"  v-model="add_new_score_form.ghsj_detail" auto-complete="off"></el-input>
+                <el-input style="width:500px" type="textarea"  v-model="add_new_score_form.ghsj_detail" auto-complete="off"></el-input>
               </el-form-item>
-              <el-form-item label="规划落实" prop="zbpt">
-                <el-input style="width:300px" :disabled="is_score_form_disabled" v-model="add_new_score_form.zbpt" auto-complete="off"></el-input>
+              <el-form-item label="规划落实" prop="ghls">
+                <el-input style="width:300px" v-model="add_new_score_form.ghls" auto-complete="off"></el-input>
                 <span style="font-size:12px;color:#999;">例：8或8.2</span>
               </el-form-item>
               <el-form-item label="评分概述">
-                <el-input style="width:500px" :disabled="is_score_form_disabled" type="textarea"  v-model="add_new_score_form.ghls_detail" auto-complete="off"></el-input>
+                <el-input style="width:500px" type="textarea"  v-model="add_new_score_form.ghls_detail" auto-complete="off"></el-input>
               </el-form-item>
               <el-form-item label="周边配套" prop="zbpt">
-                <el-input style="width:300px" :disabled="is_score_form_disabled" v-model="add_new_score_form.zbpt" auto-complete="off"></el-input>
+                <el-input style="width:300px" v-model="add_new_score_form.zbpt" auto-complete="off"></el-input>
                 <span style="font-size:12px;color:#999;">例：8或8.2</span>
               </el-form-item>
               <el-form-item label="评分概述">
-                <el-input style="width:500px" :disabled="is_score_form_disabled" type="textarea" v-model="add_new_score_form.zbpt_detail" auto-complete="off"></el-input>
+                <el-input style="width:500px" type="textarea" v-model="add_new_score_form.zbpt_detail" auto-complete="off"></el-input>
               </el-form-item>
             </el-form>
             <div style="text-align:center;margin-bottom:50px;width:80%">
-              <el-button type="primary" v-show="!is_score_form_disabled" @click="sure_add_score('add_new_score_form_ref')">保存</el-button>
+              <el-button type="primary"  @click="sure_add_score('add_new_score_form_ref')">保存</el-button>
               <el-button type="primary"  @click="is_show_score(false)">取消</el-button>
             </div>
           </div>
@@ -1014,7 +1030,6 @@ export default {
           callback();
         }
       };
-
       var validateType = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请选择物业类型'));
@@ -1129,20 +1144,108 @@ export default {
       };
       return {
         coordinatearr,
-        pdfsrc:'/static/pdf.pdf',
-        isshowpdf:false,
-        is_loading_baogao_tab:false,
-        is_show_score_swi:false,
-        repeat_tableData:[
-          {id:1,name:'xx报告',type:'工程质量',state:'下线',time:'2017-9-10',reporter:'丁军伟'}
-        ],
-        score_tableData:[
-          {id:1,time:'2017-9-11',gczl:'9',ghsj:'9',ghls:'8',zbpt:'7',reporter:'djw'},
-          {id:2,time:'2017-9-12',gczl:'1',ghsj:'1',ghls:'1',zbpt:'1',reporter:'hhh'}
-        ],
-        
+        //tab默认显示
+        activeName:"first",
+        activeName2:'first', 
+  
+  
+        dialogVisible1:false,
+        dialogImageUrl1:'',
+        fileList1:[{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
+        dialogVisible2:false,
+        dialogImageUrl2:'',
+        fileList2:[{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
+        dialogVisible3:false,
+        dialogImageUrl3:'',
+        fileList3:[{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
+        dialogVisible4:false,
+        dialogImageUrl4:'',
+        fileList4:[{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
+        secondLevel:'楼盘管理',
+        threeLevel:'添加楼盘',
+        //修改楼盘基本信息表单
+        add_new_estate_form:{
+          sheng:'',
+          shi:'',
+          qu:'',
+          title:'',
+          alias:'',
+          desc:'',
+          type:'',
+          state:'',
+          openingDate:'',
+          handoverDate:'',
+          averagePrice:'',
+          decorationDegree:'',
+          floor:[],
+          buildingType:'1',
+          existing:'',
+          year:'',
+          feature:[],
+          metro:'',
+          buildingAddress:'',
+          starttime:'08:00',
+          endtime:'',
+          trafficRoute:'',
+          sailphone:'',
+          sailaddress:'',
+          propertyfee:'',
+          propertycompany:'',
+          buildBuild:'',
+          jw:[],
+          ys:'',
+          fz:'',
+          bd:''
+        },
+        //修改楼盘基本信息表单规则
+        add_new_estate_form_rule: {
+          title: [
+            { validator: validateTitle, trigger: 'blur' }
+          ],
+          type: [
+            { validator: validateType, trigger: 'blur' }
+          ],
+          state: [
+            { validator: validateState, trigger: 'blur' }
+          ],
+          decorationDegree: [
+            { validator: validateDecorationDegree, trigger: 'blur' }
+          ],
+          floor: [
+            { validator: validateFloor, trigger: 'blur' }
+          ],
+          existing: [
+            { validator: validateExisting, trigger: 'blur' }
+          ],
+        },
+        //修改楼盘附加信息表单
+        additionalInformationForm:{
+          dfl:'',
+          lhl:'',
+          rjl:'',
+          jzmj:'',
+          zdmj:'',
+          cwzb:'',
+          xqss:'',
+          v_url:'',
+          ghhs:'',
+          ksts:'',
+          ldzl:'',
+          kfzq:'',
+          gs:'',
+          gd:'',
+          gn:'',
+          ztjd:'',
+          ggqy:'',
+          dqqd:'',
+          id_arr:[{id:''},{id:''}]
+        },
+
+
+        //户型图全部数据
         hxAllData:{
           dialogVisible:false,
+          isdisabled:false,
           is_show_hx_main:true,
           is_loading_hx_tab:false,
           dialogImageUrl:'',
@@ -1194,8 +1297,12 @@ export default {
             list:[]
           },
         },
+
+
+        //实景图全部数据
         sjAllData:{
           dialogVisible:false,
+          isdisabled:false,
           dialogImageUrl:'',
           fileList:[],
           updatafiles:[],
@@ -1208,8 +1315,12 @@ export default {
             time:''
           }
         },
+
+
+        //样板间全部数据
         ybjAllData:{
           dialogVisible:false,
+          isdisabled:false,
           dialogImageUrl:'',
           fileList:[],
           updatafiles:[],
@@ -1223,120 +1334,42 @@ export default {
             time:'',
           }
         },
+
+
+        //楼盘报告数据
+        repeat_data:{
+          list:[]
+        },
+        //添加新的报告表单
         add_new_repeat_form:{
           name:'',
           type:'',
         },
-        is_score_form_disabled:false,
+        is_loading_repeat_tab:false,//是否加载报告表格loading
+        is_show_updata_repeat_swi:false,//是否显示添加报告
+        pdfsrc:'/static/pdf.pdf',
+        isshowpdf:false,
+
+
+
+        //楼盘评分数据
+        score_data:{
+          list:[]
+        },
+        //添加新的评分表单
         add_new_score_form:{
           gczl:'',
           gczl_detail:'',
           ghsj:'',
-          ghls_detail:'',
+          ghsj_detail:'',
           ghls:'',
           ghls_detail:'',
           zbpt:'',
           zbpt_detail:''
         },
-        house_setting_form:{
-          tjsy:'',
-          lpzd:'',
-          stpx:'',
-          jryx:'',
-          hzmf:'',
-          zjfh:''
-        },
-        is_show_updata_repeat_swi:false,
-        is_loading_score_tab:false,
-        activeName:"first",
-        activeName2:'first',
-        dialogVisible1:false,
-        dialogImageUrl1:'',
-        fileList1:[{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
-        dialogVisible2:false,
-        dialogImageUrl2:'',
-        fileList2:[{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
-        dialogVisible3:false,
-        dialogImageUrl3:'',
-        fileList3:[{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
-        dialogVisible4:false,
-        dialogImageUrl4:'',
-        fileList4:[{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
-        secondLevel:'楼盘管理',
-        threeLevel:'添加楼盘',
-        add_new_estate_form:{
-          sheng:'',
-          shi:'',
-          qu:'',
-          title:'',
-          alias:'',
-          desc:'',
-          type:'',
-          state:'',
-          openingDate:'',
-          handoverDate:'',
-          averagePrice:'',
-          decorationDegree:'',
-          floor:[],
-          buildingType:'1',
-          existing:'',
-          year:'',
-          feature:[],
-          metro:'',
-          buildingAddress:'',
-          recepationtime:'',
-          trafficRoute:'',
-          sailphone:'',
-          sailaddress:'',
-          propertyfee:'',
-          propertycompany:'',
-          buildBuild:'',
-          jw:[],
-          ys:'',
-          fz:'',
-          bd:''
-        },
-        additionalInformationForm:{
-          dfl:'',
-          lhl:'',
-          rjl:'',
-          jzmj:'',
-          zdmj:'',
-          cwzb:'',
-          xqss:'',
-          v_url:'',
-          ghhs:'',
-          ksts:'',
-          ldzl:'',
-          kfzq:'',
-          gs:'',
-          gd:'',
-          gn:'',
-          ztjd:'',
-          ggqy:'',
-          dqqd:'',
-          id_arr:[{id:''},{id:''}]
-        },
-        add_new_estate_form_rule: {
-          title: [
-            { validator: validateTitle, trigger: 'blur' }
-          ],
-          type: [
-            { validator: validateType, trigger: 'blur' }
-          ],
-          state: [
-            { validator: validateState, trigger: 'blur' }
-          ],
-          decorationDegree: [
-            { validator: validateDecorationDegree, trigger: 'blur' }
-          ],
-          floor: [
-            { validator: validateFloor, trigger: 'blur' }
-          ],
-          existing: [
-            { validator: validateExisting, trigger: 'blur' }
-          ],
-        },
+        is_loading_score_tab:false,//报告表格loading
+        is_show_score_swi:false,//是否显示添加评分
+        //楼盘评分规则
         add_new_score_form_rule:{
           gczl: [
             { validator: scopeValidateGczl, trigger: 'blur' }
@@ -1351,6 +1384,16 @@ export default {
             { validator: scopeValidateZbpt, trigger: 'blur' }
           ],
         },
+        //楼盘设置
+        house_setting_form:{
+          tjsy:'',
+          lpzd:'',
+          stpx:'',
+          jryx:'',
+          hzmf:'',
+          zjfh:''
+        },
+        //地图marker中心点
         markers:[],
         center:[116.480983, 40.0958],      
       };
@@ -1370,44 +1413,58 @@ export default {
       },
       'add_new_estate_form.sheng':{
         handler:function(val){
-          for(let i in this.coordinatearr){
-            if(this.coordinatearr[i].pro==val){
-              this.center=this.coordinatearr[i].coordinate
-            }
-          }
-          this.init_map()
+          
+          // for(let i in this.coordinatearr){
+          //   if(this.coordinatearr[i].pro==val){
+          //     this.center=this.coordinatearr[i].coordinate
+          //   }
+          // }
+          // this.init_map()
         }
       }
     },
     created(){
-      this.getdata()
       this.getbasicdata()
       this.getinfodata()
+      this.getrepeatdata()
+      this.getscoredata()
+      this.getsettingdata()
       this.gethxdata()
       this.getsjdata()
       this.getybjdata()
+      console.log(this.$route.query)
+      if(this.$route.query.type==1){
+        this.activeName='first'
+        this.is_show_updata_repeat_swi=false
+        this.is_show_score_swi=false;
+      }else if(this.$route.query.type==2){
+        this.activeName='fourth'
+        this.is_show_updata_repeat_swi=true
+      }else{
+        this.activeName='five'
+        this.is_show_score_swi=true;
+      }
     },
     methods: {
-      getdata(){
-        let _this=this;
-        _this.is_loading_tab=true;
-        this.$http('/activitymanagement').then(function(res){
-          console.log(res)
-          if(res.data.code==1000){
-            _this.tableData=res.data.data;
-          }
-          _this.is_loading_tab=false;
-        }).catch(function(err){
-          console.log(err)
-        })
-      },
+      //获取基本信息请求
       getbasicdata(){
         let _this=this;
         this.$http('/basicdata').then(function(res){
           console.log(res)
           if(res.data.code==1000){
+            _this.add_new_estate_form.sheng=res.data.data.sheng;
+            setTimeout(function(){
+               _this.add_new_estate_form.shi=res.data.data.shi;
+            },100)
+            setTimeout(function(){
+               _this.add_new_estate_form.qu=res.data.data.qu;
+            },200)
+          
             for(let i in res.data.data){
-              _this.add_new_estate_form[i]=res.data.data[i]
+              if(i!='sheng' && i!='shi' && i!='qu'){
+                _this.add_new_estate_form[i]=res.data.data[i]
+              }
+              
             }
             if(_this.add_new_estate_form.jw){
                _this.center=_this.add_new_estate_form.jw
@@ -1418,6 +1475,7 @@ export default {
           console.log(err)
         })
       },
+      //获取附加信息请求
       getinfodata(){
         let _this=this;
         this.$http('/infodata').then(function(res){
@@ -1429,6 +1487,51 @@ export default {
           console.log(err)
         })
       },
+      //获取楼盘报告请求
+      getrepeatdata(){
+        let _this=this;
+        _this.is_loading_repeat_tab=true;
+        this.$http('/repeat').then(function(res){
+          console.log(res)
+          _this.is_loading_repeat_tab=false;
+          if(res.data.code==1000){
+            _this.repeat_data=res.data.data;
+          }
+        }).catch(function(err){
+          _this.is_loading_repeat_tab=false;
+          console.log(err)
+        })
+      },
+      //获取楼盘评分请求
+      getscoredata(){
+        let _this=this;
+        _this.is_loading_score_tab=true;
+        this.$http('/score').then(function(res){
+          console.log(res)
+          _this.is_loading_score_tab=false;
+          if(res.data.code==1000){
+            _this.score_data=res.data.data;
+          }
+        }).catch(function(err){
+          _this.is_loading_score_tab=false;
+          console.log(err)
+        })
+      },
+      //获取楼盘设置请求
+      getsettingdata(){
+        let _this=this;
+        this.$http('/setting').then(function(res){
+          console.log(res)
+          if(res.data.code==1000){
+            _this.house_setting_form=res.data.data;
+          }
+        }).catch(function(err){
+          console.log(err)
+        })
+      },
+
+      
+      //获取户型数据请求
       gethxdata(){
         let _this=this;
         _this.hxAllData.is_loading_hx_tab=true;
@@ -1442,6 +1545,126 @@ export default {
           console.log(err)
         })
       },
+      //获取户型图详情
+      gethxDetaildata(){
+        let _this=this;
+      
+        this.$http('/hxdetail').then(function(res){
+          console.log(res)
+          if(res.data.code==1000){
+            _this.hxAllData.addNewHouseType=res.data.data;
+          }
+        }).catch(function(err){
+          console.log(err)
+        })
+      },
+      //添加户型图
+      show_add_hx_from(swi){
+        this.hxAllData.is_show_hx_main=swi;
+        this.hxAllData.updatafiles=[];
+        for(let i in this.hxAllData.addNewHouseType){
+          if(i=='tags'){
+            this.hxAllData.addNewHouseType[i]=[]
+          }else{
+            this.hxAllData.addNewHouseType[i]=''
+          }
+        }
+      },
+      //查看编辑删除上下线户型图
+      handleHx(index,scope,type){
+        let _this=this;
+        if(type==2){
+          this.hxAllData.isdisabled=false;
+          this.hxAllData.is_show_hx_main=false;
+          this.gethxDetaildata()
+        }else if(type==1){
+          this.hxAllData.isdisabled=true;
+          this.hxAllData.is_show_hx_main=false;
+          this.gethxDetaildata()
+        }else if(type==3){
+          _this.$confirm('确认删除吗?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              _this.gethxdata()
+              _this.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+            }).catch(() => {
+              _this.$message({
+                type: 'info',
+                message: '已取消删除'
+              });          
+            });
+        }else{
+            _this.$confirm('确认上线/下线吗?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              _this.gethxdata()
+              _this.$message({
+                type: 'success',
+                message: '操作成功!'
+              });
+            }).catch(() => {
+              _this.$message({
+                type: 'info',
+                message: '已取消'
+              });          
+            });
+        }
+      },
+      //确认修改添加户型图
+      hx_updata_sure(formName){
+        if(this.hxAllData.isdisabled){
+          this.hxAllData.is_show_hx_main=true;
+          return;
+        }
+        let _this=this;
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            console.log(this.hxAllData.updatafiles);
+            _this.hxAllData.is_show_hx_main=true;
+            _this.gethxdata();
+            _this.$message({
+              type: 'success',
+              message: '已添加'
+            });   
+            let param = new FormData(); 
+            if(_this.hxAllData.updatafiles.length>0){
+              for(let i in _this.hxAllData.updatafiles){
+                param.append('hximg',_this.hxAllData.updatafiles[i].raw.name)
+              }
+            }
+            console.log(param.get('hximg'));
+            for(let j in _this.hxAllData.addNewHouseType){
+              param.append(j,_this.hxAllData.addNewHouseType[j])
+            }
+            console.log(param.get('title'));
+            let config = {
+              'Content-Type':'multipart/form-data'
+            };  //添加请求头
+            this.$http('/xxx',{},param,config,'post')
+            .then(response=>{
+              console.log(response.data);
+            })      
+          } else {
+            _this.$message({
+              type: 'warning',
+              message: '有必填项未填写'
+            });
+            console.log('error submit!!');
+            return false;
+          }
+        })
+      }, 
+
+      
+
+      //获取实景图数据请求
       getsjdata(){
         let _this=this;
         _this.sjAllData.is_loading_sj_tab=true;
@@ -1455,6 +1678,77 @@ export default {
           console.log(err)
         })
       },
+      //获取实景图详情
+      getsjDetaildata(){
+        let _this=this;
+        _this.sjAllData.is_loading_sj_tab=true;
+        this.$http('/sjdetail').then(function(res){
+          console.log(res)
+           _this.sjAllData.is_loading_sj_tab=false;
+          if(res.data.code==1000){
+            _this.sjAllData.addNewsjType=res.data.data;
+          }
+        }).catch(function(err){
+           _this.sjAllData.is_loading_sj_tab=false;
+          console.log(err)
+        })
+      },
+      //查看编辑删除实景图
+      handleSj(index,scope,type){
+        let _this=this;
+        if(type==1){
+          this.sjAllData.isdisabled=true;
+          this.sjAllData.is_show_sj_main=false;
+          this.getsjDetaildata()
+        }else if(type==2){
+          this.sjAllData.isdisabled=false;
+          this.sjAllData.is_show_sj_main=false;
+          this.getsjDetaildata()
+        }else{
+          _this.$confirm('确认删除吗?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            _this.getsjDetaildata()
+            _this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+          }).catch(() => {
+            _this.$message({
+              type: 'info',
+              message: '已取消'
+            });          
+          });
+        }
+      },
+      //确认更新添加实景图
+      sj_updata_sure(){
+        if(this.sjAllData.isdisabled){
+          this.sjAllData.is_show_sj_main=true;
+          return;
+        }
+        let _this=this;
+        if(_this.sjAllData.addNewsjType.time==''){
+          _this.$message({
+            type: 'warning',
+            message: '请选择时间'
+          });
+          return;
+        }
+        _this.sjAllData.is_show_sj_main=true;
+        _this.getsjdata();
+        _this.$message({
+          type: 'success',
+          message: '操作成功'
+        });  
+      },
+      
+      
+
+
+      //获取样板间数据请求
       getybjdata(){
         let _this=this;
         _this.ybjAllData.is_loading_ybj_tab=true;
@@ -1468,6 +1762,86 @@ export default {
           console.log(err)
         })
       },
+      //获取实景图详情
+      getybjDetaildata(){
+        let _this=this;
+        _this.ybjAllData.is_loading_ybj_tab=true;
+        this.$http('/ybjdetail').then(function(res){
+          console.log(res)
+           _this.ybjAllData.is_loading_ybj_tab=false;
+          if(res.data.code==1000){
+            _this.ybjAllData.addNewybjType=res.data.data;
+          }
+        }).catch(function(err){
+           _this.ybjAllData.is_loading_ybj_tab=false;
+          console.log(err)
+        })
+      },
+      //查看编辑样板间
+      handleYbj(index,scope,type){
+        let _this=this;
+        if(type==1){
+          this.ybjAllData.isdisabled=true;
+          this.ybjAllData.is_show_ybj_main=false;
+          this.getybjDetaildata()
+        }else if(type==2){
+          this.ybjAllData.isdisabled=false;
+          this.ybjAllData.is_show_ybj_main=false;
+          this.getybjDetaildata()
+        }else{
+          _this.$confirm('确认删除吗?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            _this.getybjDetaildata()
+            _this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+          }).catch(() => {
+            _this.$message({
+              type: 'info',
+              message: '已取消'
+            });          
+          });
+        }
+      },
+      handleRemoveybj(){
+
+      },
+      //确认更新样板间
+      ybj_updata_sure(){
+        let _this=this;
+        if(this.ybjAllData.isdisabled){
+          this.ybjAllData.is_show_ybj_main=true;
+          return;
+        }
+        if(_this.ybjAllData.addNewybjType.name==''){
+          _this.$message({
+            type: 'warning',
+            message: '请输入标题'
+          });
+          return;
+        }
+        if(_this.ybjAllData.addNewybjType.time==''){
+          _this.$message({
+            type: 'warning',
+            message: '请选择时间'
+          });
+          return;
+        }
+        _this.ybjAllData.is_show_ybj_main=true;
+        _this.getybjdata();
+        _this.$message({
+          type: 'success',
+          message: '操作成功'
+        });  
+      },
+
+
+
+      //基本信息提交
       submitForm(formName) {
         let _this=this;
         this.$refs[formName].validate((valid) => {
@@ -1490,11 +1864,16 @@ export default {
             });
 
           } else {
+            _this.$message({
+              type: 'warning',
+              message: '有必填项未填写'
+            }); 
             console.log('error submit!!');
             return false;
           }
         });
       },
+      //附加信息提交
       submitForm2(){
         let _this=this;
         _this.$confirm('确认提交吗?', '提示', {
@@ -1513,11 +1892,12 @@ export default {
           });          
         });
       },
+      //初始化地图
       init_map(){
         let _this=this;
         var map = new AMap.Map('container',{
             resizeEnable: true,
-            zoom: 6,
+            zoom: 20,
             center: _this.center
         });
         AMap.plugin(['AMap.ToolBar','AMap.Scale','AMap.OverView'],
@@ -1530,16 +1910,16 @@ export default {
                
         });
         
-        // let add_arr=_this.center;
-        // var marker1 = new AMap.Marker({
-        //   position: add_arr,
-        //   map
-        // });
+        let add_arr=_this.center;
+        var marker1 = new AMap.Marker({
+          position: add_arr,
+          map
+        });
        
         map.on('click', function (e) {
-          // if(marker1){
-          //   marker1.setMap(null);
-          // }
+          if(marker1){
+            marker1.setMap(null);
+          }
           if(_this.markers.length>0){
             _this.markers[0].setMap(null)
           }   
@@ -1557,91 +1937,12 @@ export default {
       addid(){
         this.additionalInformationForm.id_arr.push({id:''})
       },
-      is_show_updata_repeat(swi){
-        this.is_show_updata_repeat_swi=swi;
-      },
-      is_show_score(swi){
-        this.is_show_score_swi=swi;
-        if(true){
-          for(let i in this.add_new_score_form){
-            this.add_new_score_form[i]='';
-          }
-          this.is_score_form_disabled=false;
-        }
-      },
-      sure_add_score(formName){
-        let _this=this;
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            _this.$confirm('确认提交吗?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              _this.$message({
-                type: 'success',
-                message: '提交成功!'
-              });
-            }).catch(() => {
-              _this.$message({
-                type: 'info',
-                message: '已取消提交'
-              });          
-            });
 
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
-      },
+      
       begin_updata(){
         this.$refs.updata_repeat_input.click()
       },
-      closepdf(){
-          this.isshowpdf = false
-      },
-      handleEdit(index,scope,type){
-        let _this=this;
-        console.log(scope)
-        if(type==2){
-          this.isshowpdf=true
-        }else if(type==3){
-          _this.$confirm('确认删除吗?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            let _index=this.repeat_tableData.indexOf(scope)
-            _this.repeat_tableData.splice(_index,1)
-            _this.$message({
-              type: 'success',
-              message: '提交成功!'
-            });
-          }).catch(() => {
-            _this.$message({
-              type: 'info',
-              message: '已取消提交'
-            });          
-          });
-        }else{
-          _this.$confirm('确认上线/下线吗?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            _this.$message({
-              type: 'success',
-              message: '操作成功!'
-            });
-          }).catch(() => {
-            _this.$message({
-              type: 'info',
-              message: '已取消'
-            });          
-          });
-        }
-      },
+      //查看删除评分
       handleScore(index,scope,type){
         let _this=this;
         if(type==1){
@@ -1656,8 +1957,7 @@ export default {
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-            let _index=this.score_tableData.indexOf(scope)
-            _this.score_tableData.splice(_index,1)
+            _this.getscoredata()
             _this.$message({
               type: 'success',
               message: '删除成功!'
@@ -1670,6 +1970,120 @@ export default {
           });
         }
       },
+      //确认更新或者保存评分
+      sure_add_score(formName){
+        let _this=this;
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            _this.$confirm('确认提交吗?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              _this.$message({
+                type: 'success',
+                message: '提交成功!'
+              });
+              _this.is_show_score_swi=false;
+              _this.getscoredata()
+            }).catch(() => {
+              _this.$message({
+                type: 'info',
+                message: '已取消提交'
+              });          
+            });
+
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
+      //添加新的评分
+      is_show_score(swi){
+        this.is_show_score_swi=swi;
+        if(true){
+          for(let i in this.add_new_score_form){
+            this.add_new_score_form[i]='';
+          }
+          this.is_score_form_disabled=false;
+        }
+      },
+
+
+      //添加新的报告
+      is_show_updata_repeat(swi){
+        this.is_show_updata_repeat_swi=swi;
+      },
+      //关闭pdf
+      closepdf(){
+          this.isshowpdf = false
+      },
+      //上线查看删除报告
+      handleRepeat(index,scope,type){
+        let _this=this;
+        console.log(scope)
+        if(type==2){
+          this.isshowpdf=true
+        }else if(type==3){
+          _this.$confirm('确认删除吗?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            _this.getrepeatdata()
+            _this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+          }).catch(() => {
+            _this.$message({
+              type: 'info',
+              message: '已取消删除'
+            });          
+          });
+        }else{
+          _this.$confirm('确认上线/下线吗?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            _this.getrepeatdata()
+            _this.$message({
+              type: 'success',
+              message: '操作成功!'
+            });
+          }).catch(() => {
+            _this.$message({
+              type: 'info',
+              message: '已取消'
+            });          
+          });
+        }
+      },
+      //确认添加报告
+      sure_updata(){
+        let _this=this;
+        if(this.add_new_repeat_form.name==''){
+          _this.$message({
+            type: 'warning',
+            message: '请填写报告名!'
+          });
+          return;
+        }
+        if(this.add_new_repeat_form.type==''){
+          _this.$message({
+            type: 'warning',
+            message: '请选择报告类型!'
+          });
+          return;
+        }
+        this.is_show_updata_repeat_swi=false;
+        this.getrepeatdata()
+      },
+      
+
+      //楼盘设置
       house_setting_btn(){
         let _this=this;
         _this.$confirm('确认保存吗?', '提示', {
@@ -1688,8 +2102,7 @@ export default {
           });          
         });
       },
-      sure_updata(){
-      },
+      
       refresh(){
         this.$store.dispatch('mainLoadingAction',true);
         this.getdata()
@@ -1717,6 +2130,9 @@ export default {
         this.sjAllData.dialogImageUrl=file.url;
         this.sjAllData.dialogVisible=true;
       },  
+      handleRemovesj(){
+
+      },
       handlePreviewybj(file){
         this.ybjAllData.dialogImageUrl=file.url;
         this.ybjAllData.dialogVisible=true;
@@ -1757,17 +2173,7 @@ export default {
           this.$refs.upload4.submit();
         }
       },
-      show_add_hx_from(swi){
-        this.hxAllData.is_show_hx_main=swi;
-        this.hxAllData.updatafiles=[];
-        for(let i in this.hxAllData.addNewHouseType){
-          if(i=='tags'){
-            this.hxAllData.addNewHouseType[i]=[]
-          }else{
-            this.hxAllData.addNewHouseType[i]=''
-          }
-        }
-      },
+      
       show_add_sj_from(swi){
         this.sjAllData.is_show_sj_main=swi;
         this.sjAllData.updatafiles=[];
@@ -1790,80 +2196,6 @@ export default {
           }
         }
       },
-      hx_updata_sure(formName){
-        let _this=this;
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            console.log(this.hxAllData.updatafiles);
-            _this.hxAllData.is_show_hx_main=true;
-            _this.gethxdata();
-            _this.$message({
-              type: 'success',
-              message: '已添加'
-            });   
-            let param = new FormData(); 
-            if(_this.hxAllData.updatafiles.length>0){
-              for(let i in _this.hxAllData.updatafiles){
-                param.append('hximg',_this.hxAllData.updatafiles[i].raw.name)
-              }
-            }
-            console.log(param.get('hximg'));
-            for(let j in _this.hxAllData.addNewHouseType){
-              param.append(j,_this.hxAllData.addNewHouseType[j])
-            }
-            console.log(param.get('title'));
-            let config = {
-              'Content-Type':'multipart/form-data'
-            };  //添加请求头
-            this.$http('/xxx',{},param,config,'post')
-            .then(response=>{
-              console.log(response.data);
-            })      
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        })
-      }, 
-      sj_updata_sure(){
-        let _this=this;
-        if(_this.sjAllData.addNewsjType.time==''){
-          _this.$message({
-            type: 'warning',
-            message: '请选择时间'
-          });
-          return;
-        }
-        _this.sjAllData.is_show_sj_main=true;
-        _this.getsjdata();
-        _this.$message({
-          type: 'success',
-          message: '已添加'
-        });  
-      },
-      ybj_updata_sure(){
-        let _this=this;
-        if(_this.ybjAllData.addNewybjType.name==''){
-          _this.$message({
-            type: 'warning',
-            message: '请输入标题'
-          });
-          return;
-        }
-        if(_this.ybjAllData.addNewybjType.time==''){
-          _this.$message({
-            type: 'warning',
-            message: '请选择时间'
-          });
-          return;
-        }
-        _this.ybjAllData.is_show_ybj_main=true;
-        _this.getybjdata();
-        _this.$message({
-          type: 'success',
-          message: '已添加'
-        });  
-      }
     },
     mounted(){
       this.$store.dispatch('mainLoadingAction',true);

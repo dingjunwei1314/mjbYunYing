@@ -120,6 +120,15 @@ const AccountAdmin = function (resolve) {
       resolve(require('../components/accountAdmin/accountAdmin'))
     })
 }
+
+const ChangePassword = function (resolve) {
+    require.ensure([],function () {
+      resolve(require('../components/ChangePassword/ChangePassword'))
+    })
+}
+
+
+
 //新建管理员
 const CreateNewAdmin = function (resolve) {
   require.ensure([],function () {

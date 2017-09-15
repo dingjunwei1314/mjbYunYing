@@ -26,7 +26,7 @@
   import Subnav from '../Subnav/Subnav.vue'
 
   export default {
-    name:'AccountAdmin',
+    name:'changePassword',
     components:{
       Subnav,
     },
@@ -54,7 +54,7 @@
     },
     mounted(){
       this.$store.dispatch('mainLoadingAction',true);
-      this.$store.dispatch('defaultIndexAction','/index/posts');
+      this.$store.dispatch('defaultIndexAction','/index/accountAdmin');
       var that=this;
       setTimeout(function(){
         that.$store.dispatch('mainLoadingAction',false);

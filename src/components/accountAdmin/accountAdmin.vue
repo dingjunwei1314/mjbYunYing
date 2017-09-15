@@ -21,7 +21,7 @@
                 align="right"
                 type="date"
                 placeholder="选择日期"
-                :picker-options="pickerOptions1">
+               >
               </el-date-picker>
               <span class="demonstration">至</span>
               <el-date-picker
@@ -29,7 +29,7 @@
                 align="right"
                 type="date"
                 placeholder="选择日期"
-                :picker-options="pickerOptions1">
+               >
               </el-date-picker>
             </div>
             <el-button type="primary">查询</el-button>
@@ -101,11 +101,12 @@
       },
         data(){
             return{
+              input:'',
               secondLevel:'账户管理',
               threeLevel:'账户管理',
               value1:'',
               value2:'',
-              loading:true,
+              loading:false,
               tableData: [{
                 date: '2016-05-02',
                 name: '王小虎',
@@ -163,7 +164,7 @@
       },
       mounted(){
         this.$store.dispatch('mainLoadingAction',true);
-        this.$store.dispatch('defaultIndexAction','/index/posts');
+        this.$store.dispatch('defaultIndexAction','/index/accountAdmin');
         var that=this;
         setTimeout(function(){
           that.$store.dispatch('mainLoadingAction',false);
@@ -172,7 +173,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     .accountAdminTop{
       border: 1px solid darkgray;margin:20px;
     }

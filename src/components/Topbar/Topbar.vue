@@ -1,7 +1,7 @@
 <template>
 
 
-  <el-menu router="true" theme="dark"  class="el-menu-demo" index="" default-active="10" mode="horizontal" style="height:45px;line-height:45px;padding:0px 20px;padding-right:10px">
+  <el-menu :router="true" theme="dark"  class="el-menu-demo" index="" default-active="10" mode="horizontal" style="height:45px;line-height:45px;padding:0px 20px;padding-right:10px">
     <router-link to="/index/managers" style="color:#f1f1f1;line-height:45px;">
       <span style="font-size:14px">买家帮运营管理平台</span>
     </router-link>
