@@ -120,7 +120,12 @@ const AccountAdmin = function (resolve) {
       resolve(require('../components/accountAdmin/accountAdmin'))
     })
 }
-
+//新建管理员
+const CreateNewAdmin = function (resolve) {
+  require.ensure([],function () {
+    resolve(require('../components/accountAdmin/createNewAdmin'))
+  })
+}
 //角色管理
 
 const RoleAdmin = function (resolve) {
@@ -143,6 +148,7 @@ export default new Router({
             path: '/login',
             component: Login,
         },
+
         {
             path:'/index',
             component:Index,
@@ -222,6 +228,14 @@ export default new Router({
                 {
                   path:'/index/createAdmin',
                   component:CreateAdmin
+                },
+                {
+                  path:'/index/createNewAdmin',
+                  component:CreateNewAdmin
+                },
+                {
+                  path: '/index/changePassword',
+                  component: ChangePassword,
                 },
             ]
         }

@@ -53,7 +53,7 @@
                         </el-select>
                     </div>
                     <div class="bao" style="
-                     display:-webkit-box;
+                      display:-webkit-box;
                       display:-webkit-flex;
                       display:-ms-flexbox;
                       display: flex;
@@ -76,7 +76,6 @@
                           :picker-options="pickerOptions1">
                         </el-date-picker>
                       </div>
-
                         <div>
                             <span style="line-height:36px;float:left;">区域：</span>
                           <AreaAll :area="filterForm"></AreaAll>
@@ -92,7 +91,6 @@
             </div>
         </div>
         <div class="postsSeekBtn">
-
               <div style="width:100%;height:250px;overflow: scroll">
                 <el-table
                   ref="multipleTable"
@@ -178,7 +176,6 @@
                   </el-table-column>
                 </el-table>
               </div>
-
             <div class="blockPage">
                 <el-button type="danger" @click="removesHander()">批量删除</el-button>
                 <el-pagination

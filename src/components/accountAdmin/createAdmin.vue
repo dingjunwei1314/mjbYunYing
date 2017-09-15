@@ -100,7 +100,7 @@
 
 <script>
   import Subnav from '../Subnav/Subnav.vue'
-  const cityOptions = ['上海', '北京', '广州', '深圳'];
+
   export default {
     name:'CreateAdmin',
     components:{
