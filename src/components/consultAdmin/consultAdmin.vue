@@ -4,7 +4,12 @@
     <div style="padding:20px" class="postsTop_wap">
       <div class="postsSeek">
         <div style="width: 80%;">
-          <div style="display: flex;justify-content: space-around">
+          <div style="
+            display:-webkit-box;
+            display:-webkit-flex;
+            display:-ms-flexbox;
+            display: flex;
+          justify-content: space-around">
             <div>
               <span>查询ID</span>
               <el-input v-model="input" placeholder="请输入内容" style="width:150px;"></el-input>
@@ -33,7 +38,12 @@
               </el-select>
             </div>
           </div>
-          <div class="bao" style="display: flex;justify-content: space-around">
+          <div class="bao" style="
+            display:-webkit-box;
+            display:-webkit-flex;
+            display:-ms-flexbox;
+            display: flex;
+          justify-content: space-around">
             <div>
               <span class="demonstration">发布时间</span>
               <el-date-picker
@@ -114,13 +124,19 @@
           prop="address"
           label="回复概要">
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column width="180px" label="操作">
           <template scope="scope">
-            <router-link to="/index/estateadd">
+            <router-link to="/index/counsultParticulars">
             <el-button
               size="small"
               type="danger"
               @click="handleDelete(scope.$index, scope.row)">查看详情</el-button>
+            </router-link>
+            <router-link to="/index/counsultParticulars">
+              <el-button
+                size="small"
+                type="info"
+                @click="handleDelete(scope.$index, scope.row)">详情编辑</el-button>
             </router-link>
           </template>
         </el-table-column>
@@ -230,10 +246,15 @@
   }
   .consultAdmin .postsSeek .bao{
     width:100%;
-    display: inline-block;
+    display:inline-block;
+    *display:inline;
+    *zoom:1;
     margin-top: 15px;
   }
   .consultAdmin .postsSeek{
+    display:-webkit-box;
+    display:-webkit-flex;
+    display:-ms-flexbox;
     display: flex;
     justify-content: space-between;
   }

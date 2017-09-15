@@ -52,7 +52,12 @@
                             </el-option>
                         </el-select>
                     </div>
-                    <div class="bao" style="display: flex;justify-content: space-around">
+                    <div class="bao" style="
+                     display:-webkit-box;
+                      display:-webkit-flex;
+                      display:-ms-flexbox;
+                      display: flex;
+                    justify-content: space-around">
                       <div>
                         <span class="demonstration">发布时间</span>
                         <el-date-picker
@@ -77,17 +82,17 @@
                           <AreaAll :area="filterForm"></AreaAll>
                         </div>
                     </div>
-
                 </div>
                 <div class="inquireBtn">
                     <el-button type="primary">查询</el-button>
+                  <router-link to="/index/newtext">
+                    <el-button type="primary">发布文章</el-button>
+                  </router-link>
                 </div>
             </div>
         </div>
         <div class="postsSeekBtn">
-            <p style="padding-bottom: 10px">
-                <router-link to="/index/newtext"><el-button type="primary">发布文章</el-button></router-link>
-            </p>
+
               <div style="width:100%;height:250px;overflow: scroll">
                 <el-table
                   ref="multipleTable"
@@ -98,22 +103,23 @@
                   @selection-change="handleSelectionChange">
                   <el-table-column
                     type="selection"
-                    width="50">
+                    width="50"
+                  >
                   </el-table-column>
                   <el-table-column
                     label="ID"
-                    width="100">
-                    <template scope="scope">{{ scope.row.date }}</template>
+                    width="100"
+                    prop="id"
+                  >
                   </el-table-column>
                   <el-table-column
-                    prop="name"
+                    prop="title"
                     label="标题"
                     width="120">
                   </el-table-column>
                   <el-table-column
-                    prop="address"
+                    prop="classify"
                     label="文章分类"
-
                     show-overflow-tooltip>
                   </el-table-column>
                   <el-table-column
@@ -167,19 +173,19 @@
                       <el-button
                         size="small"
                         type="danger"
-                        @click="handleDelete(scope.$index, scope.row)">下线</el-button>
+                        @click="noLonger(scope.$index, scope.row)">下线</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
               </div>
 
             <div class="blockPage">
-                <el-button type="danger">批量删除</el-button>
+                <el-button type="danger" @click="removesHander()">批量删除</el-button>
                 <el-pagination
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
                         :current-page.sync="currentPage1"
-                        :page-size="100"
+                        :page-size="20"
                         layout="total, prev, pager, next"
                         :total="1000">
                 </el-pagination>
@@ -204,7 +210,17 @@
                 secondLevel:'文章管理',
                 threeLevel:'文章管理',
                 input: '',
-              currentPage1:1,
+                currentPage1:1,
+                seekValue: '选项1',
+                classValue: '选项1',
+                textValue: '选项1',
+                multipleSelection: [],
+                topValue: '选项1',
+                titleValue: '选项1',
+                value1: '',
+                value2: '',
+                removesArr:[],
+
               filterForm: {
                 name:'',
                 developers:'',
@@ -231,7 +247,6 @@
                     value: '选项4',
                     label: '来源'
                 }],
-                seekValue: '选项1',
                 classOptions: [{
                     value: '选项1',
                     label: '不限'
@@ -248,7 +263,6 @@
                     value: '选项5',
                     label: '新政解读'
                 }],
-                classValue: '选项1',
                 textOptions: [{
                     value: '选项1',
                     label: '不限'
@@ -259,7 +273,6 @@
                     value: '选项3',
                     label: '下线'
                 }],
-                textValue: '选项1',
                 titleOptions: [{
                     value: '选项1',
                     label: '是'
@@ -267,7 +280,6 @@
                     value: '选项2',
                     label: '否'
                 }],
-                titleValue: '选项1',
                 topOptions: [{
                     value: '选项1',
                     label: '是'
@@ -275,7 +287,6 @@
                     value: '选项2',
                     label: '否'
                 }],
-                topValue: '选项1',
                 pickerOptions0: {
                     disabledDate(time) {
                         return time.getTime() < Date.now() - 8.64e7;
@@ -303,27 +314,23 @@
                         }
                     }]
                 },
-                value1: '',
-                value2: '',
                 tableData3: [{
-                    date: '',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄',
-
+                    id: '00',
+                    title: '王小虎',
+                    classify: '上海市普陀区金沙江路 1518 弄',
                 }, {
-                    date: '',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
+                    id: '11',
+                    title: '王小虎',
+                    classify: '上海市普陀区金沙江路 1518 弄',
                 }, {
-                    date: '',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
+                    id: '22',
+                    title: '王小虎',
+                    classify: '上海市普陀区金沙江路 1518 弄',
                 }, {
-                    date: '',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
+                    id: '33',
+                    title: '王小虎',
+                    classify: '上海市普陀区金沙江路 1518 弄',
                 }],
-                multipleSelection: []
             }
         },
         filters:{
@@ -336,6 +343,7 @@
 
         },
         methods: {
+
             refresh(){
                 this.$store.dispatch('mainLoadingAction',true);
                 this.getdata()
@@ -348,17 +356,87 @@
                     that.$store.dispatch('mainLoadingAction',false);
                 },300)
             },
-          handleSelectionChange(){
-
+          handleDelete($index,scope){
+                this.open2($index);
+          },
+          //勾选变化
+          handleSelectionChange(k){
+            this.removesArr=k;
           },
           handleSizeChange(){
-            console.log(`每页 ${val} 条`);
+            console.log(`每页 1 条`);
           },
-          handleCurrentChange(){
-            console.log(`当前页: ${val}`);
+          handleCurrentChange($val){
+            console.log($val);
+            this.$store.dispatch('mainLoadingAction',true);
+            this.$store.dispatch('defaultIndexAction','/index/posts');
+            var that=this;
+            setTimeout(function(){
+              that.$store.dispatch('mainLoadingAction',false);
+            },300)
           },
-
-
+          //是否删除
+          open2($index) {
+            this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+              this.tableData3.splice($index,1);
+            }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消删除'
+              });
+            });
+          },
+          //是否下线
+          noLonger($index) {
+            this.$confirm('确定上线／下线该条资讯？', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.$message({
+                type: 'success',
+                message: '操作成功!'
+              });
+              this.tableData3.splice($index,1);
+            }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消操作'
+              });
+            });
+          },
+          //批量删除
+          removesHander(){
+              this.$confirm('此操作将永久删除所有选中文件, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                this.$message({
+                  type: 'success',
+                  message: '删除成功!'
+                });
+                let ids = this.removesArr.map(item => item.id);//获取所有选中行的id组成的字符串，以逗号分隔
+                let lens = ids.length;
+                for(let i = 0;i<lens;i++){
+//                  this.tableData3.splice(ids[i],1);
+                  console.log(ids[i]);
+                }
+              }).catch(() => {
+                this.$message({
+                  type: 'info',
+                  message: '已取消删除'
+                });
+              });
+          }
         },
         mounted(){
             this.$store.dispatch('mainLoadingAction',true);
@@ -393,29 +471,41 @@
         }
         .postsSeek .bao{
             width:100%;
-           display: inline-block;
+            display:inline-block;
+            *display:inline;
+            *zoom:1;
             margin-top: 15px;
         }
         .postsSeek{
+            display:-webkit-box;
+            display:-webkit-flex;
+            display:-ms-flexbox;
             display: flex;
             justify-content: space-between;
         }
         .inquireBtn button{
-            width:150px;
+            width:100px;
             height:50px;
-
+          margin: 5px;
         }
         .inquireBtn{
           line-height: 50px;
           padding-top: 24px;
           padding-bottom: 24px;
+          display:-webkit-box;
+          display:-webkit-flex;
+          display:-ms-flexbox;
+          display: flex;
         }
         .postsSeekBtn{
             border: 1px solid darkgray;margin:20px;
             padding:10px;
         }
         .blockPage{
-            display: flex;
+          display:-webkit-box;
+          display:-webkit-flex;
+          display:-ms-flexbox;
+          display: flex;
           justify-content: space-between;
             padding: 20px;
         }

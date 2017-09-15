@@ -22,7 +22,7 @@
         <el-col :span="6" style="text-align:right">
             <el-button type="primary" @click="onSearchSubmit">查询</el-button>
             <el-button type="primary" @click="addNew">新增排行榜</el-button>
-            <el-button type="primary" @click="addNew">排行榜排序</el-button>
+            <el-button type="primary" @click="rankSort">排行榜排序</el-button>
         </el-col>
       </el-row>
       <div class="tabletopbar">
@@ -72,7 +72,7 @@
           <template scope="scope">
             <el-button
               size="small"
-              @click="handleEdit(scope.$index, scope.row)">
+              @click="handleView(scope.$index, scope.row)">
               查看
             </el-button>
             <el-button
@@ -124,9 +124,86 @@
         </el-form>
       </div>  
     </BigDialog>
+
+    <BigDialog dialogTitle="编辑排行榜" @dialogCancel="bjdialogCancel" @dialogConfirm="bjdialogConfirm" :dialogFormVisible="bjAllData.bjdialogFormVisible">
+      <div slot="dia_body" class="dia_body">
+        <el-form ref="form" :model="bjAllData.bjForm" label-width="200px" style="margin:0px auto;width:620px">
+
+          <el-form-item label="排行榜名称：">
+            <el-input v-model="bjAllData.bjForm.name" style="width:195px"  auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="区域：">
+            {{bjAllData.bjForm.sheng}}{{bjAllData.bjForm.shi}}
+          </el-form-item>
+          <el-form-item  v-for="(item,index) in bjAllData.bjForm.range" :key="index">
+            <span slot="label">添加楼盘NO{{index+1}}</span>
+            <el-select :clearable="true" v-model="bjAllData.bjForm.range[index]" placeholder="请选择">
+              <el-option
+                v-for="(item,index) in bjAllData.houselist"
+                :key="index"
+                :label="item.name"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-button style="margin-left:100px" @click="bjaddmore" type="text">继续添加楼盘</el-button>
+        </el-form>
+      </div>  
+    </BigDialog>
+
+    <BigDialog dialogTitle="排行榜排序" @dialogCancel="pxdialogCancel" @dialogConfirm="pxdialogCancel" :dialogFormVisible="pxAllData.pxdialogFormVisible">
+      <div slot="dia_body" class="dia_body">
+        <el-form ref="form" :model="pxAllData.pxForm" label-width="200px" style="margin:0px auto;width:620px">
+          <el-form-item label="区域：">
+            <AreaAll :isshowqu="false" :area="pxAllData.pxForm"></AreaAll> 
+          </el-form-item>
+        </el-form>
+        <el-table
+          empty-text="请选择省市"
+          v-loading="is_loading_sort_tab"
+          :data="sortTableDataComput.list"
+          style="width: 100%;font-size:12px!important;">
+          <el-table-column
+            prop="name"
+            label="排行榜名称"
+            min-width="100">
+          </el-table-column>
+          <el-table-column
+            prop="time"
+            min-width="100"
+            label="创建时间">
+          </el-table-column>
+          <el-table-column
+            min-width="100"
+            label="操作">
+            <template scope="scope">
+              <i @click="handlerSort(scope.$index, scope.row,true)" v-if="scope.row.sort!=1 && sortTableDataComput.list.length!=1" style="font-size:20px;cursor:pointer" class="fa fa-arrow-up"></i>
+              <i @click="handlerSort(scope.$index, scope.row,false)" v-if="scope.row.sort!=sortTableDataComput.list.length && sortTableDataComput.list.length!=1" style="font-size:20px;cursor:pointer" class="fa fa-arrow-down"></i>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>  
+    </BigDialog>
+
+    <BigDialog dialogTitle="排行榜详情" @dialogCancel="pxDetaildialogCancel" @dialogConfirm="pxDetaildialogCancel" :dialogFormVisible="pxDetailAllData.pxDetaildialogFormVisible">
+      <div slot="dia_body" class="dia_body">
+        <el-form ref="form" label-width="200px" style="margin:0px auto;width:620px"> 
+          <el-form-item label="排行榜名称：">
+            {{pxDetailAllData.data.name}}
+          </el-form-item>
+          <el-form-item label="区域：">
+            {{pxDetailAllData.data.sheng}}{{pxDetailAllData.data.shi}}
+          </el-form-item>
+          <el-form-item  v-for="(item,index) in pxDetailAllData.data.range" :key="index">
+            <span slot="label">NO{{index+1}}：</span>
+            <router-link to="">{{item}}</router-link>
+          </el-form-item>
+        </el-form>
+      </div>  
+    </BigDialog>
+
   </div>
 </template>
-
 <script>
 import AreaAll from '../Common/AreaAll/AreaAll'
 import Subnav from '../Subnav/Subnav'
@@ -153,6 +230,10 @@ export default {
           total:0,
           list:[]
         },
+        sortTableData:{
+          total:0,
+          list:[]
+        },
         pgbAddAllData:{
           phbdialogFormVisible:false,
           houselist:[],
@@ -162,21 +243,52 @@ export default {
             shi:'',
             range:['','','','','','','','','','']
           }
-
         },
-        is_loading_tab:false,      
+        pxAllData:{
+          pxdialogFormVisible:false,
+          pxForm:{
+            sheng:'',
+            shi:''
+          }
+        },
+        pxDetailAllData:{
+          pxDetaildialogFormVisible:false,
+          data:{
+            name:'',
+            area:'',
+            range:[]
+          }
+        },
+        bjAllData:{
+          bjdialogFormVisible:false,
+          houselist:[],
+          bjForm:{
+            name:'',
+            sheng:'',
+            shi:'',
+            range:[]
+          }
+        },
+        is_loading_tab:false,  
+        is_loading_sort_tab:false    
       };
     },
     filters:{
-     
     },
     computed:{
-                                        
+      sortTableDataComput(){
+        let _this=this;
+        let arr=_.cloneDeep(_this.sortTableData)
+        arr.list.sort(function(a,b){
+          return a.sort-b.sort
+        })
+        return arr;
+      }          
     },
     watch:{
       'pgbAddAllData.phbAddForm.sheng':{
         handler:function(val){
-          this.gethouselistdata()
+          this.gethouselistdata(1)
           for(let i in this.pgbAddAllData.phbAddForm.range){
             this.pgbAddAllData.phbAddForm.range[i]=''
           }
@@ -184,10 +296,20 @@ export default {
       },
       'pgbAddAllData.phbAddForm.shi':{
         handler:function(val){
-          this.gethouselistdata()
+          this.gethouselistdata(1)
           for(let i in this.pgbAddAllData.phbAddForm.range){
             this.pgbAddAllData.phbAddForm.range[i]=''
           }
+        }
+      },
+      'pxAllData.pxForm.sheng':{
+        handler:function(val){
+          this.getSortData()
+        }
+      },
+      'pxAllData.pxForm.shi':{
+        handler:function(val){
+          this.getSortData()
         }
       }
     },
@@ -208,12 +330,48 @@ export default {
           console.log(err)
         })
       },
-      gethouselistdata(){
+      getSortData(){
+        let _this=this;
+        _this.is_loading_sort_tab=true;
+        this.$http('/ranklist').then(function(res){
+          console.log(res)
+          if(res.data.code==1000){
+            _this.sortTableData=res.data.data;
+          }
+          _this.is_loading_sort_tab=false;
+        }).catch(function(err){
+          console.log(err)
+        })
+      },
+      getpxDetailData(type){
+        let _this=this;
+        this.$http('/pxdetail').then(function(res){
+          if(res.data.code==1000){
+            if(type==1){
+              _this.pxDetailAllData.data=res.data.data;
+              _this.pxDetailAllData.pxDetaildialogFormVisible=true;
+            }else{
+              _this.bjAllData.bjForm=res.data.data;
+              _this.gethouselistdata(2)
+              _this.bjAllData.bjdialogFormVisible=true;
+            }
+            
+          }
+        }).catch(function(err){
+          console.log(err)
+        })
+      },
+      gethouselistdata(type){
         let _this=this;
         this.$http('/houselist').then(function(res){
           console.log(res)
           if(res.data.code==1000){
-            _this.pgbAddAllData.houselist=res.data.data;
+            if(type==1){
+              _this.pgbAddAllData.houselist=res.data.data;
+            }else{
+              _this.bjAllData.houselist=res.data.data;
+            }
+           
           }
         }).catch(function(err){
           console.log(err)
@@ -245,16 +403,18 @@ export default {
           }
         }
       },
-
-      
       addmore(){
         this.pgbAddAllData.phbAddForm.range.push(...['','','','',''])
+      },
+      bjaddmore(){
+        this.bjAllData.bjForm.range.push(...['','','','',''])
       },
       handleSelectionChange(val){
         this.multipleSelection = val;
       },
       handleEdit(index, row) {
-        console.log(index, row);
+        this.bjAllData.bjdialogFormVisible=true;
+        this.getpxDetailData(2)
       },
       handleDelete(index, row) {
         let _this=this;
@@ -276,7 +436,6 @@ export default {
         });
       },
       batchDelete(){
-        
         if(this.multipleSelection.length>0){
 
           this.$confirm('确认删除吗?', '提示', {
@@ -334,7 +493,59 @@ export default {
           return;
         }
         this.pgbAddAllData.phbdialogFormVisible=false;
-        this.gethouselistdata()
+        this.getdata()
+      },
+      bjdialogCancel(){
+        this.bjAllData.bjdialogFormVisible=false;
+      },
+      bjdialogConfirm(){
+        if(this.bjAllData.bjForm.name==''){
+          this.$message({
+            type: 'warning',
+            message: '请填写标题!'
+          });
+          return;
+        }
+        if(this.bjAllData.bjForm.range[0]==''){
+          this.$message({
+            type: 'warning',
+            message: '请选择排序!'
+          });
+          return;
+        }
+        this.bjAllData.bjdialogFormVisible=false;
+        this.getdata()
+      },
+      rankSort(){
+        this.pxAllData.pxdialogFormVisible=true;
+      },
+      pxdialogCancel(){
+        this.pxAllData.pxdialogFormVisible=false;
+      },
+      pxDetaildialogCancel(){
+        this.pxDetailAllData.pxDetaildialogFormVisible=false;
+      },
+      handlerSort(index,row,type){
+        if(type){
+          this.sortTableData.list.forEach(function(item,i){
+            if(row.id==item.id){
+              item.sort-=1;
+            }else if(row.sort-item.sort==1){
+              item.sort+=1;  
+            }
+          })
+        }else{
+          this.sortTableData.list.forEach(function(item,i){
+            if(row.id==item.id){
+              item.sort+=1;
+            }else if(row.sort-item.sort==-1){
+              item.sort-=1;  
+            }
+          })
+        }
+      },
+      handleView(index,row){
+        this.getpxDetailData(1)
       }
     },
     mounted(){

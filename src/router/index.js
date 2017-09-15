@@ -117,6 +117,12 @@ const RoleAdmin = function (resolve) {
       resolve(require('../components/accountAdmin/roleAdmin'))
     })
 }
+//新建角色
+const CreateAdmin = function (resolve) {
+  require.ensure([],function () {
+    resolve(require('../components/accountAdmin/createAdmin'))
+  })
+}
 export default new Router({
     mode: 'hash',
     base: __dirname,
@@ -180,7 +186,7 @@ export default new Router({
                 },
                 {
                   path:'/index/accountAdmin',
-                  component:AccountAdmin
+                  component:AccountAdmin,
                 },
                 {
                   path:'/index/roleAdmin',
@@ -193,6 +199,10 @@ export default new Router({
                 {
                   path:'/index/counsultParticulars',
                   component:CounsultParticulars
+                },
+                {
+                  path:'/index/createAdmin',
+                  component:CreateAdmin
                 },
             ]
         }

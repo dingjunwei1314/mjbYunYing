@@ -1,6 +1,4 @@
 <template>
-
-
   <el-menu :router="router" :default-active="defaultIndex" class="el-menu-vertical-demo leftbar" @open="handleOpen" @close="handleClose" :unique-opened=true style="overflow-x:hidden" :style="navStyle">
       <el-submenu index="1">
         <template slot="title">
@@ -39,7 +37,6 @@
         <span slot="title">咨询管理</span>
       </template>
       <el-menu-item index="/index/consultAdmin">咨询管理</el-menu-item>
-      <el-menu-item index="/index/counsultParticulars">咨询详情</el-menu-item>
     </el-submenu>
       <el-submenu index="6">
         <template slot="title">
