@@ -28,6 +28,17 @@ const EstateAdd=function(resolve){
     })
 }
 
+const EstateEdit=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/EstateEdit/EstateEdit'))
+    })
+}
+const EstateDetail=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/EstateDetail/EstateDetail'))
+    })
+}
+
 const RankingList=function(resolve){
     require.ensure([],function(){
         resolve(require('../components/RankingList/RankingList'))
@@ -122,7 +133,7 @@ const CreateAdmin = function (resolve) {
   require.ensure([],function () {
     resolve(require('../components/accountAdmin/createAdmin'))
   })
-}
+}  
 export default new Router({
     mode: 'hash',
     base: __dirname,
@@ -140,9 +151,17 @@ export default new Router({
                   path:'/index/estatemanagement',
                   component:EstateManagement
                 },
-                {
+                {  
                   path:'/index/estateadd',
                   component:EstateAdd
+                },  
+                {
+                  path:'/index/estateedit',
+                  component:EstateEdit
+                },
+                {
+                  path:'/index/estatedetail',
+                  component:EstateDetail
                 },
                 {
                   path:'/index/rankinglist',

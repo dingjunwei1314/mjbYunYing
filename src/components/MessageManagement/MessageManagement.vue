@@ -130,11 +130,11 @@
           </el-form-item>
 
           <el-form-item label="消息标题：">
-            <el-input v-model="addNewForm.title" :disabled="type==1" placeholder="发送人"></el-input>
+            <el-input v-model="addNewForm.title" :disabled="type==1" placeholder="消息标题"></el-input>
           </el-form-item>
 
           <el-form-item label="消息内容：">
-            <el-input v-model="addNewForm.content" type="textarea" :disabled="type==1" placeholder="发送人"></el-input>
+            <el-input v-model="addNewForm.content" type="textarea" :disabled="type==1" placeholder="消息内容"></el-input>
           </el-form-item>
         </el-form>
       </div>  

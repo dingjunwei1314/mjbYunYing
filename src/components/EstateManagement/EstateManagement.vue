@@ -140,16 +140,16 @@
           <template scope="scope">
           <el-button
             size="small"
-            @click="handleEdit(scope.$index, scope.row)">查看</el-button>
+            @click="handleEdit(scope.$index, scope.row,1)">查看</el-button>
           <el-button
             size="small"
-            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            @click="handleEdit(scope.$index, scope.row,2)">编辑</el-button>
             <el-button
             size="small"
-            @click="handleEdit(scope.$index, scope.row)">添加报告</el-button>
+            @click="handleEdit(scope.$index, scope.row,2)">添加报告</el-button>
             <el-button
             size="small"
-            @click="handleEdit(scope.$index, scope.row)">添加评分</el-button>
+            @click="handleEdit(scope.$index, scope.row,2)">添加评分</el-button>
           <el-button
             size="small"
             type="danger"
@@ -168,8 +168,6 @@
         :total="tableData.total">
       </el-pagination>
     </div>
-
-   
     
   </div>
 </template>
@@ -285,8 +283,13 @@ export default {
       handleSelectionChange(val){
         this.multipleSelection = val;
       },
-      handleEdit(index, row) {
+      handleEdit(index, row ,type) {
         console.log(index, row);
+        if(type==1){
+          this.$router.push({path:'/index/estatedetail'})
+        }else if(type==2){
+          this.$router.push({path:'/index/estateedit'})
+        }
       },
       handleDelete(index, row) {
         let _this=this;

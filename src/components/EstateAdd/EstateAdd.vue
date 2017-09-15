@@ -1518,6 +1518,7 @@ export default {
             map
           });
           _this.markers.push(marker)
+          console.log(marker)
         });
       },
       addid(){
