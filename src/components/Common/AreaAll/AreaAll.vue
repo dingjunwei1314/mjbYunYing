@@ -1,26 +1,15 @@
 <template>
-    
       <div style="display:inline-block;" class="area_wap">
-       
-          <el-select  style="width:140px" :disabled="isdisabled" clearable v-model="new_area.sheng" placeholder="省" @change="area_change">
+          <el-select  style="width:140px" :disabled="isdisabled" clearable v-model="new_area.province" placeholder="省" @change="area_change">
             <el-option v-for="(item,index) in area_arr" :key="index" :label="item.name" :value="item.name"></el-option>
           </el-select>
-     
-      
-        
-          <el-select  style="width:140px" :disabled="isdisabled" clearable v-model="new_area.shi" placeholder="市" @change="city_area_change">
+          <el-select  style="width:140px" :disabled="isdisabled" clearable v-model="new_area.city" placeholder="市" @change="city_area_change">
             <el-option v-for="(item,index) in city_area_arr" :key="index" :label="item.name" :value="item.name"></el-option>
           </el-select>
-       
-      
-       
-          <el-select style="width:140px" v-if="isshowqu" :disabled="isdisabled" clearable v-model="new_area.qu" placeholder="区">
+          <el-select style="width:140px" v-if="isshowqu" :disabled="isdisabled" clearable v-model="new_area.area" placeholder="区">
             <el-option v-for="(item,index) in area_area_arr" :key="index" :label="item" :value="item"></el-option>
           </el-select>
-       
-      
       </div>
- 
 </template>
 <script>
 import area_arr from './js/area';
@@ -30,7 +19,7 @@ export default {
       area:{
         required:true,
         type:Object,
-        default:{sheng:'',shi:'',qu:''}
+        default:{province:'',city:'',area:''}
       },
       isshowqu:{
         type:Boolean,
@@ -40,7 +29,6 @@ export default {
         type:Boolean,
         default:false
       }
-
     },
     data(){
       return{
@@ -51,14 +39,13 @@ export default {
       }
     },
     computed:{
-      
     },
     methods: {
       area_change(val){
         this.city_area_arr=[];
         this.area_area_arr=[];
-        this.new_area.shi='';
-        this.new_area.qu='';
+        this.new_area.city='';
+        this.new_area.area='';
         if(val!=''){
           for(let i in this.area_arr){
             if(this.area_arr[i].name==val){
@@ -70,10 +57,10 @@ export default {
       city_area_change(val){
         if(this.isshowqu){
           this.area_area_arr=[];
-          this.new_area.qu='';
+          this.new_area.area='';
           if(val != ''){
             for(var i in this.area_arr){
-              if(this.area_arr[i].name==this.new_area.sheng){
+              if(this.area_arr[i].name==this.new_area.province){
                 for(var j in this.area_arr[i].city){
                   if(this.area_arr[i].city[j].name==val){
                     this.area_area_arr=this.area_arr[i].city[j].area
@@ -86,7 +73,6 @@ export default {
       }
     },
     mounted(){
-      
     }
   }
 </script>

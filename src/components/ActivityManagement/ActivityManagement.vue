@@ -63,6 +63,7 @@
         </el-table-column>
       </el-table>
       <el-button type="primary" size="small" @click="hide_or_show_add(true)">添加活动轮播图</el-button>
+      <el-button type="primary" size="small" @click="hide_or_show_sort(true)">轮播图排序</el-button>
       <el-button type="danger" size="small" @click="handle_some(1)">批量删除</el-button>
       <el-button type="primary" size="small" @click="handle_some(2)">批量更新</el-button>
     </div>
@@ -84,16 +85,21 @@
           </el-input>
         </el-form-item>
 
+        
+
+
+
         <el-form-item label="上传图片">
           <el-upload
-            class="upload-demo"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :file-list="fileList">
-            <el-button size="small" type="primary">点击上传</el-button>
-            <span slot="tip" style="color:red;padding-left:10px" class="el-upload__tip">注：图片支持jpg及bmp格式，上传图片尺寸建议为750*360，图片大小2m内</span>
-          </el-upload>
+          class="avatar-uploader"
+          action="https://jsonplaceholder.typicode.com/posts/"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload">
+          <img v-if="addNewForm.imageUrl" :src="addNewForm.imageUrl" class="avatar">
+          <el-button v-else size="small" type="primary">点击上传</el-button>
+          <p slot="tip" style="color:red;padding-left:10px" class="el-upload__tip">注：图片支持jpg及bmp格式，上传图片尺寸建议为750*360，图片大小2m内</p>
+        </el-upload>
         </el-form-item>
         
         <el-form-item label="备注">
@@ -101,7 +107,7 @@
         </el-form-item>
          
         <el-form-item label="排序">
-          <el-input type="number" style="width:120px" v-model="addNewForm.sort"></el-input>
+          <el-input type="number" style="width:120px" v-model="addNewForm.show_sort"></el-input>
         </el-form-item> 
 
         <el-form-item label="活动上下线">
@@ -111,13 +117,47 @@
           </el-radio-group>
         </el-form-item>
         
-
         <el-form-item>
           <el-button style="margin-left:120px" type="primary" @click="add_new">提交</el-button>
         </el-form-item>
       </el-form>
     </div>
-  
+
+    <div class="addnew_wap" v-if="is_show_sort_wap">
+      <p class="tit_wap">
+        轮播图排序
+        <i class="el-icon-close" @click="hide_or_show_sort(false)"></i>
+      </p>
+      <el-table
+        v-loading="is_loading_tab"
+        ref="multipleTable"
+        :data="sortTableDataComput"
+        tooltip-effect="dark"
+        style="width: 100%;font-size:12px!important;margin-bottom:20px;text-align:center">
+        
+        <el-table-column
+          label="标题"
+          prop="title"
+          min-width="title">
+        </el-table-column>
+
+        <el-table-column
+          prop="time"
+          min-width="100"
+          label="发布时间">
+        </el-table-column>
+        <el-table-column
+          min-width="100"
+          label="操作">
+          <template scope="scope">
+            <i @click="handlerSort(scope.$index, scope.row,true)" v-if="scope.row.show_sort!=1 && tableData.length!=1" style="font-size:20px;cursor:pointer" class="fa fa-arrow-up"></i>
+            <i @click="handlerSort(scope.$index, scope.row,false)" v-if="scope.row.show_sort!=tableData.length && tableData.length!=1" style="font-size:20px;cursor:pointer" class="fa fa-arrow-down"></i>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+
+
     
   </div>
 </template>
@@ -135,18 +175,18 @@ export default {
     },
     data() {
       return {
-        fileList:[],
         is_show_add_wap:false,
+        is_show_sort_wap:false,
         secondLevel:'活动管理',
         threeLevel:'活动管理',
        
-      
         addNewForm: {
           title: '',
           url: '',
           remark:'',
-          sort:'',
+          show_sort:'',
           state:'',
+          imageUrl:''
         },
         current_data:{
           type:'',
@@ -161,7 +201,14 @@ export default {
      
     },
     computed:{
-                                        
+      sortTableDataComput(){
+        let _this=this;
+        let arr=_.cloneDeep(_this.tableData)
+        arr.sort(function(a,b){
+          return a.show_sort-b.show_sort
+        })
+        return arr;
+      }          
     },
     created(){
       this.getdata()
@@ -179,6 +226,23 @@ export default {
         }).catch(function(err){
           console.log(err)
         })
+      },
+      getdetaildata(){
+        let _this=this;
+        this.$http('/activitydetail').then(function(res){
+          console.log(res)
+          if(res.data.code==1000){
+            _this.addNewForm=res.data.data;
+          }
+        }).catch(function(err){
+          console.log(err)
+        })
+      },
+      beforeAvatarUpload(){
+
+      },
+      handleAvatarSuccess(){
+
       },
       handleRemove(file, fileList) {
         console.log(file, fileList);
@@ -200,7 +264,7 @@ export default {
             message: '请添加链接'
           });
           return;
-        }else if(this.addNewForm.sort==''){
+        }else if(this.addNewForm.show_sort==''){
           this.$message({
             type: 'warning',
             message: '请添加排序'
@@ -213,20 +277,31 @@ export default {
           });
           return;
         }
-        this.$http('',_this.addNewForm).then(function(res){
-
-        }).catch(function(err){
-          console.log(err)
-        })
-        this.$message({
-          type: 'success',
-          message: '添加成功'
+        this.$confirm('确认提交吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          _this.$http('',_this.addNewForm).then(function(res){
+          }).catch(function(err){
+            console.log(err)
+          })
+          _this.$message({
+            type: 'success',
+            message: '更新成功'
+          });
+          _this.getdata();
+          _this.is_show_add_wap=false;
+          for(let i in _this.addNewForm){
+            _this.addNewForm[i]=''
+          }
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });          
         });
-        this.getdata();
-        this.is_show_add_wap=false;
-        for(let i in this.addNewForm){
-          this.addNewForm[i]=''
-        }
+        
       },
       handleSelectionChange(val){
         console.log(val)
@@ -273,11 +348,9 @@ export default {
           });          
         });
       },
+      //上下线 更新 编辑 删除
       handle(index,row,type){
-        console.log(row)
-        console.log(index)
-
-        let _this=this,
+            let _this=this,
             show_message_tit="",
             show_message_success="",
             show_message_error="";
@@ -294,7 +367,9 @@ export default {
           show_message_success="更新成功!";
           show_message_error="已取消更新";
         }else if(type==3){
-          
+          this.getdetaildata()
+          this.is_show_add_wap=true;
+          return;
         }else{
           show_message_tit="确定删除该楼盘？";
           show_message_success="删除成功!";
@@ -318,11 +393,40 @@ export default {
         });
       },
       hide_or_show_add(swi){
+        this.is_show_sort_wap=false;
         this.is_show_add_wap=swi;
         for(let i in this.addNewForm){
           this.addNewForm[i]=''
         }   
-      },     
+      },  
+      //排序
+      handlerSort(index,row,type){
+        if(type){
+          this.tableData.forEach(function(item,i){
+            if(row.id==item.id){
+              item.show_sort-=1;
+            }else if(row.show_sort-item.show_sort==1){
+              item.show_sort+=1;  
+            }
+          })
+        }else{
+          this.tableData.forEach(function(item,i){
+            if(row.id==item.id){
+              item.show_sort+=1;
+            }else if(row.show_sort-item.show_sort==-1){
+              item.show_sort-=1;  
+            }
+          })
+        }
+        this.getdata()
+      },
+      hide_or_show_sort(swi){
+        this.is_show_add_wap=false;
+        for(let i in this.addNewForm){
+          this.addNewForm[i]=''
+        }  
+        this.is_show_sort_wap=swi;
+      },   
       refresh(){
         this.$store.dispatch('mainLoadingAction',true);
         this.getdata()
@@ -372,4 +476,5 @@ export default {
   .activitymanagment .top_wap .el-input__inner{height: 25px;}
   .activitymanagment .top_wap .el-table th>.cell{text-align: center;}
   .activitymanagment .top_wap .el-table .cell{text-align: center;}
+  .activitymanagment .el-table th>.cell{text-align:center}
 </style>

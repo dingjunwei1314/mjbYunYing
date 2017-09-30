@@ -22,7 +22,7 @@
         <i class="fa fa-user-o" style="margin-right:10px"></i>
         <span slot="title">文章管理</span>
       </template>
-      <el-menu-item index="/index/posts">文章管理</el-menu-item>
+      <el-menu-item index="/index/articlemanagement">文章管理</el-menu-item>
     </el-submenu>
       <el-submenu index="4">
         <template slot="title">
@@ -52,9 +52,9 @@
           <i class="fa fa-user-o" style="margin-right:10px"></i>
           <span slot="title">账户管理</span>
         </template>
-        <el-menu-item index="/index/roleAdmin">角色管理</el-menu-item>
-        <el-menu-item index="/index/accountAdmin">账户管理</el-menu-item>
-
+        <el-menu-item index="/index/rolemanagement">角色管理</el-menu-item>
+        <el-menu-item index="/index/accountmanagement">账户管理</el-menu-item>
+        <el-menu-item index="/index/changePassword">修改密码</el-menu-item>
       </el-submenu>
   </el-menu>
 

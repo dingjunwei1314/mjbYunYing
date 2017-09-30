@@ -64,18 +64,21 @@ const CooperOrders=function(resolve){
 }
 
 //文章管理
-const Posts=function(resolve){
+const ArticleManagement=function(resolve){
   require.ensure([],function(){
-    resolve(require('../components/Posts/posts'))
+    resolve(require('../components/ArticleManagement/ArticleManagement'))
   })
 }
-//新建文章
-const NewText=function(resolve){
+const NewArticle=function(resolve){
   require.ensure([],function(){
-    resolve(require('../components/Posts/newtext'))
+    resolve(require('../components/ArticleManagement/NewArticle'))
   })
 }
-
+const ArticleDetail=function(resolve){
+  require.ensure([],function(){
+    resolve(require('../components/ArticleManagement/ArticleDetail'))
+  })
+}
 //活动管理
 const ActivityManagement=function(resolve){
     require.ensure([],function(){
@@ -89,14 +92,13 @@ const ConsultAdmin=function(resolve){
     resolve(require('../components/consultAdmin/consultAdmin'))
   })
 }
-//资讯详情
 const CounsultParticulars=function(resolve){
   require.ensure([],function(){
     resolve(require('../components/consultAdmin/counsultParticulars'))
   })
 }
-//用户管理
 
+//用户管理
 const UserList=function(resolve){
     require.ensure([],function(){
         resolve(require('../components/UserList/UserList'))
@@ -107,7 +109,6 @@ const IntentUserList=function(resolve){
         resolve(require('../components/IntentUserList/IntentUserList'))
     })
 }
-
 const MessageManagement=function(resolve){
     require.ensure([],function(){
         resolve(require('../components/MessageManagement/MessageManagement'))
@@ -115,9 +116,9 @@ const MessageManagement=function(resolve){
 }
 
 //账户管理
-const AccountAdmin = function (resolve) {
+const AccountManagement = function (resolve) {
     require.ensure([],function () {
-      resolve(require('../components/accountAdmin/accountAdmin'))
+      resolve(require('../components/AccountManagement/AccountManagement'))
     })
 }
 
@@ -130,22 +131,22 @@ const ChangePassword = function (resolve) {
 
 
 //新建管理员
-const CreateNewAdmin = function (resolve) {
+const CreateNewAccount = function (resolve) {
   require.ensure([],function () {
-    resolve(require('../components/accountAdmin/createNewAdmin'))
+    resolve(require('../components/AccountManagement/CreateNewAccount'))
   })
 }
 //角色管理
 
-const RoleAdmin = function (resolve) {
+const RoleManagement = function (resolve) {
     require.ensure([],function () {
-      resolve(require('../components/accountAdmin/roleAdmin'))
+      resolve(require('../components/AccountManagement/RoleManagement'))
     })
 }
 //新建角色
-const CreateAdmin = function (resolve) {
+const CreateNewRole = function (resolve) {
   require.ensure([],function () {
-    resolve(require('../components/accountAdmin/createAdmin'))
+    resolve(require('../components/AccountManagement/CreateNewRole'))
   })
 }  
 export default new Router({
@@ -157,7 +158,6 @@ export default new Router({
             path: '/login',
             component: Login,
         },
-
         {
             path:'/index',
             component:Index,
@@ -211,20 +211,24 @@ export default new Router({
                 component:MessageManagement
                 },
                 {
-                  path:'/index/posts',
-                  component:Posts
+                  path:'/index/articlemanagement',
+                  component:ArticleManagement
+                },  
+                {
+                  path:'/index/articledetail',
+                  component:ArticleDetail
                 },
                 {
-                  path:'/index/newText',
-                  component:NewText
+                  path:'/index/newarticle',
+                  component:NewArticle
                 },
                 {
-                  path:'/index/accountAdmin',
-                  component:AccountAdmin,
+                  path:'/index/accountmanagement',
+                  component:AccountManagement,
                 },
                 {
-                  path:'/index/roleAdmin',
-                  component:RoleAdmin
+                  path:'/index/rolemanagement',
+                  component:RoleManagement
                 },
                 {
                   path:'/index/consultAdmin',
@@ -235,12 +239,12 @@ export default new Router({
                   component:CounsultParticulars
                 },
                 {
-                  path:'/index/createAdmin',
-                  component:CreateAdmin
+                  path:'/index/createnewrole',
+                  component:CreateNewRole
                 },
                 {
-                  path:'/index/createNewAdmin',
-                  component:CreateNewAdmin
+                  path:'/index/createnewaccount',
+                  component:CreateNewAccount
                 },
                 {
                   path: '/index/changePassword',

@@ -102,7 +102,7 @@
       </el-pagination> -->
     </div>
      
-    <BigDialog dialogTitle="用户详情" @dialogCancel="dialogCancel" @dialogConfirm="dialogConfirm" :dialogFormVisible="dialogFormVisible">
+    <BigDialog :dialogTitle="dialogTitle" @dialogCancel="dialogCancel" @dialogConfirm="dialogConfirm" :dialogFormVisible="dialogFormVisible">
       <div slot="dia_body" class="dia_body">
         <el-form v-if="dialogFormVisible" ref="form" :model="addNewForm" label-width="150px" style="margin:0px auto;width:620px">
           <el-form-item label="发送对象：">
@@ -156,6 +156,7 @@ export default {
     },
     data() {
       return {
+        dialogTitle:'',
         currentPage:1,
         type:'',
         dialogFormVisible:false,
@@ -220,6 +221,7 @@ export default {
 
       },
       addNew(){
+        this.dialogTitle='新建消息';
         for(let i in this.addNewForm){
           if(i!='sender'){
             this.addNewForm[i]='';
@@ -280,7 +282,8 @@ export default {
       handleEdit(index,row){
         let _this=this,
             data={id:row.id};
-        this.type=1
+        this.type=1;
+        this.dialogTitle='消息详情';
         this.$http('/messagedetail',{},data).then(function(res){
           console.log(res)
           if(res.data.code==1000){
@@ -334,12 +337,24 @@ export default {
             });
             return;
           }
-          this.$message({
-            type: 'success',
-            message: '发送成功'
+
+          this.$confirm('确认提交吗?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+          }).then(() => {
+              this.$message({
+                type: 'success',
+                message: '提交成功'
+              });
+              this.dialogFormVisible=false;
+              this.getdata()
+          }).catch(() => {
+              _this.$message({
+                  type: 'info',
+                  message: '已取消'
+              });
           });
-          this.dialogFormVisible=false;
-          this.getdata()
         }
         
       },

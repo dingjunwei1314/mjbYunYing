@@ -2,87 +2,89 @@
     <div class="accountAdmin">
       <Subnav :secondLevel="secondLevel" :threeLevel="threeLevel" @refresh="refresh"></Subnav>
       <div class="accountAdminTop">
-          <p>管理员管理</p>
-          <div class="accountAdminInquire">
-            <div class="accountAdminInquireInput">
-              <div>
-                <span>用户名</span>:
-                  <el-input v-model="input" placeholder="请输入内容"></el-input>
-              </div>
-              <div>
-                <span>真实姓名</span>:
-                  <el-input v-model="input" placeholder="请输入内容"></el-input>
-              </div>
+        <p>管理员管理</p>
+        <div class="accountAdminInquire">
+          <div class="accountAdminInquireInput">
+            <div>
+              <span>用户名</span>:
+                <el-input v-model="filterForm.user_name" placeholder="请输入内容"></el-input>
             </div>
-            <div class="accountAdminInquireDate">
-              <span class="demonstration">发布时间</span>
-              <el-date-picker
-                v-model="value1"
-                align="right"
-                type="date"
-                placeholder="选择日期"
-               >
-              </el-date-picker>
-              <span class="demonstration">至</span>
-              <el-date-picker
-                v-model="value2"
-                align="right"
-                type="date"
-                placeholder="选择日期"
-               >
-              </el-date-picker>
+            <div>
+              <span>真实姓名</span>:
+                <el-input v-model="filterForm.real_name" placeholder="请输入内容"></el-input>
             </div>
-            <el-button type="primary">查询</el-button>
           </div>
+          <div class="accountAdminInquireDate">
+            <span class="demonstration">创建时间</span>
+            <el-date-picker
+              v-model="filterForm.register_begin_time"
+              align="right"
+              type="date"
+              placeholder="开始时间"
+              >
+            </el-date-picker>
+            <span class="demonstration">至</span>
+            <el-date-picker
+              v-model="filterForm.register_end_time"
+              align="right"
+              type="date"
+              placeholder="结束时间"
+              >
+            </el-date-picker>
+          </div>
+          <el-button type="primary" @click="search">查询</el-button>
+        </div>
         <div class="accountAdminInquireTable">
-              <div class="accountAdminInquireNum">
-                <router-link to="/index/createNewAdmin">
-                   <el-button type="primary">新建账户</el-button>
-                </router-link>
-                    <i>11</i>
-              </div>
+          <div class="accountAdminInquireNum">
+            <router-link to="/index/createnewaccount">
+                <el-button type="primary">新建账户</el-button>
+            </router-link>     
+          </div>
           <el-table
-            v-loading="loading"
+            v-loading="is_loading_tab"
             :data="tableData"
-            style="width: 100%">
+            style="width: 100%;font-size:12px!important">
             <el-table-column
-              prop="date"
+              prop="id"
               label="ID"
               width="180">
             </el-table-column>
             <el-table-column
-              prop="name"
+              prop="user_name"
               label="用户名"
               width="180">
             </el-table-column>
             <el-table-column
-              prop="address"
+              prop="real_name"
               label="真实姓名">
             </el-table-column>
             <el-table-column
-              prop="address"
+              prop="created_time"
               label="创建时间">
             </el-table-column>
             <el-table-column
-              prop="address"
+              prop="role"
               label="角色分配">
             </el-table-column>
             <el-table-column
-              prop="address"
+              prop="ip"
               label="登陆IP">
             </el-table-column>
             <el-table-column width="180px" label="操作">
               <template scope="scope">
+                <router-link :to="{path:'/index/createnewaccount',query:{type:'edit',id:scope.row.id}}">
+                  <el-button
+                    size="small"
+                    type="info">
+                    编辑
+                  </el-button>
+                </router-link>
                 <el-button
                   size="small"
                   type="danger"
-                  @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-                <router-link to="/index/counsultParticulars">
-                  <el-button
-                    size="small"
-                    type="info"
-                    @click="handleDelete(scope.$index, scope.row)">修改</el-button>
-                </router-link>
+                  @click="handleDelete(scope.$index, scope.row)">
+                  删除
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -99,34 +101,41 @@
       components:{
         Subnav,
       },
-        data(){
-            return{
-              input:'',
-              secondLevel:'账户管理',
-              threeLevel:'账户管理',
-              value1:'',
-              value2:'',
-              loading:false,
-              tableData: [{
-                date: '2016-05-02',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-              }, {
-                date: '2016-05-04',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1517 弄'
-              }, {
-                date: '2016-05-01',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1519 弄'
-              }, {
-                date: '2016-05-03',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1516 弄'
-              }]
-            }
-        },
+      data(){
+          return{
+            secondLevel:'账户管理',
+            threeLevel:'账户管理',
+            filterForm:{
+              user_name:'',
+              real_name:'',
+              register_begin_time:'',
+              register_end_time:''
+            },
+            is_loading_tab:false,
+            tableData: []
+          }
+      },
+      created(){
+        this.getdata()
+      },
       methods:{
+        getdata(){
+          let _this=this;
+          _this.is_loading_tab=true;
+          this.$http('/accountlist',{},_this.filterForm).then(function(res){
+          console.log(res)
+          if(res.data.code==1000){
+              _this.tableData=res.data.data;
+          }
+          _this.is_loading_tab=false;
+          }).catch(function(err){
+              _this.is_loading_tab=false;
+              console.log(err)
+          })
+        },
+        search(){
+          this.getdata()
+        },
         refresh(){
           this.$store.dispatch('mainLoadingAction',true);
           this.getdata()
@@ -140,31 +149,28 @@
           },300)
         },
         //是否删除
-        open2($index) {
-          this.$confirm('此操作将永久删除该角色, 是否继续?', '提示', {
+        handleDelete(index,row){
+          this.$confirm('确认删除吗?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
+            this.getdata()
             this.$message({
               type: 'success',
               message: '删除成功!'
             });
-            this.tableData.splice($index,1);
           }).catch(() => {
             this.$message({
               type: 'info',
-              message: '已取消删除'
+              message: '已取消'
             });
           });
-        },
-        handleDelete($index){
-          this.open2($index);
         }
       },
       mounted(){
         this.$store.dispatch('mainLoadingAction',true);
-        this.$store.dispatch('defaultIndexAction','/index/accountAdmin');
+        this.$store.dispatch('defaultIndexAction','/index/accountmanagement');
         var that=this;
         setTimeout(function(){
           that.$store.dispatch('mainLoadingAction',false);

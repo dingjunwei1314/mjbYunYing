@@ -13,76 +13,80 @@
               <el-form-item label="区域" :required="true">
                 <AreaAll :area="add_new_estate_form"></AreaAll> 
               </el-form-item>
-              <el-form-item label="标题" style="width:400px" :required="true" prop="title">
-                <el-input v-model="add_new_estate_form.title" placeholder="标题" auto-complete="off"></el-input>
+              <el-form-item label="标题" style="width:400px" :required="true" prop="buidingName">
+                <el-input v-model="add_new_estate_form.buidingName" placeholder="标题" auto-complete="off"></el-input>
               </el-form-item>
-              <el-form-item label="楼盘别名" style="width:400px"  prop="alias">
-                <el-input v-model="add_new_estate_form.alias"  placeholder="楼盘别名" auto-complete="off"></el-input>
+              <el-form-item label="楼盘别名" style="width:400px"  prop="nickName">
+                <el-input v-model="add_new_estate_form.nickName"  placeholder="楼盘别名" auto-complete="off"></el-input>
               </el-form-item>
 
               <el-form-item label="描述"  prop="desc">
                 <el-input v-model="add_new_estate_form.desc" placeholder="描述"  style="width:70%" type="textarea" auto-complete="off"></el-input>
               </el-form-item>
 
-              <el-form-item label="物业类型" :required="true" prop="type">
-                <el-radio-group v-model="add_new_estate_form.type">
-                  <el-radio :label="1">普通住宅</el-radio>
-                  <el-radio :label="2">公寓</el-radio>
-                  <el-radio :label="3">商住</el-radio>
-                  <el-radio :label="4">别墅</el-radio>
-                  <el-radio :label="5">其他</el-radio>
+              <el-form-item label="物业类型" :required="true" prop="propertyType">
+                <el-radio-group v-model="add_new_estate_form.propertyType">
+                  <el-radio :label="0">普通住宅</el-radio>
+                  <el-radio :label="1">公寓</el-radio>
+                  <el-radio :label="2">商住</el-radio>
+                  <el-radio :label="3">别墅</el-radio>
+                  <el-radio :label="4">其他</el-radio>
                 </el-radio-group>
               </el-form-item>
 
-              <el-form-item label="销售状态" :required="true" prop="state">
-                <el-radio-group v-model="add_new_estate_form.state">
-                  <el-radio :label="1">在售</el-radio>
-                  <el-radio :label="2">待售</el-radio>
-                  <el-radio :label="3">售罄</el-radio>
+              <el-form-item label="销售状态" :required="true" prop="sellStatus">
+                <el-radio-group v-model="add_new_estate_form.sellStatus">
+                  <el-radio :label="0">在售</el-radio>
+                  <el-radio :label="1">待售</el-radio>
+                  <el-radio :label="2">售罄</el-radio>
                 </el-radio-group>
               </el-form-item>
 
-              <el-form-item label="开盘日期"  prop="openingDate">
+              <el-form-item label="开盘日期"  prop="sellTime">
                 <el-date-picker
-                  v-model="add_new_estate_form.openingDate"
+                  format="yyyy-MM-dd"
+                  v-model="add_new_estate_form.sellTime"
                   type="date"
+                  @change="sell_time_change"
                   placeholder="开盘日期">
                 </el-date-picker>
                 <span style="color:#999;font-size:12px">主要是以开盘说明为准，这里用于开盘日历及列表排序</span>
               </el-form-item>
 
-              <el-form-item label="交房日期"  prop="handoverDate">
+              <el-form-item label="交房日期"  prop="deliverTime">
                 <el-date-picker
-                  v-model="add_new_estate_form.handoverDate"
+                  format="yyyy-MM-dd"
+                  v-model="add_new_estate_form.deliverTime"
                   type="date"
+                  @change="deliver_time_change"
                   placeholder="交房日期">
                 </el-date-picker>
               </el-form-item>
 
-              <el-form-item label="均价"  prop="averagePrice">
-                <el-input v-model="add_new_estate_form.averagePrice" placeholder="均价" style="width:100px" auto-complete="off"></el-input>
+              <el-form-item label="均价"  prop="avgPrice">
+                <el-input v-model="add_new_estate_form.avgPrice" placeholder="均价" style="width:100px" auto-complete="off"></el-input>
                 <span style="color:#999;font-size:12px">单位是：元/M2,不填写为待定;</span>
               </el-form-item>
              
-              <el-form-item label="装修程度" :required="true" prop="decorationDegree">
-                <el-radio-group v-model="add_new_estate_form.decorationDegree">
-                  <el-radio :label="1">毛坯</el-radio>
-                  <el-radio :label="2">简单装修</el-radio>
-                  <el-radio :label="3">中档装修</el-radio>
-                  <el-radio :label="4">高档装修</el-radio>
-                  <el-radio :label="5">豪华装修</el-radio>
-                  <el-radio :label="6">其它</el-radio>
+              <el-form-item label="装修程度" :required="true" prop="decorationdLevel">
+                <el-radio-group v-model="add_new_estate_form.decorationdLevel">
+                  <el-radio :label="0">毛坯</el-radio>
+                  <el-radio :label="1">简单装修</el-radio>
+                  <el-radio :label="2">中档装修</el-radio>
+                  <el-radio :label="3">高档装修</el-radio>
+                  <el-radio :label="4">豪华装修</el-radio>
+                  <el-radio :label="5">其它</el-radio>
                 </el-radio-group>
               </el-form-item>
               
-              <el-form-item label="楼层" :required="true"  prop="floor">
+              <el-form-item label="楼层" :required="true"  prop="storey">
                
-                <el-radio-group v-model="add_new_estate_form.floor">
-                  <el-radio :label="1">底层</el-radio>
-                  <el-radio :label="2">多层</el-radio>
-                  <el-radio :label="3">小高层</el-radio>
-                  <el-radio :label="4">高层</el-radio>
-                  <el-radio :label="5">超高层</el-radio>
+                <el-radio-group v-model="add_new_estate_form.storey">
+                  <el-radio :label="0">底层</el-radio>
+                  <el-radio :label="1">多层</el-radio>
+                  <el-radio :label="2">小高层</el-radio>
+                  <el-radio :label="3">高层</el-radio>
+                  <el-radio :label="4">超高层</el-radio>
                 </el-radio-group>
                 <span style="color:#999;font-size:12px">1~3为底层，4~7为多层，8~12为小高层，13~25为高层，26层100米以上为超高层</span>
               </el-form-item>
@@ -101,25 +105,25 @@
               
               <el-form-item label="现房期房" :required="true"  prop="existing">
                 <el-radio-group v-model="add_new_estate_form.existing">
-                  <el-radio :label="1">现房</el-radio>
-                  <el-radio :label="2">准现房</el-radio>
-                  <el-radio :label="3">期房</el-radio>
+                  <el-radio :label="0">现房</el-radio>
+                  <el-radio :label="1">准现房</el-radio>
+                  <el-radio :label="2">期房</el-radio>
                 </el-radio-group>
               </el-form-item>
 
-              <el-form-item label="产权年限" style="width:200px"  prop="year">
-                <el-input v-model="add_new_estate_form.year" placeholder="产权年限" auto-complete="off"></el-input>
+              <el-form-item label="产权年限" style="width:200px"  prop="housingProperty">
+                <el-input v-model="add_new_estate_form.housingProperty" placeholder="产权年限" auto-complete="off"></el-input>
               </el-form-item>
 
-              <el-form-item label="楼盘特色标签"   prop="feature">
-                <el-radio-group v-model="add_new_estate_form.feature">
-                  <el-radio :label="1">地铁沿线房</el-radio>
-                  <el-radio :label="2">学区置业房</el-radio>
-                  <el-radio :label="3">甜蜜新婚房</el-radio>
-                  <el-radio :label="4">投资置业房</el-radio>
-                  <el-radio :label="5">生态景观房</el-radio>
-                  <el-radio :label="6">单身贵族房</el-radio>
-                </el-radio-group>
+              <el-form-item label="楼盘特色标签"   prop="housingLable">
+                <el-checkbox-group v-model="add_new_estate_form.housingLable">
+                  <el-checkbox :label="0">地铁沿线房</el-checkbox>
+                  <el-checkbox :label="1">学区置业房</el-checkbox>
+                  <el-checkbox :label="2">甜蜜新婚房</el-checkbox>
+                  <el-checkbox :label="3">投资置业房</el-checkbox>
+                  <el-checkbox :label="4">生态景观房</el-checkbox>
+                  <el-checkbox :label="5">单身贵族房</el-checkbox>
+                </el-checkbox-group>
               </el-form-item>
 
             </el-form>
@@ -134,24 +138,24 @@
               <el-form-item label="地铁" style="width:400px"  prop="metro">
                 <el-input v-model="add_new_estate_form.metro" placeholder="地铁" auto-complete="off"></el-input>
               </el-form-item>
-              <el-form-item label="环线"  prop="loopLine">
-                <el-radio-group v-model="add_new_estate_form.loopLine">
-                  <el-radio :label="1">一环以内</el-radio>
-                  <el-radio :label="2">一至二环</el-radio>
-                  <el-radio :label="3">二至三环</el-radio>
-                  <el-radio :label="4">三至四环</el-radio>
-                  <el-radio :label="5">四至五环</el-radio>
-                  <el-radio :label="6">五至六环</el-radio>
-                  <el-radio :label="7">六环外</el-radio>
+              <el-form-item label="环线"  prop="loopWire">
+                <el-radio-group v-model="add_new_estate_form.loopWire">
+                  <el-radio :label="0">一环以内</el-radio>
+                  <el-radio :label="1">一至二环</el-radio>
+                  <el-radio :label="2">二至三环</el-radio>
+                  <el-radio :label="3">三至四环</el-radio>
+                  <el-radio :label="4">四至五环</el-radio>
+                  <el-radio :label="5">五至六环</el-radio>
+                  <el-radio :label="6">六环外</el-radio>
                 </el-radio-group>
               </el-form-item>
-              <el-form-item label="楼盘地址" style="width:400px"  prop="buildingAddress">
-                <el-input v-model="add_new_estate_form.buildingAddress"  placeholder="楼盘地址" auto-complete="off"></el-input>
+              <el-form-item label="楼盘地址" style="width:400px"  prop="buidingAddress">
+                <el-input v-model="add_new_estate_form.buidingAddress"  placeholder="楼盘地址" auto-complete="off"></el-input>
               </el-form-item>
               <el-form-item label="接待时间">
                 <el-time-select
                   placeholder="开始时间"
-                  v-model="add_new_estate_form.starttime"
+                  v-model="add_new_estate_form.serviceTimeBegin"
                   :picker-options="{
                     start: '08:30',
                     step: '00:15',
@@ -160,17 +164,17 @@
                 </el-time-select>
                 <el-time-select
                   placeholder="结束时间"
-                  v-model="add_new_estate_form.endtime"
+                  v-model="add_new_estate_form.serviceTimeEnd"
                   :picker-options="{
                     start: '08:30',
                     step: '00:15',
                     end: '18:30',
-                    minTime: add_new_estate_form.starttime
+                    minTime: add_new_estate_form.serviceTimeBegin
                   }">
                 </el-time-select>
               </el-form-item>
-              <el-form-item label="交通路线" style="width:400px"  prop="trafficRoute">
-                <el-input v-model="add_new_estate_form.trafficRoute" placeholder="交通路线" type="textarea" auto-complete="off"></el-input>
+              <el-form-item label="交通路线" style="width:400px"  prop="trafficRoutes">
+                <el-input v-model="add_new_estate_form.trafficRoutes" placeholder="交通路线" type="textarea" auto-complete="off"></el-input>
               </el-form-item>
               <el-form-item label="地图" style="width:200px">
                 <el-button type="text" @click="show_map()">位置标注</el-button>
@@ -185,41 +189,47 @@
             </p>
             
             <el-form :model="add_new_estate_form"  label-width="100px" class="demo-dynamic" style="width:60%;margin-left:15%;margin-top:40px">
-              <el-form-item label="售楼电话" style="width:400px"  prop="sailphone">
-                <el-input v-model="add_new_estate_form.sailphone" placeholder="售楼电话" auto-complete="off"></el-input>
+              <el-form-item label="售楼电话" style="width:400px"  prop="serviceCall">
+                <el-input v-model="add_new_estate_form.serviceCall" placeholder="售楼电话" auto-complete="off"></el-input>
               </el-form-item>
-              <el-form-item label="售楼地址" style="width:400px"  prop="sailaddress">
-                <el-input v-model="add_new_estate_form.sailaddress" placeholder="售楼地址" auto-complete="off"></el-input>
+              <el-form-item label="售楼地址" style="width:400px"  prop="serviceAddress">
+                <el-input v-model="add_new_estate_form.serviceAddress" placeholder="售楼地址" auto-complete="off"></el-input>
               </el-form-item>
-              <el-form-item label="物业费" style="width:400px"  prop="propertyfee">
-                <el-input v-model="add_new_estate_form.propertyfee" placeholder="物业费" auto-complete="off"></el-input>
+              <el-form-item label="物业费" style="width:400px"  prop="propertyFee">
+                <el-input v-model="add_new_estate_form.propertyFee" placeholder="物业费" auto-complete="off"></el-input>
               </el-form-item>
-              <el-form-item label="物业公司" style="width:400px"  prop="propertycompany">
-                <el-input v-model="add_new_estate_form.propertycompany" placeholder="物业公司" auto-complete="off"></el-input>
+              <el-form-item label="物业公司" style="width:400px"  prop="propertyCompany">
+                <el-input v-model="add_new_estate_form.propertyCompany" placeholder="物业公司" auto-complete="off"></el-input>
               </el-form-item>
-              <el-form-item label="楼盘开发商" style="width:600px"  prop="buildBuild">
-                <el-input v-model="add_new_estate_form.buildBuild" placeholder="楼盘开发商" auto-complete="off"></el-input>
+              <el-form-item label="楼盘开发商" style="width:600px"  prop="developer">
+                <el-input v-model="add_new_estate_form.developer" placeholder="楼盘开发商" auto-complete="off"></el-input>
               </el-form-item>
-              <el-form-item label="预售许可证书" style="width:600px"  prop="ys">
-                <el-input v-model="add_new_estate_form.ys"  placeholder="预售许可证书" auto-complete="off"></el-input>
+              <div v-for="(item,index) in add_new_estate_form.permitPresaleList" :key="index">
+                <el-form-item label="预售许可证书" style="width:600px">
+                  <el-input v-model="item.permitPresale"  placeholder="预售许可证书" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="发证时间" style="width:600px">
+                  <el-date-picker
+                    format="yyyy-MM-dd"
+                    v-model="item.permitPresaleTime"
+                    type="date"
+                    onPick="pick"
+                    placeholder="发证时间">
+                  </el-date-picker>
+                </el-form-item>
+                <el-form-item label="绑定楼栋" style="width:600px">
+                  <el-input v-model="item.bindbuiding"  placeholder="绑定楼栋" type="textarea" auto-complete="off"></el-input>
+                </el-form-item>
+              </div>
+        
+              <el-form-item label="添加许可证"  style="width:600px">
+                <el-button  @click="add_new_permitpresale" type="primary">添加新预售许可证</el-button>
               </el-form-item>
-              <el-form-item label="发证时间" style="width:600px"  prop="fz">
-              
-                <el-date-picker
-                  v-model="add_new_estate_form.fz"
-                  type="date"
-                  placeholder="发证时间"
-                 >
-                </el-date-picker>
-              </el-form-item>
-              <el-form-item label="绑定楼栋" style="width:600px"  prop="bd">
-                <el-input v-model="add_new_estate_form.bd"  placeholder="绑定楼栋" type="textarea" auto-complete="off"></el-input>
-              </el-form-item>
+
             </el-form>
           </div>
-
-          <div>
-            <el-button style="margin-left:320px" @click="submitForm('add_new_estate_form_ref')" type="primary">提交</el-button>
+          <div style="text-align:center">
+            <el-button  @click="submitForm('add_new_estate_form_ref')" type="primary">提交</el-button>
           </div>
         </el-tab-pane>
         <el-tab-pane label="附加信息" name="second">
@@ -1013,6 +1023,7 @@
 </template>
 
 <script>
+import formatTime from '../../common/formatTime'
 import Pdfonline from '../Common/Pdfonline/Pdfonline'
 import AreaAll from '../Common/AreaAll/AreaAll'
 import Subnav from '../Subnav/Subnav'
@@ -1153,6 +1164,47 @@ export default {
         activeName:"first",
         activeName2:'first',
 
+        //添加新的楼盘基本信息表单
+        add_new_estate_form:{
+          province:'',
+          city:'',
+          area:'',
+          buidingName:'',
+          nickName:'',
+          desc:'',
+          propertyType:'',
+          sellStatus:'',
+          sellTime:'',
+          deliverTime:'',
+          avgPrice:'',
+          decorationdLevel:'',
+          storey:'',
+          buildingType:'',
+          existing:'',
+          housingProperty:'',
+          housingLable:[],
+          metro:'',
+          loopWire:'',
+          buidingAddress:'',
+          serviceTimeBegin:'',
+          serviceTimeEnd:'',
+          trafficRoutes:'',
+          serviceCall:'',
+          serviceAddress:'',
+          propertyFee:'',
+          propertyCompany:'',
+          developer:'',
+          mapLon:'',
+          mapLat:'',
+          permitPresaleList:[
+            {
+              permitPresale:'',
+              permitPresaleTime:'',
+              bindbuiding:''
+            }
+          ]
+        },
+
         //楼盘报告数据
         repeat_data:{
           list:[]
@@ -1166,7 +1218,6 @@ export default {
         is_show_updata_repeat_swi:false,//是否显示添加报告
         pdfsrc:'/static/pdf.pdf',
         isshowpdf:false,
-
 
 
         //楼盘评分数据
@@ -1307,8 +1358,6 @@ export default {
           hzmf:'',
           zjfh:''
         },
-      
-     
         
         dialogVisible1:false,
         dialogImageUrl1:'',
@@ -1323,40 +1372,6 @@ export default {
         dialogImageUrl4:'',
         fileList4:[{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
         
-        //添加新的楼盘基本信息表单
-        add_new_estate_form:{
-          sheng:'',
-          shi:'',
-          qu:'',
-          title:'',
-          alias:'',
-          desc:'',
-          type:'',
-          state:'',
-          openingDate:'',
-          handoverDate:'',
-          averagePrice:'',
-          decorationDegree:'',
-          floor:[],
-          buildingType:'',
-          existing:'',
-          year:'',
-          feature:[],
-          metro:'',
-          buildingAddress:'',
-          starttime:'',
-          endtime:'',
-          trafficRoute:'',
-          sailphone:'',
-          sailaddress:'',
-          propertyfee:'',
-          propertycompany:'',
-          buildBuild:'',
-          addressJW:[],
-          ys:'',
-          fz:'',
-          bd:''
-        },
         //添加新的楼盘附加信息表单
         additionalInformationForm:{
           dfl:'',
@@ -1381,19 +1396,19 @@ export default {
         },
         //添加新的楼盘基本信息表单验证规则
         add_new_estate_form_rule: {
-          title: [
+          buidingName: [
             { validator: validateTitle, trigger: 'blur' }
           ],
-          type: [
+          propertyType: [
             { validator: validateType, trigger: 'blur' }
           ],
-          state: [
+          sellStatus: [
             { validator: validateState, trigger: 'blur' }
           ],
-          decorationDegree: [
+          decorationdLevel: [
             { validator: validateDecorationDegree, trigger: 'blur' }
           ],
-          floor: [
+          storey: [
             { validator: validateFloor, trigger: 'blur' }
           ],
           existing: [
@@ -1405,19 +1420,10 @@ export default {
         center:[116.480983, 40.0958],      
       };
     },
-    filters:{
-     
-    },
     computed:{
                                
     },
     watch:{
-      'area':{
-        handler:function(val){
-          console.log(val)
-        },
-        deep:true
-      },
       'add_new_estate_form.sheng':{
         handler:function(val){
           for(let i in this.coordinatearr){
@@ -1438,7 +1444,80 @@ export default {
       this.getybjdata()
     },
     methods: {
-     
+      sell_time_change(val){
+        this.add_new_estate_form.sellTime=val
+      },
+      deliver_time_change(val){
+        this.add_new_estate_form.deliverTime=val
+      },
+      //添加新预售许可证
+      add_new_permitpresale(){
+        this.add_new_estate_form.permitPresaleList.push({permitPresale:'',permitPresaleTime:'',bindbuiding:''})
+      },
+      //楼盘基本信息提交
+      submitForm(formName) {
+        
+        console.log(this.add_new_estate_form)
+        let _this=this;
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            console.log(_this.add_new_estate_form)
+            _this.$confirm('确认提交吗?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              for(let i in this.add_new_estate_form.permitPresaleList){
+                this.add_new_estate_form.permitPresaleList[i].permitPresaleTime=formatTime(this.add_new_estate_form.permitPresaleList[i].permitPresaleTime)
+              }
+              this.$http('/add',{body:_this.add_new_estate_form},{},{},'post').then(function(res){
+                if(res.data.code==0){
+                  if(res.data.response.status==1){
+                    _this.$message({
+                      message: res.data.response.message,
+                      type: 'warning'
+                    });
+                  }else{
+                    _this.$message({
+                      message: res.data.response.message,
+                      type: 'warning'
+                    });
+                  }
+                }else{
+                  _this.$message({
+                    message: res.data.message,
+                    type: 'warning'
+                  });
+                }
+              }).catch(function(err){
+                console.log(err)
+                _this.$message({
+                  message: '请求失败，请稍后重试',
+                  type: 'warning'
+                });
+              })
+            
+            }).catch(() => {
+              _this.$message({
+                type: 'info',
+                message: '已取消提交'
+              });          
+            });
+
+          } else {
+            _this.$message({
+              type: 'info',
+              message: '有必填项未填'
+            });
+            return false;
+          }
+        });
+      },
+
+
+
+
+
       //获取楼盘评分请求
       getscoredata(){
         let _this=this;
@@ -1946,37 +2025,6 @@ export default {
           message: '操作成功'
         });  
       },
-
-
-
-      //楼盘基本信息提交
-      submitForm(formName) {
-        let _this=this;
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            console.log(_this.add_new_estate_form)
-            _this.$confirm('确认提交吗?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              _this.$message({
-                type: 'success',
-                message: '提交成功!'
-              });
-            }).catch(() => {
-              _this.$message({
-                type: 'info',
-                message: '已取消提交'
-              });          
-            });
-
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
-      },
       //楼盘附加信息提交
       submitForm2(){
         let _this=this;
@@ -2024,8 +2072,10 @@ export default {
           }   
           _this.markers=[]        
           let add_arr=[e.lnglat.getLng(),e.lnglat.getLat()] 
-          _this.add_new_estate_form.addressJW=[e.lnglat.getLng(),e.lnglat.getLat()]        
-          var marker = new AMap.Marker({
+          _this.add_new_estate_form.mapLon=e.lnglat.getLng()
+          _this.add_new_estate_form.mapLat=e.lnglat.getLat()
+      
+          var marker = new AMap.Marker({ 
             position: add_arr,
             map
           });

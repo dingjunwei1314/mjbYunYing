@@ -11,15 +11,15 @@
             <el-form  label-width="150px" class="demo-dynamic" style="width:60%;margin-left:15%;margin-top:40px">
                
               <el-form-item label="区域：">
-                {{houseBasicData.sheng}}{{houseBasicData.shi}}{{houseBasicData.qu}}
+                {{houseBasicData.province}}{{houseBasicData.city}}{{houseBasicData.area}}
               </el-form-item>
               <el-form-item label="标题：" style="width:400px">
-                {{houseBasicData.title}}
-                <span v-if="houseBasicData.title==''">--</span>
+                {{houseBasicData.buidingName}}
+                <span v-if="houseBasicData.buidingName==''">--</span>
               </el-form-item>
               <el-form-item label="楼盘别名：" style="width:400px">
-                {{houseBasicData.alias}}
-                <span v-if="houseBasicData.alias==''">--</span>
+                {{houseBasicData.nickName}}
+                <span v-if="houseBasicData.nickName==''">--</span>
               </el-form-item>
               <el-form-item label="描述：">
                 {{houseBasicData.desc}}
@@ -27,80 +27,80 @@
               </el-form-item>
 
               <el-form-item label="物业类型：">
-                <span v-if="houseBasicData.type==''">--</span>
-                <span v-if="houseBasicData.type==1">普通住宅</span>
-                <span v-if="houseBasicData.type==2">公寓</span>
-                <span v-if="houseBasicData.type==3">商住</span>
-                <span v-if="houseBasicData.type==4">别墅</span>
-                <span v-if="houseBasicData.type==5">其他</span>
+                <span v-if="houseBasicData.propertyType==''">--</span>
+                <span v-if="houseBasicData.propertyType==0">普通住宅</span>
+                <span v-if="houseBasicData.propertyType==1">公寓</span>
+                <span v-if="houseBasicData.propertyType==2">商住</span>
+                <span v-if="houseBasicData.propertyType==3">别墅</span>
+                <span v-if="houseBasicData.propertyType==4">其他</span>
               </el-form-item>
 
               <el-form-item label="销售状态：">
-                <span v-if="houseBasicData.state==''">--</span>
-                <span v-if="houseBasicData.state==1">在售</span>
-                <span v-if="houseBasicData.state==2">待售</span>
-                <span v-if="houseBasicData.state==3">售罄</span>
+                <span v-if="houseBasicData.sellStatus==''">--</span>
+                <span v-if="houseBasicData.sellStatus==0">在售</span>
+                <span v-if="houseBasicData.sellStatus==1">待售</span>
+                <span v-if="houseBasicData.sellStatus==2">售罄</span>
               </el-form-item>
 
               <el-form-item label="开盘日期：">
-                {{houseBasicData.openingDate}}
-                <span v-if="houseBasicData.openingDate==''">--</span>
+                {{houseBasicData.sellTime}}
+                <span v-if="houseBasicData.sellTime==''">--</span>
               </el-form-item>
 
               <el-form-item label="交房日期：">
-                {{houseBasicData.handoverDate}}
-                <span v-if="houseBasicData.handoverDate==''">--</span>
+                {{houseBasicData.deliverTime}}
+                <span v-if="houseBasicData.deliverTime==''">--</span>
               </el-form-item>
 
               <el-form-item label="均价：">
-                {{houseBasicData.averagePrice}}
-                <span v-if="houseBasicData.averagePrice==''">--</span>
+                {{houseBasicData.avgPrice}}
+                <span v-if="houseBasicData.avgPrice==''">--</span>
               </el-form-item>
              
               <el-form-item label="装修程度：">
-                <span v-if="houseBasicData.decorationDegree==''">--</span>
-                <span v-if="houseBasicData.decorationDegree==1">毛坯</span>
-                <span v-if="houseBasicData.decorationDegree==2">简单装修</span>
-                <span v-if="houseBasicData.decorationDegree==3">中档装修</span>
-                <span v-if="houseBasicData.decorationDegree==4">高档装修</span>
-                <span v-if="houseBasicData.decorationDegree==5">豪华装修</span>
-                <span v-if="houseBasicData.decorationDegree==6">其它</span>
+                <span v-if="houseBasicData.decorationdLevel==''">--</span>
+                <span v-if="houseBasicData.decorationdLevel==0">毛坯</span>
+                <span v-if="houseBasicData.decorationdLevel==1">简单装修</span>
+                <span v-if="houseBasicData.decorationdLevel==2">中档装修</span>
+                <span v-if="houseBasicData.decorationdLevel==3">高档装修</span>
+                <span v-if="houseBasicData.decorationdLevel==4">豪华装修</span>
+                <span v-if="houseBasicData.decorationdLevel==5">其它</span>
               </el-form-item>
               
               <el-form-item label="楼层：">
-                <span v-if="houseBasicData.floor==''">--</span>
-                <span v-if="houseBasicData.floor==1">底层</span>
-                <span v-if="houseBasicData.floor==2">多层</span>
-                <span v-if="houseBasicData.floor==3">小高层</span>
-                <span v-if="houseBasicData.floor==4">高层</span>
-                <span v-if="houseBasicData.floor==5">超高层</span>
+                <span v-if="houseBasicData.storey==''">--</span>
+                <span v-if="houseBasicData.storey==0">底层</span>
+                <span v-if="houseBasicData.storey==1">多层</span>
+                <span v-if="houseBasicData.storey==2">小高层</span>
+                <span v-if="houseBasicData.storey==3">高层</span>
+                <span v-if="houseBasicData.storey==4">超高层</span>
               </el-form-item>
               
               <el-form-item label="建筑类型：">
                 <span v-if="houseBasicData.buildingType==''">板楼</span>
-                <span v-if="houseBasicData.buildingType==1">塔楼</span>
-                <span v-if="houseBasicData.buildingType==2">板塔结合</span>
-                <span v-if="houseBasicData.buildingType==3">联排别墅</span>
-                <span v-if="houseBasicData.buildingType==4">双拼别墅</span>
-                <span v-if="houseBasicData.buildingType==5">独栋别墅</span>
-                <span v-if="houseBasicData.buildingType==6">叠拼别墅</span>
+                <span v-if="houseBasicData.buildingType==0">塔楼</span>
+                <span v-if="houseBasicData.buildingType==1">板塔结合</span>
+                <span v-if="houseBasicData.buildingType==2">联排别墅</span>
+                <span v-if="houseBasicData.buildingType==3">双拼别墅</span>
+                <span v-if="houseBasicData.buildingType==4">独栋别墅</span>
+                <span v-if="houseBasicData.buildingType==5">叠拼别墅</span>
               </el-form-item>
               
               <el-form-item label="现房期房：">
                 <span v-if="houseBasicData.existing==''">--</span>
-                <span v-if="houseBasicData.existing==1">现房</span>
-                <span v-if="houseBasicData.existing==2">准现房</span>
-                <span v-if="houseBasicData.existing==3">期房</span>
+                <span v-if="houseBasicData.existing==0">现房</span>
+                <span v-if="houseBasicData.existing==1">准现房</span>
+                <span v-if="houseBasicData.existing==2">期房</span>
               </el-form-item>
 
               <el-form-item label="产权年限：">
-                {{houseBasicData.year}}
-                <span v-if="houseBasicData.year==''">--</span>
+                {{houseBasicData.housingProperty}}
+                <span v-if="houseBasicData.housingProperty==''">--</span>
               </el-form-item>
 
               <el-form-item label="楼盘特色标签：">
-                <el-tag type="warning" v-for="(item,index) in houseBasicData.feature" :key="index">地铁房</el-tag>
-                <span v-if="houseBasicData.feature.length==0">--</span>
+                <el-tag type="warning" v-for="(item,index) in houseBasicData.housingLable" :key="index">地铁房</el-tag>
+                <span v-if="houseBasicData.housingLable.length==0">--</span>
               </el-form-item>
             </el-form>
           </div>
@@ -116,26 +116,27 @@
                 <span v-if="houseBasicData.metro==''">--</span>
               </el-form-item>
               <el-form-item label="环线：">
-                <span v-if="houseBasicData.loopLine==''">--</span>
-                <span v-if="houseBasicData.loopLine==''">一环以内</span>
-                <span v-if="houseBasicData.loopLine==''">一至二环</span>
-                <span v-if="houseBasicData.loopLine==''">二至三环</span>
-                <span v-if="houseBasicData.loopLine==''">三至四环</span>
-                <span v-if="houseBasicData.loopLine==''">四至五环</span>
-                <span v-if="houseBasicData.loopLine==''">五至六环</span>
-                <span v-if="houseBasicData.loopLine==''">六环外</span>
+                <span v-if="houseBasicData.loopWire==''">--</span>
+                <span v-if="houseBasicData.loopWire=='0'">一环以内</span>
+                <span v-if="houseBasicData.loopWire=='1'">一至二环</span>
+                <span v-if="houseBasicData.loopWire=='2'">二至三环</span>
+                <span v-if="houseBasicData.loopWire=='3'">三至四环</span>
+                <span v-if="houseBasicData.loopWire=='4'">四至五环</span>
+                <span v-if="houseBasicData.loopWire=='5'">五至六环</span>
+                <span v-if="houseBasicData.loopWire=='6'">六环外</span>
               </el-form-item>
               <el-form-item label="楼盘地址：" style="width:400px">
-                {{houseBasicData.buildingAddress}}
-                <span v-if="houseBasicData.buildingAddress==''">--</span>
+                {{houseBasicData.buidingAddress}}
+                <span v-if="houseBasicData.buidingAddress==''">--</span>
               </el-form-item>
               <el-form-item label="接待时间：" style="width:400px">
-                {{houseBasicData.recepationtime}}
-                <span v-if="houseBasicData.recepationtime==''">--</span>
+                {{houseBasicData.serviceTimeBegin}}
+                --
+                {{houseBasicData.serviceTimeEnd}}
               </el-form-item>
               <el-form-item label="交通路线：" style="width:400px">
-                {{houseBasicData.trafficRoute}}
-                <span v-if="houseBasicData.trafficRoute==''">--</span>
+                {{houseBasicData.trafficRoutes}}
+                <span v-if="houseBasicData.trafficRoutes==''">--</span>
               </el-form-item>
               <el-form-item label="地图：" style="width:200px">
                 <div id="container" tabindex="0" style="width:800px;height:400px"></div>
@@ -149,37 +150,40 @@
             </p>
             <el-form  label-width="150px" class="demo-dynamic" style="width:60%;margin-left:15%;margin-top:40px">
               <el-form-item label="售楼电话：" style="width:400px">
-                {{houseBasicData.sailphone}}
-                <span v-if="houseBasicData.sailphone==''">--</span>
+                {{houseBasicData.serviceCall}}
+                <span v-if="houseBasicData.serviceCall==''">--</span>
               </el-form-item>
               <el-form-item label="售楼地址：" style="width:400px">
-                {{houseBasicData.sailaddress}}
-                <span v-if="houseBasicData.sailaddress==''">--</span>
+                {{houseBasicData.serviceAddress}}
+                <span v-if="houseBasicData.serviceAddress==''">--</span>
               </el-form-item>
               <el-form-item label="物业费：" style="width:400px">
-                {{houseBasicData.propertyfee}}
-                <span v-if="houseBasicData.v==''">--</span>
+                {{houseBasicData.propertyFee}}
+                <span v-if="houseBasicData.propertyFee==''">--</span>
               </el-form-item>
               <el-form-item label="物业公司：" style="width:400px">
-                {{houseBasicData.propertycompany}}
-                <span v-if="houseBasicData.propertycompany==''">--</span>
+                {{houseBasicData.propertyCompany}}
+                <span v-if="houseBasicData.propertyCompany==''">--</span>
               </el-form-item>
               <el-form-item label="楼盘开发商：" style="width:600px">
-                {{houseBasicData.buildBuild}}
-                <span v-if="houseBasicData.buildBuild==''">--</span>
+                {{houseBasicData.developer}}
+                <span v-if="houseBasicData.developer==''">--</span>
               </el-form-item>
-              <el-form-item label="预售许可证书：" style="width:600px">
-                {{houseBasicData.ys}}
-                <span v-if="houseBasicData.ys==''">--</span>
-              </el-form-item>
-              <el-form-item label="发证时间：" style="width:600px">
-                {{houseBasicData.fz}}
-                <span v-if="houseBasicData.fz==''">--</span>
-              </el-form-item>
-              <el-form-item label="绑定楼栋：" style="width:600px">
-                {{houseBasicData.bd}}
-                <span v-if="houseBasicData.bd==''">--</span>
-              </el-form-item>
+
+              <div v-for="(item,index) in houseBasicData.permitPresaleList" :key="index">
+                <el-form-item label="预售许可证书" style="width:600px">
+                  {{item.permitPresale}}
+                  <span v-if="item.permitPresale==''">--</span>
+                </el-form-item>
+                <el-form-item label="发证时间" style="width:600px">
+                  {{item.permitPresaleTime}}
+                  <span v-if="item.permitPresaleTime==''">--</span>
+                </el-form-item>
+                <el-form-item label="绑定楼栋" style="width:600px">
+                  {{item.bindbuiding}}
+                  <span v-if="item.bindbuiding==''">--</span>
+                </el-form-item>
+              </div>
             </el-form>
           </div>
         </el-tab-pane>
@@ -820,36 +824,43 @@ export default {
         secondLevel:'楼盘管理',
         threeLevel:'添加楼盘',
         houseBasicData:{
-          sheng:'',
-          shi:'',
-          qu:'',
-          title:'',
-          alias:'',
+          province:'',
+          city:'',
+          area:'',
+          buidingName:'',
+          nickName:'',
           desc:'',
-          type:'',
-          state:'',
-          openingDate:'',
-          handoverDate:'',
-          averagePrice:'',
-          decorationDegree:'',
-          floor:[],
+          propertyType:'',
+          sellStatus:'',
+          sellTime:'',
+          deliverTime:'',
+          avgPrice:'',
+          decorationdLevel:'',
+          storey:'',
           buildingType:'',
           existing:'',
-          year:'',
-          feature:[],
+          housingProperty:'',
+          housingLable:[],
           metro:'',
-          buildingAddress:'',
-          recepationtime:'',
-          trafficRoute:'',
-          sailphone:'',
-          sailaddress:'',
-          propertyfee:'',
-          propertycompany:'',
-          buildBuild:'',
-          addressJW:[],
-          ys:'',
-          fz:'',
-          bd:''
+          loopWire:'',
+          buidingAddress:'',
+          serviceTimeBegin:'',
+          serviceTimeEnd:'',
+          trafficRoutes:'',
+          serviceCall:'',
+          serviceAddress:'',
+          propertyFee:'',
+          propertyCompany:'',
+          developer:'',
+          mapLon:'',
+          mapLat:'',
+          permitPresaleList:[
+            {
+              permitPresale:'',
+              permitPresaleTime:'',
+              bindbuiding:''
+            }
+          ]
         },
         infoData:{
           dfl:'',

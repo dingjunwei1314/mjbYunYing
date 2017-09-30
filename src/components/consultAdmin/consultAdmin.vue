@@ -4,143 +4,128 @@
     <div style="padding:20px" class="postsTop_wap">
       <div class="postsSeek">
         <div style="width: 80%;">
-          <div style="
-            display:-webkit-box;
-            display:-webkit-flex;
-            display:-ms-flexbox;
-            display: flex;
-          justify-content: space-around">
+          <div style="display: flex;">
             <div>
               <span>查询ID</span>
-              <el-input v-model="input" placeholder="请输入内容" style="width:150px;"></el-input>
+              <el-input v-model="filterForm.id" placeholder="id" style="width:60px;"></el-input>
             </div>
             <div>
-              <span>用户名</span>
-              <el-input v-model="input" placeholder="请输入内容" style="width:150px;"></el-input>
+              <span style="margin-left:10px">用户名</span>
+              <el-input v-model="filterForm.username" placeholder="用户名" style="width:100px;"></el-input>
             </div>
             <div>
-              <span>手机号</span>
-              <el-input v-model="input" placeholder="请输入内容" style="width:150px;"></el-input>
+              <span style="margin-left:10px">手机号</span>
+              <el-input v-model="filterForm.phone" placeholder="手机号" style="width:150px;"></el-input>
             </div>
             <div>
-              <span>楼盘</span>
-              <el-input v-model="input" placeholder="请输入内容" style="width:150px;"></el-input>
+              <span style="margin-left:10px">楼盘</span>
+              <el-input v-model="filterForm.house" placeholder="楼盘" style="width:150px;"></el-input>
             </div>
             <div>
-              <span>状态</span>
-              <el-select v-model="textValue" placeholder="请选择" style="width:100px;">
-                <el-option
-                  v-for="(item,key) in textOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value" >
-                </el-option>
+              <span style="margin-left:10px">状态</span>
+              <el-select v-model="filterForm.state" placeholder="状态" style="width:100px;">
+                <el-option label="在线" value="1"></el-option>
+                <el-option label="离线" value="2"></el-option>
               </el-select>
             </div>
           </div>
-          <div class="bao" style="
-            display:-webkit-box;
-            display:-webkit-flex;
-            display:-ms-flexbox;
-            display: flex;
-          justify-content: space-around">
-            <div>
-              <span class="demonstration">发布时间</span>
-              <el-date-picker
-                v-model="value2"
-                align="right"
-                type="date"
-                placeholder="选择日期"
-                :picker-options="pickerOptions1">
-              </el-date-picker>
-              <span class="demonstration">至</span>
-              <el-date-picker
-                v-model="value2"
-                align="right"
-                type="date"
-                placeholder="选择日期"
-                :picker-options="pickerOptions1">
-              </el-date-picker>
-            </div>
-            <div>
-              <span style="line-height:36px;float:left;">区域：</span>
-              <AreaAll :area="filterForm"></AreaAll>
-            </div>
+          <div class="bao">
+            <span>区域：</span>
+            <AreaAll :area="filterForm"></AreaAll>
+            <span class="demonstration" style="margin-left:10px">时间</span>
+            <el-date-picker
+              v-model="filterForm.time"
+              align="right"
+              type="date"
+              placeholder="选择日期">
+            </el-date-picker>  
           </div>
         </div>
         <div class="inquireBtn">
-          <el-button type="primary">查询</el-button>
+          <el-button @click="search" type="primary">查询</el-button>
         </div>
       </div>
     </div>
     <div class="consultAdminTible">
       <el-table
-        :data="tableData"
+        :data="data.list"
         border
-        style="width: 100%">
+        v-loading="is_loading_tab"
+        tooltip-effect="dark"
+        style="font-size:12px!important">
         <el-table-column
-          prop="date"
+          prop="id"
           label="咨询ID"
           >
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="address"
           label="所在省市区"
          >
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="house"
           label="楼盘">
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="username"
           label="用户名">
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="phone"
           label="手机号">
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="appointment_time"
           label="预约时间">
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="problem"
           label="问题">
         </el-table-column>
         <el-table-column
           label="状态"
-          color="red"
-        >
+          color="red">
           <template scope="scope">
-            <span style="color:red">{{name}}</span>
+            <span style="color:red">{{scope.row.state}}</span>
           </template>
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="recovery_time"
           label="回复时间">
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="recovery_con"
           label="回复概要">
         </el-table-column>
         <el-table-column width="180px" label="操作">
           <template scope="scope">
-            <router-link to="/index/counsultParticulars">
+            <router-link :to="{path:'/index/counsultParticulars',query:{id:scope.row.id,type:'see'}}">
             <el-button
               size="small"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)">查看详情</el-button>
+              type="info">
+              查看详情
+            </el-button>
             </router-link>
-            <router-link to="/index/counsultParticulars">
+            <router-link :to="{path:'/index/counsultParticulars',query:{id:scope.row.id,type:'edit'}}">
               <el-button
                 size="small"
                 type="info"
-                @click="handleDelete(scope.$index, scope.row)">详情编辑</el-button>
+                >详情编辑</el-button>
             </router-link>
           </template>
         </el-table-column>
       </el-table>
+      <div style="text-align:center;margin:20px 0px">
+        <el-pagination
+        @current-change="handleCurrentChange"
+        :current-page.sync="currentPage"
+        :page-size="2"
+        layout="total, prev, pager, next"
+        :total="data.total">
+        </el-pagination>
+      </div>
+      
     </div>
   </div>
 </template>
@@ -157,68 +142,69 @@
     },
     data(){
       return{
-        input:'',
         secondLevel:'咨询管理',
         threeLevel:'咨询管理',
-        name:'已完成',
-        textValue:'',
-        pickerOptions1:'',
-        value2:'',
+        currentPage:1,
+        is_loading_tab:false,
         filterForm: {
-          name:'',
-          developers:'',
+          page:1,
+          id:'',
+          username:'',
           time:'',
-          rental_return:'',
           sheng:'',
           shi:'',
           qu:'',
-          cooper_buy:'',
-          strict_select:'',
           state:'',
-          id:''
         },
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }],
-        textOptions: [{
-          value: '选项1',
-          label: '是'
-        }, {
-          value: '选项2',
-          label: '否'
-        }],
+        data:{
+          total:0,
+          list:[]
+        }
       }
     },
+    created(){
+      this.getdata()
+    },
     methods:{
+      getdata(){
+          let _this=this;
+          _this.is_loading_tab=true;
+          this.$http('/consultationlist',{},_this.filterForm).then(function(res){
+          console.log(res)
+          if(res.data.code==1000){
+              _this.data=res.data.data;
+          }
+          _this.is_loading_tab=false;
+          }).catch(function(err){
+              _this.is_loading_tab=false;
+              console.log(err)
+          })
+      },
+      search(){
+        this.filterForm.page=1;
+        this.currentPage=1;
+        this.getdata()
+      },
+      handleCurrentChange(page){
+        this.filterForm.page=page;
+        this.getdata()
+      },
       refresh(){
         this.$store.dispatch('mainLoadingAction',true);
-        this.getdata()
         this.currentPage=1;
         for(var i in this.filterForm){
-          this.filterForm[i]=''
+          if(i=='page'){
+            this.filterForm[i]=1
+          }else{
+            this.filterForm[i]=''
+          }
         }
+        this.getdata()
         var that=this
         setTimeout(function(){
           that.$store.dispatch('mainLoadingAction',false);
         },300)
       },
-      handleDelete(){
-
-      }
     },
     mounted(){
       this.$store.dispatch('mainLoadingAction',true);
@@ -231,7 +217,7 @@
   }
 </script>
 
-<style>
+<style scoped>
   .consultAdminTible{
     border: 1px solid darkgray;margin:20px;
   }
@@ -269,3 +255,4 @@
     padding-bottom: 24px;
   }
 </style>
+

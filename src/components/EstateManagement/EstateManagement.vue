@@ -9,45 +9,50 @@
           <el-form :inline="true" style="" :model="filterForm" class="demo-form-inline">
             <div>
               <el-form-item label="楼盘id">
-                <el-input   v-model="filterForm.id" placeholder="楼盘id"></el-input>
+                <el-input   v-model="filterForm.buidingId" placeholder="楼盘id"></el-input>
               </el-form-item>
               <el-form-item label="楼盘名称">
-                <el-input  v-model="filterForm.name" placeholder="楼盘名称"></el-input>
+                <el-input  v-model="filterForm.buidingName" placeholder="楼盘名称"></el-input>
               </el-form-item>
               <el-form-item label="开发商">
-                <el-input  v-model="filterForm.developers" placeholder="开发商"></el-input>
+                <el-input  v-model="filterForm.developer" placeholder="开发商"></el-input>
               </el-form-item>
               <AreaAll :area="filterForm"></AreaAll> 
             </div>
 
             <el-form-item label="严选">
-              <el-select clearable v-model="filterForm.strict_select" placeholder="不限">
+              <el-select clearable v-model="filterForm.ICareU" placeholder="严选">
+                <el-option label="不限" value="2"></el-option>
                 <el-option label="是" value="1"></el-option>
                 <el-option label="否" value="0"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="合作买房">
-              <el-select clearable v-model="filterForm.cooper_buy" placeholder="不限">
+              <el-select clearable v-model="filterForm.housePurchaseType" placeholder="合作买房">
+                <el-option label="不限" value="2"></el-option>
                 <el-option label="是" value="1"></el-option>
                 <el-option label="否" value="0"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="租金返还">
-              <el-select clearable v-model="filterForm.rental_return" placeholder="不限">
+              <el-select clearable v-model="filterForm.rentaType" placeholder="租金返还">
+                <el-option label="不限" value="2"></el-option>
                 <el-option label="是" value="1"></el-option>
                 <el-option label="否" value="0"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="状态">
-              <el-select clearable v-model="filterForm.state" placeholder="不限">
+              <el-select clearable v-model="filterForm.onlineStatus" placeholder="状态">
+                <el-option label="不限" value="2"></el-option>
                 <el-option label="在线" value="1"></el-option>
                 <el-option label="离线" value="0"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="更新时间">
               <el-date-picker
+                style="width:150px"
                 @change="pickerChange"
-                v-model="filterForm.time"
+                v-model="editTime"
                 type="daterange"
                 align="right"
                 placeholder="选择日期范围"
@@ -65,77 +70,90 @@
   
 
       <div class="tabletopbar">
-        <span>所有数据：共</span> <span style="color:#111">{{tableData.total}}</span> <span>条</span>
         <span style="margin-left:20px">查询结果：共</span> 
-        <span style="color:#111">{{tableData.total}}</span> <span>条</span>
+        <span style="color:#111">{{tableData.rowCount}}</span> <span>条</span>
       </div>
       <el-table
         v-loading="is_loading_tab"
         ref="multipleTable"
-        :data="tableData.list"
+        :data="tableData.buidingList"
         border
         tooltip-effect="dark"
         style="width: 100%;font-size:12px!important;"
         @selection-change="handleSelectionChange">
         <el-table-column
-          prop="id"
+          prop="buidingId"
           label="楼盘id"
           width="80">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="buidingName"
           label="楼盘名"
           min-width="60">
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="area"
           label="所在地区"
           min-width="80">
         </el-table-column>
         <el-table-column
-          prop="developers"
+          prop="developer"
           label="开发商"
           min-width="80">
         </el-table-column>
         <el-table-column
+          prop="fraction"
           label="工程质量、规划、落实、周边评分"
           min-width="100">
-          <template scope="scope">
-            {{ scope.row.score[0]}}、
-            {{ scope.row.score[1]}}、
-            {{ scope.row.score[2]}}、
-            {{ scope.row.score[3]}}
-          </template>
-         
         </el-table-column>
 
         <el-table-column
-          prop="strict_select"
+          prop="ICareU"
           label="严选"
           min-width="60">
+          <template scope="scope">
+            <span v-if="scope.row.ICareU==0">否</span>
+            <span v-if="scope.row.ICareU==1">是</span>
+            <span v-if="scope.row.ICareU==2">不限</span>    
+          </template>
         </el-table-column>
         <el-table-column
           prop="cooper_buy"
           nim-width="60"
           label="合作买房">
+           <template scope="scope">
+            <span v-if="scope.row.housePurchaseType==0">否</span>
+            <span v-if="scope.row.housePurchaseType==1">是</span>
+            <span v-if="scope.row.housePurchaseType==2">不限</span>    
+          </template>
         </el-table-column>
         <el-table-column
           prop="rental_return"
           min-width="80"
           label="租金返还">
+          <template scope="scope">
+            <span v-if="scope.row.rentaType==0">否</span>
+            <span v-if="scope.row.rentaType==1">是</span>
+            <span v-if="scope.row.rentaType==2">不限</span>    
+          </template>
         </el-table-column>
         <el-table-column
           prop="state" 
           min-width="60"
           label="状态">
+          <template scope="scope">
+            <span v-if="scope.row.onlineStatus==0">离线</span>
+            <span v-if="scope.row.onlineStatus==1">在线</span>
+            <span v-if="scope.row.onlineStatus==2">不限</span>    
+          </template>
         </el-table-column>
         <el-table-column
-          prop="time"
+          prop="editTime"
           width="100"
           label="更新时间">
         </el-table-column>
         <el-table-column
-          min-width="300"
+          width="400"
           label="操作">
           <template scope="scope">
           <el-button
@@ -159,13 +177,13 @@
       </el-table>
       
       <el-pagination
-        v-show="tableData.total>0"
+        v-show="tableData.rowCount>0"
         style="margin: 0 auto;text-align:center;margin-top:20px"
         layout="prev, pager, next"
         :page-size=2
         :currentPage="currentPage"
         @current-change="currentChange"
-        :total="tableData.total">
+        :total="tableData.rowCount">
       </el-pagination>
     </div>
     
@@ -187,6 +205,7 @@ export default {
         currentPage:1,
         secondLevel:'楼盘',
         threeLevel:'楼盘管理',
+        editTime:'',
         pickerOptions:{
           shortcuts: [{
             text: '最近一周',
@@ -215,25 +234,27 @@ export default {
           }]
         },
         filterForm: {
-          name:'',
-          developers:'',
-          time:'',
-          rental_return:'',
-          sheng:'',
-          shi:'',
-          qu:'',
-          cooper_buy:'',
-          strict_select:'',
-          state:'',
-          id:''
+          pageIndex:1,
+          pageSize:2,
+          buidingName:'',
+          developer:'',
+          editTimeBegin:'',
+          editTimeEnd:'',
+          rentaType:'',
+          province:'',
+          city:'',
+          area:'',
+          housePurchaseType:'',
+          ICareU:'',
+          onlineStatus:'',
+          buidingId:''
         },
         tableData: {
-          total:0,
-          list:[]
+          rowCount:0,
+          buidingList:[]
         },
         is_loading_tab:false,
         multipleSelection: [],
-      
       };
     },
     filters:{
@@ -249,29 +270,67 @@ export default {
       getdata(){
         let _this=this;
         _this.is_loading_tab=true;
-        this.$http('/emlist').then(function(res){
+        this.$http('/emlist',{body:_this.filterForm},{},{},'post').then(function(res){
           console.log(res)
-          if(res.data.code==1000){
-            _this.tableData=res.data.data;
-          }
           _this.is_loading_tab=false;
+          if(res.data.code==0){
+            if(res.data.response.status==1){
+              _this.tableData=res.data.response.data;
+            }else{
+              _this.$message({
+                message: res.data.response.message,
+                type: 'warning'
+              });
+            }
+          }else{
+            _this.$message({
+              message: res.data.message,
+              type: 'warning'
+            });
+          }
         }).catch(function(err){
           console.log(err)
+          _this.is_loading_tab=false;
+          _this.$message({
+            message: '请求失败，请稍后重试',
+            type: 'warning'
+          });
         })
       },
       onSearchSubmit(){
-        this.currentPage=1;
-        this.getdata();
+        this.filterForm.pageIndex=1;
+        if(this.currentPage!=1){
+          this.currentPage=1;
+        }else{
+          this.getdata()
+        }
       },
-      pickerChange(){
-
+      pickerChange(val){
+        this.filterForm.editTimeBegin=val.slice(0,10)
+        this.filterForm.editTimeEnd=val.slice(13)
       },
       currentChange(page){
         this.currentPage=page;
+        this.filterForm.pageIndex=page;
         this.getdata()
       },
       refresh(){
         this.$store.dispatch('mainLoadingAction',true);
+        this.editTime='';
+        for(let i in this.filterForm){
+          if(i=='pageIndex'){
+            this.filterForm[i]=1
+          }else if(i=='pageSize'){
+            this.filterForm[i]=2
+          }else{
+            this.filterForm[i]=''
+          }
+        }
+        if(this.currentPage!=1){
+          this.currentPage=1;
+        }else{
+          this.getdata()
+        }
         var that=this
         setTimeout(function(){
           that.$store.dispatch('mainLoadingAction',false);
@@ -376,5 +435,5 @@ export default {
 </style>
 
 <style>
-  .search_wap .el-input{width:140px;}
+  .search_wap .el-input{width:110px;}
 </style>

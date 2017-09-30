@@ -323,11 +323,23 @@ export default {
         this.dialogFormVisible=false;
       },
       dialogConfirm(){
-        this.getdata()
-        this.dialogFormVisible=false;
-        this.$message({
-          message: '修改成功',
-          type: 'success'
+        let _this=this;
+        this.$confirm('确认修改吗?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        }).then(() => {
+            this.getdata()
+            this.dialogFormVisible=false;
+            this.$message({
+              message: '修改成功',
+              type: 'success'
+            });
+        }).catch(() => {
+            _this.$message({
+                type: 'info',
+                message: '已取消'
+            });
         });
       },
       refresh(){

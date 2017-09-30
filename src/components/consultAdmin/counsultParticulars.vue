@@ -2,71 +2,104 @@
   <div class="consultParticulars">
     <Subnav :secondLevel="secondLevel" :threeLevel="threeLevel" @refresh="refresh"></Subnav>
     <div class="consultParticularsTop">
-      <h4>买家帮</h4>
-      <p v-for="(items,key) in consultParticularsArr">
-        <span style="width: 90px;text-align: right">{{items.name}}</span>:<span>{{items.value}}</span>
+      <h4>咨询-
+        <span v-if="data.username==''">--</span>
+        <span v-else>{{data.username}}</span>
+      </h4>
+      <p>
+        <span style="width: 90px;text-align: right">咨询编号</span>:
+        <span v-if="data.id==''">--</span>
+        <span>{{data.id}}</span>
+      </p>
+      <p>
+        <span style="width: 90px;text-align: right">省市区</span>:
+        <span v-if="data.address==''">--</span>
+        <span v-else>{{data.address}}</span>
+      </p>
+      <p>
+        <span style="width: 90px;text-align: right">楼盘</span>:
+        <span v-if="data.house==''">--</span>
+        <span v-else>{{data.house}}</span>
+      </p>
+      <p>
+        <span style="width: 90px;text-align: right">用户名</span>:
+        <span v-if="data.username==''">--</span>
+        <span v-else>{{data.username}}</span>
+      </p>
+      <p>
+        <span style="width: 90px;text-align: right">手机号</span>:
+        <span v-if="data.phone==''">--</span>
+        <span v-else>{{data.phone}}</span>
+      </p>
+      <p>
+        <span style="width: 90px;text-align: right">预约时间</span>:
+        <span v-if="data.appointment_time==''">--</span>
+        <span v-else>{{data.appointment_time}}</span>
+      </p>
+      <p>
+        <span style="width: 90px;text-align: right">问题</span>:
+        <span v-if="data.problem==''">--</span>
+        <span v-else>{{data.problem}}</span>
       </p>
     </div>
     <div class="consultParticularsText">
       <div class="state">
         <span>状态</span>:
-          <span>
-            <el-select v-model="stateValue" placeholder="请选择" style="width:150px;">
-          <el-option
-            v-for="item in consultParticularsTextOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value" >
-          </el-option>
-        </el-select>
-      </span>
+        <span>
+          <el-select v-model="updataForm.state" :disabled="isdisabled" placeholder="状态" style="width:150px;">
+            <el-option
+              v-for="item in consultParticularsTextOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value" >
+            </el-option>
+          </el-select>
+        </span>
       </div>
       <div class="state">
         <span>回复时间</span>:
-          <span>
-                <div class="block">
-              <el-date-picker
-                v-model="value1"
-                type="datetime"
-                placeholder="选择日期时间">
-              </el-date-picker>
-            </div>
-      </span>
+        <span>
+          <div class="block">
+            <el-date-picker
+              :disabled="isdisabled"
+              v-model="updataForm.recovery_time"
+              type="datetime"
+              placeholder="选择日期时间">
+            </el-date-picker>
+          </div>
+        </span>
       </div>
       <div class="state">
         <span>备注</span>:
         <span style="width:500px">
          <el-input
+           :disabled="isdisabled"
            type="textarea"
            :rows="2"
-           placeholder="请输入内容"
-           v-model="textarea">
+           placeholder="备注"
+           v-model="updataForm.recovery_con">
          </el-input>
       </span>
       </div>
-      <div class="consultParticularsFoot">
-        <el-button type="primary">保存</el-button>
-        <el-button type="danger">取消</el-button>
+      <div class="consultParticularsFoot" v-if="!isdisabled">
+        <el-button @click="updata(true)" type="primary">保存</el-button>
+        <el-button @click="updata(false)" type="danger">取消</el-button>
       </div>
     </div>
     <div class="message">
       <h4>信息备注</h4>
       <el-table
-        :data="tableData"
-        style="width: 100%">
+        v-loading="is_load_table"
+        :data="data.list"
+        style="width: 100%;font-size:12px">
         <el-table-column
-          prop="date"
-          label="日期"
+          prop="time"
+          label="回复时间"
           width="180">
         </el-table-column>
         <el-table-column
-          prop="name"
-          label="姓名"
-          width="180">
-        </el-table-column>
-        <el-table-column
-          prop="address"
-          label="备注信息">
+          prop="con"
+          label="回复内容">
         </el-table-column>
       </el-table>
     </div>
@@ -85,80 +118,103 @@
       return{
         secondLevel:'咨询管理',
         threeLevel:'咨询详情',
-        textarea:'',
-        stateValue:'选项1',
-        value1:[new Date()],
-        consultParticularsArr:[
-          {name:'咨询编号',value:'097774'},
-          {name:'省市区',value:'河南-郑州-莞城'},
-          {name:'楼盘',value:'禁地博悦'},
-          {name:'用户名',value:'回忆'},
-          {name:'手机号',value:'18910966666'},
-          {name:'预约时间',value:'2017-08-18'},
-          {name:'问题',value:'合作买房'}
-        ],
+        isdisabled:false,
+        data:{
+          id: '',
+          address: '',
+          house: '',
+          username: '',
+          phone: '',
+          appointment_time: '',
+          problem: '',
+          state: '',
+          recovery_time: '',
+          recovery_con: '',
+          list:[]
+        },
+        is_load_table:false,
+        updataForm:{
+          state:'',
+          recovery_time:new Date(),
+          recovery_con:'',
+        },
         consultParticularsTextOptions: [{
-          value: '选项1',
+          value: '1',
           label: '待回复'
         }, {
-          value: '选项2',
+          value: '2',
           label: '待跟进'
         }, {
-          value: '选项3',
+          value: '3',
           label: '转给销售'
         }, {
-          value: '选项4',
+          value: '4',
           label: '完成'
         }],
-        pickerOptions1: {
-          shortcuts: [{
-            text: '今天',
-            onClick(picker) {
-              picker.$emit('pick', new Date());
-            }
-          }, {
-            text: '昨天',
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24);
-              picker.$emit('pick', date);
-            }
-          }, {
-            text: '一周前',
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', date);
-            }
-          }]
-        },
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }]
+      }
+    },
+    created(){
+      this.getdata()
+      if(this.$route.query.type=='see'){
+        this.isdisabled=true;
+      }else{
+        this.isdisabled=false;
       }
     },
     methods:{
+      getdata(){
+        let _this=this;
+        _this.is_load_table=true;
+        this.$http('/consultationdetail',{}).then(function(res){
+          console.log(res)
+          if(res.data.code==1000){
+              _this.data=res.data.data;
+              if(_this.$route.query.type=='see'){
+                _this.updataForm.state=_this.data.state;
+                _this.updataForm.recovery_time=_this.data.recovery_time;
+                _this.updataForm.recovery_con=_this.data.recovery_con;
+              }
+              _this.is_load_table=false;
+          }
+        }).catch(function(err){
+          console.log(err)
+          _this.is_load_table=false;
+        })
+      },
+      updata(swi){
+        let _this=this;
+        if(swi){
+          if(this.updataForm.state==''){
+            this.$message({
+              message: '请选择状态',
+              type: 'warning'
+            });
+            return;
+          }
+          this.$confirm('确认提交吗?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+          }).then(() => {
+              console.log(_this.updataForm)
+              _this.$router.push({path:'/index/consultAdmin'})
+              _this.$message({
+                  type: 'success',
+                  message: '提交成功!'
+              });
+          }).catch(() => {
+              _this.$message({
+                  type: 'info',
+                  message: '已取消'
+              });
+          });
+        }else{
+          this.$router.push({path:'/index/consultAdmin'})
+        }
+      },
       refresh(){
         this.$store.dispatch('mainLoadingAction',true);
         this.getdata()
-        this.currentPage=1;
-        for(var i in this.filterForm){
-          this.filterForm[i]=''
-        }
         var that=this
         setTimeout(function(){
           that.$store.dispatch('mainLoadingAction',false);
@@ -167,7 +223,7 @@
     },
     mounted(){
       this.$store.dispatch('mainLoadingAction',true);
-      this.$store.dispatch('defaultIndexAction','/index/counsultParticulars');
+      this.$store.dispatch('defaultIndexAction','/index/consultAdmin');
       var that=this;
       setTimeout(function(){
         that.$store.dispatch('mainLoadingAction',false);

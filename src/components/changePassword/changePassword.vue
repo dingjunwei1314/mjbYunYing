@@ -3,22 +3,21 @@
     <Subnav :secondLevel="secondLevel" :threeLevel="threeLevel" @refresh="refresh"></Subnav>
     <p>修改密码</p>
     <div class="changePasswordTop">
-        <div>
-          <span>原密码 ：</span>
-          <el-input v-model="input"></el-input>
-        </div>
+      <div>
+        <span>原密码 ：</span>
+        <el-input type="password" v-model="updata.old_password"></el-input>
+      </div>
       <div>
         <span>新密码 ：</span>
-        <el-input v-model="input"></el-input>
+        <el-input type="password" v-model="updata.new_password"></el-input>
       </div>
       <div>
         <span>确认密码 ：</span>
-        <el-input v-model="input"></el-input>
+        <el-input type="password" v-model="updata.new_password_sure"></el-input>
       </div>
     </div>
     <div class="consultParticularsFoot">
-      <el-button type="primary">保存</el-button>
-      <el-button type="danger">取消</el-button>
+      <el-button type="primary" @click="updata_btn">保存</el-button>
     </div>
   </div>
 </template>
@@ -34,17 +33,50 @@
       return{
         secondLevel:'修改密码',
         threeLevel:'修改密码',
-
+        updata:{
+          old_password:'',
+          new_password:'',
+          new_password_sure:''
+        }
       }
     },
     methods: {
+      updata_btn(){
+        if(this.updata.old_password.length<6 || this.updata.old_password.length>16){
+          this.$message({
+            type: 'warning',
+            message: '旧密码必须是6-16位字符!'
+          });
+          return;
+        }
+        if(this.updata.new_password.length<6 || this.updata.new_password.length>16){
+          this.$message({
+            type: 'warning',
+            message: '新密码必须是6-16位字符!'
+          });
+          return;
+        }
+        if(this.updata.new_password_sure.length<6 || this.updata.new_password_sure.length>16){
+          this.$message({
+            type: 'warning',
+            message: '确认密码必须是6-16位字符!'
+          });
+          return;
+        }
+        if(this.updata.new_password_sure!==this.updata.new_password){
+          this.$message({
+            type: 'warning',
+            message: '两次输入的密码不一致!'
+          });
+          return;
+        }
+        this.$message({
+          type: 'success',
+          message: '修改成功!'
+        });
+      },
       refresh(){
         this.$store.dispatch('mainLoadingAction', true);
-        this.getdata()
-        this.currentPage = 1;
-        for (var i in this.filterForm) {
-          this.filterForm[i] = ''
-        }
         var that = this
         setTimeout(function () {
           that.$store.dispatch('mainLoadingAction', false);
@@ -54,7 +86,7 @@
     },
     mounted(){
       this.$store.dispatch('mainLoadingAction',true);
-      this.$store.dispatch('defaultIndexAction','/index/accountAdmin');
+      this.$store.dispatch('defaultIndexAction','/index/changePassword');
       var that=this;
       setTimeout(function(){
         that.$store.dispatch('mainLoadingAction',false);
