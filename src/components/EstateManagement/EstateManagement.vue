@@ -2,63 +2,93 @@
   <div class="managers">
     <Subnav :secondLevel="secondLevel" :threeLevel="threeLevel" @refresh="refresh"></Subnav>
 
-    <div style="padding:20px" class="search_wap">
+    <div style="padding:20px">
       
-      <el-row style="min-height:150px">
+      <el-row style="padding:20px 10px 0px 10px;border:1px solid #eee;margin-bottom:20px">
         <el-col :span="20">
           <el-form :inline="true" style="" :model="filterForm" class="demo-form-inline">
             <div>
               <el-form-item label="楼盘id">
-                <el-input   v-model="filterForm.buidingId" placeholder="楼盘id"></el-input>
+                <el-input   v-model="filterForm.buildingId" style="width:80px" placeholder="id"></el-input>
               </el-form-item>
               <el-form-item label="楼盘名称">
-                <el-input  v-model="filterForm.buidingName" placeholder="楼盘名称"></el-input>
+                <el-autocomplete
+                  v-model="filterForm.buildingName"
+                  :fetch-suggestions="querySearchAsync"
+                  placeholder="请输入关键词"
+                  @select="handleSelect"
+                ></el-autocomplete>
               </el-form-item>
               <el-form-item label="开发商">
-                <el-input  v-model="filterForm.developer" placeholder="开发商"></el-input>
+                <el-input  v-model="filterForm.developer" style="width:200px" placeholder="开发商"></el-input>
               </el-form-item>
-              <AreaAll :area="filterForm"></AreaAll> 
+              <el-form-item label="更新时间">
+                <el-date-picker
+                  style="width:180px"
+                  @change="pickerChange"
+                  v-model="editTime"
+                  type="daterange"
+                  align="right"
+                  placeholder="选择日期范围"
+                  :picker-options="pickerOptions">
+                </el-date-picker>
+              </el-form-item> 
             </div>
-
-            <el-form-item label="严选">
-              <el-select clearable v-model="filterForm.ICareU" placeholder="严选">
+            <el-form-item label="区域：">
+              <el-select @change="proChange" v-model="filterForm.province" :clearable="true" placeholder="省"  style="width:120px;">
+                  <el-option
+                  v-for="item in provinceIdsList"
+                  :key="item.cityId"
+                  :label="item.cityName"
+                  :value="item.cityId" >
+                  </el-option>
+              </el-select> 
+              <el-select @change="cityChange" v-model="filterForm.city" :clearable="true" placeholder="市"  style="width:120px;">
+                  <el-option
+                  v-for="item in cityIdsList"
+                  :key="item.cityId"
+                  :label="item.cityName"
+                  :value="item.cityId" >
+                  </el-option>
+              </el-select> 
+              <el-select v-model="filterForm.area" :clearable="true" placeholder="区"  style="width:120px;">
+                  <el-option
+                  v-for="item in areaIdsList"
+                  :key="item.cityId"
+                  :label="item.cityName"
+                  :value="item.cityId" >
+                  </el-option>
+              </el-select> 
+            </el-form-item>
+            <el-form-item label="关注">
+              <el-select v-model="filterForm.ICareU" style="width:150px" placeholder="关注">
                 <el-option label="不限" value="2"></el-option>
                 <el-option label="是" value="1"></el-option>
                 <el-option label="否" value="0"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="合作买房">
-              <el-select clearable v-model="filterForm.housePurchaseType" placeholder="合作买房">
+            <!-- <el-form-item label="合作买房">
+              <el-select v-model="filterForm.housePurchaseType" style="width:150px" placeholder="合作买房">
                 <el-option label="不限" value="2"></el-option>
                 <el-option label="是" value="1"></el-option>
                 <el-option label="否" value="0"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="租金返还">
-              <el-select clearable v-model="filterForm.rentaType" placeholder="租金返还">
+              <el-select v-model="filterForm.rentType" style="width:150px" placeholder="租金返还">
                 <el-option label="不限" value="2"></el-option>
                 <el-option label="是" value="1"></el-option>
                 <el-option label="否" value="0"></el-option>
               </el-select>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="状态">
-              <el-select clearable v-model="filterForm.onlineStatus" placeholder="状态">
+              <el-select v-model="filterForm.onlineStatus" style="width:150px" placeholder="状态">
                 <el-option label="不限" value="2"></el-option>
                 <el-option label="在线" value="1"></el-option>
                 <el-option label="离线" value="0"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="更新时间">
-              <el-date-picker
-                style="width:150px"
-                @change="pickerChange"
-                v-model="editTime"
-                type="daterange"
-                align="right"
-                placeholder="选择日期范围"
-                :picker-options="pickerOptions">
-              </el-date-picker>
-            </el-form-item>  
+             
           </el-form>
         </el-col>
         <el-col :span="4" style="text-align:right">
@@ -67,8 +97,7 @@
             <el-button type="primary" @click="addNew">新增楼盘</el-button>
         </el-col>
       </el-row>
-  
-
+      
       <div class="tabletopbar">
         <span style="margin-left:20px">查询结果：共</span> 
         <span style="color:#111">{{tableData.rowCount}}</span> <span>条</span>
@@ -76,25 +105,24 @@
       <el-table
         v-loading="is_loading_tab"
         ref="multipleTable"
-        :data="tableData.buidingList"
+        :data="tableData.buildingList"
         border
         tooltip-effect="dark"
-        style="width: 100%;font-size:12px!important;"
-        @selection-change="handleSelectionChange">
+        style="width: 100%;font-size:12px!important;">
         <el-table-column
-          prop="buidingId"
-          label="楼盘id"
-          width="80">
+          prop="buildingId"
+          label="ID"
+          width="60">
         </el-table-column>
         <el-table-column
-          prop="buidingName"
+          prop="buildingName"
           label="楼盘名"
           min-width="60">
         </el-table-column>
         <el-table-column
           prop="area"
           label="所在地区"
-          min-width="80">
+          min-width="60">
         </el-table-column>
         <el-table-column
           prop="developer"
@@ -103,14 +131,14 @@
         </el-table-column>
         <el-table-column
           prop="fraction"
-          label="工程质量、规划、落实、周边评分"
-          min-width="100">
+          label="工程质量、规划、落实、周边、景观、物业评分"
+          min-width="60">
         </el-table-column>
 
         <el-table-column
           prop="ICareU"
-          label="严选"
-          min-width="60">
+          label="关注"
+          width="60">
           <template scope="scope">
             <span v-if="scope.row.ICareU==0">否</span>
             <span v-if="scope.row.ICareU==1">是</span>
@@ -118,28 +146,8 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="cooper_buy"
-          nim-width="60"
-          label="合作买房">
-           <template scope="scope">
-            <span v-if="scope.row.housePurchaseType==0">否</span>
-            <span v-if="scope.row.housePurchaseType==1">是</span>
-            <span v-if="scope.row.housePurchaseType==2">不限</span>    
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="rental_return"
-          min-width="80"
-          label="租金返还">
-          <template scope="scope">
-            <span v-if="scope.row.rentaType==0">否</span>
-            <span v-if="scope.row.rentaType==1">是</span>
-            <span v-if="scope.row.rentaType==2">不限</span>    
-          </template>
-        </el-table-column>
-        <el-table-column
           prop="state" 
-          min-width="60"
+          width="80"
           label="状态">
           <template scope="scope">
             <span v-if="scope.row.onlineStatus==0">离线</span>
@@ -153,25 +161,25 @@
           label="更新时间">
         </el-table-column>
         <el-table-column
-          width="400"
+          width="320"
           label="操作">
           <template scope="scope">
           <el-button
             size="small"
-            @click="handleEdit(scope.$index, scope.row,1)">查看</el-button>
+            @click="handleEdit(scope.$index, scope.row,0)">
+            <span v-if = "scope.row.onlineStatus ==0 ">上线</span>
+            <span v-else>下线</span>
+          </el-button>
           <el-button
             size="small"
-            @click="handleEdit(scope.$index, scope.row,2)">编辑</el-button>
-            <el-button
-            size="small"
-            @click="handleEdit(scope.$index, scope.row,3)">添加报告</el-button>
-            <el-button
-            size="small"
-            @click="handleEdit(scope.$index, scope.row,4)">添加评分</el-button>
+            @click="handleEdit(scope.$index, scope.row,1)">
+            查看
+          </el-button>
           <el-button
             size="small"
-            type="danger"
-            @click="handleDelete(scope.$index, scope.row)">下线</el-button>
+            @click="handleEdit(scope.$index, scope.row,2)">
+            编辑
+          </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -180,7 +188,7 @@
         v-show="tableData.rowCount>0"
         style="margin: 0 auto;text-align:center;margin-top:20px"
         layout="prev, pager, next"
-        :page-size=2
+        :page-size=10
         :currentPage="currentPage"
         @current-change="currentChange"
         :total="tableData.rowCount">
@@ -191,20 +199,24 @@
 </template>
 
 <script>
-import AreaAll from '../Common/AreaAll/AreaAll'
+
 import Subnav from '../Subnav/Subnav'
+import message from '../../common/message'
 
 export default {
     name:'managers',
     components:{
-      Subnav,
-      AreaAll,
+      Subnav
     },
     data() {
       return {
         currentPage:1,
         secondLevel:'楼盘',
         threeLevel:'楼盘管理',
+        buidingList:[],
+        provinceIdsList:[],
+        cityIdsList:[],
+        areaIdsList:[],
         editTime:'',
         pickerOptions:{
           shortcuts: [{
@@ -234,24 +246,27 @@ export default {
           }]
         },
         filterForm: {
-          pageIndex:1,
-          pageSize:2,
-          buidingName:'',
-          developer:'',
-          editTimeBegin:'',
-          editTimeEnd:'',
-          rentaType:'',
+          pageIndex:0,
+          pageSize:10,
           province:'',
           city:'',
           area:'',
-          housePurchaseType:'',
-          ICareU:'',
-          onlineStatus:'',
-          buidingId:''
+          buildingId:'',
+          buildingName:'',
+          developer:'',
+          ICareU:'2',
+          housePurchaseType:'2',
+          rentType:'2',
+          editTimeBegin:'',
+          editTimeEnd:'',
+          onlineStatus:'2',
+          province:'',
+          city:'',
+          area:'',
         },
         tableData: {
           rowCount:0,
-          buidingList:[]
+          buildingList:[]
         },
         is_loading_tab:false,
         multipleSelection: [],
@@ -264,56 +279,131 @@ export default {
                                         
     },
     created(){
+      this.getProCityData(1)
       this.getdata()
+      this.remoteMethod('')
     },
     methods: {
+      //请求数据方法
       getdata(){
-        let _this=this;
-        _this.is_loading_tab=true;
-        this.$http('/emlist',{body:_this.filterForm},{},{},'post').then(function(res){
-          console.log(res)
-          _this.is_loading_tab=false;
-          if(res.data.code==0){
-            if(res.data.response.status==1){
-              _this.tableData=res.data.response.data;
-            }else{
-              _this.$message({
-                message: res.data.response.message,
-                type: 'warning'
-              });
-            }
+        let _this = this;
+        _this.is_loading_tab = true;
+        this.$http('/backstageBuilding/getBuildingList',{},{body:_this.filterForm},{},'get').then(function(res){
+          _this.is_loading_tab = false;
+          _this.$store.dispatch('mainLoadingAction',false);
+          if(res.data.code == 0){
+            _this.tableData = res.data.response;
+          }else if(res.data.code == 300){
+            _this.$router.push('/login')
           }else{
-            _this.$message({
-              message: res.data.message,
-              type: 'warning'
-            });
+            message(_this,res.data.message,'warning')
           }
         }).catch(function(err){
           console.log(err)
           _this.is_loading_tab=false;
-          _this.$message({
-            message: '请求失败，请稍后重试',
-            type: 'warning'
-          });
+          _this.$store.dispatch('mainLoadingAction',false);
         })
       },
+      //获取省市数据
+      getProCityData(pramas){
+          let _this=this;
+          let body = '';
+          if(pramas == 1){
+              body = {cityType:1}
+          }else if(pramas == 2){
+              body = {cityType:2,parentid:_this.filterForm.province}
+          }else{
+              body = {cityType:3,parentid:_this.filterForm.city}
+          }
+          _this.$http('/citis/cityList',{body},{},{},'post').then(function(res){
+             
+              if(res.data.code==0){
+                  
+                  if(pramas == 1){
+                      _this.provinceIdsList = res.data.response.cityList
+                  }else if(pramas == 2){
+                      _this.cityIdsList = res.data.response.cityList
+                  }else{
+                      _this.areaIdsList = res.data.response.cityList
+                  }
+                  
+              }else if(res.data.code==300){
+                  _this.$router.push('/login')
+              }else{
+                  _this.$message({
+                    message: res.data.message,
+                    type: 'warning'
+                  });
+              }
+              _this.is_loading_tab=false;
+          }).catch(function(err){
+              _this.is_loading_tab=false;
+              console.log(err)
+          })   
+      },
+      //改变省份
+      proChange(){
+          this.filterForm.city = ''
+          this.filterForm.area = ''
+          this.getProCityData(2)
+      },
+      //改变市
+      cityChange(){
+          this.filterForm.area = ''
+          this.getProCityData(3)
+      },
+      //模糊搜索
+      remoteMethod(val){
+        let _this = this,
+        body = {buildingName: val};
+       
+        this.$http('/backstageBuilding/getBuildingNameList', {body}, {}, {}, 'post').then(function (res) {
+          if (res.data.code == 0) {
+            _this.buidingList = res.data.response;
+          } else if (res.data.code == 300) {
+            _this.$router.push('/login')
+          } else {
+            message(_this,res.data.message,'warning')
+          }
+        }).catch(function (err) {
+          console.log(err)
+        })
+      },
+      //搜索
+      querySearchAsync(queryString,cb){
+        let buidingList = this.buidingList;
+        var results = queryString ? buidingList.filter(this.createStateFilter(queryString)) : buidingList;
+        cb(results)
+      },
+      createStateFilter(queryString) {
+        return (state) => {
+          return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) >= 0);
+        };
+      },
+      handleSelect(str){
+        console.log(str)
+      },
+      //触发搜索
       onSearchSubmit(){
-        this.filterForm.pageIndex=1;
-        if(this.currentPage!=1){
-          this.currentPage=1;
+        this.filterForm.pageIndex = 0;
+        if(this.currentPage != 1){
+          this.currentPage = 1;
         }else{
           this.getdata()
         }
       },
+      //改变时间格式
       pickerChange(val){
         this.filterForm.editTimeBegin=val.slice(0,10)
         this.filterForm.editTimeEnd=val.slice(13)
       },
+      //改变页码
       currentChange(page){
-        this.currentPage=page;
-        this.filterForm.pageIndex=page;
+        this.currentPage = page;
+        this.filterForm.pageIndex = page-1;
         this.getdata()
       },
+      //刷新方法
       refresh(){
         this.$store.dispatch('mainLoadingAction',true);
         this.editTime='';
@@ -321,7 +411,9 @@ export default {
           if(i=='pageIndex'){
             this.filterForm[i]=1
           }else if(i=='pageSize'){
-            this.filterForm[i]=2
+            this.filterForm[i]=10
+          }else if(i=='ICareU' || i=='housePurchaseType' || i=='rentType' || i=='onlineStatus'){
+            this.filterForm[i]='2'
           }else{
             this.filterForm[i]=''
           }
@@ -330,91 +422,76 @@ export default {
           this.currentPage=1;
         }else{
           this.getdata()
-        }
-        var that=this
-        setTimeout(function(){
-          that.$store.dispatch('mainLoadingAction',false);
-        },300)        
+        }     
       },
+      //添加新的数据
       addNew(){
-        this.$router.push({path:'/index/estateadd'})
+        this.$router.push({path:'/index/estateadd',query:{type:'add'}})
       },
-      handleSelectionChange(val){
-        this.multipleSelection = val;
-      },
+      //操作
       handleEdit(index, row ,type) {
-        console.log(index, row);
-        if(type==1){
-          this.$router.push({path:'/index/estatedetail'})
+        let _this =this;
+        if(type == 1){
+          this.$router.push({
+            path:'/index/estatedetail',
+            query:{buildingId:row.buildingId}
+          })
         }else if(type==2){
-          this.$router.push({path:'/index/estateedit',query:{type:1}})
-        }else if(type==3){
-          this.$router.push({path:'/index/estateedit',query:{type:2}})
-        }else if(type==4){
-          this.$router.push({path:'/index/estateedit',query:{type:3}})
-        }
-      },
-      handleDelete(index, row) {
-        let _this=this;
-        this.$confirm('确认上线/下线吗?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          _this.onSearchSubmit()
-          _this.$message({
-            type: 'success',
-            message: '操作成功!'
-          });
-        }).catch(() => {
-          _this.$message({
-            type: 'info',
-            message: '已取消'
-          });          
-        });
-      },
-      batchDelete(){
-        
-        if(this.multipleSelection.length>0){
+          this.$router.push({
+            path:'/index/estateedit',
+            query:{buildingId:row.buildingId,type:'edit'}
+          })
+        }else if(type == 0){
+          let body = {
+            buildingId:row.buildingId,
+          },text1,text2,text3;
+          if(row.onlineStatus == 0){
+            text1 = '确认上线吗?'
+            text2 = '上线成功'
+            text3 = '上线失败'
+            body.onlineStatus = 1;
+          }else{
+            text1 = '确认下线吗?'
+            text2 = '下线成功'
+            text3 = '下线失败'
+            body.onlineStatus = 0;
+          }
 
-          this.$confirm('确认删除吗?', '提示', {
+          this.$confirm(text1, '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-            for(let i in this.multipleSelection){
-              this.tableData.splice(this.tableData.indexOf(this.multipleSelection[i]),1)   
-            }
-            this.onSearchSubmit()
-            this.multipleSelection=[];
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
-            });
+            this.$http('/backstageBuilding/editBuildingStatus', {body}, {}, {}, 'post').then(function (res) {
+              if (res.data.code == 0) {
+                if(res.data.response.status == 1){
+                  message(_this,text2,'success')
+                  _this.getdata()
+                }else{
+                  message(_this,text3,'warning')
+                }
+              } else if (res.data.code == 300) {
+                _this.$router.push('/login')
+              } else {
+                message(_this,res.data.message,'warning')
+              }
+            }).catch(function (err) {
+              console.log(err)
+            })
           }).catch(() => {
             this.$message({
               type: 'info',
-              message: '已取消删除'
+              message: '已取消'
             });          
           });
 
-        }else{
-          this.$message({
-            type: 'info',
-            message: '请先勾选'
-          }); 
         }
-        
-      }         
+      },
+           
     },
     mounted(){
-      
       this.$store.dispatch('mainLoadingAction',true);
       this.$store.dispatch('defaultIndexAction','/index/estatemanagement');
-      var that=this
-      setTimeout(function(){
-        that.$store.dispatch('mainLoadingAction',false);
-      },300) 
     }
   }
 </script>
@@ -435,5 +512,5 @@ export default {
 </style>
 
 <style>
-  .search_wap .el-input{width:110px;}
+  .el-table--border td, .el-table--border th{text-align: center;}
 </style>

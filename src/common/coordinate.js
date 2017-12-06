@@ -105,11 +105,11 @@ let coordinatearr=[
   },
   {
     pro:'新疆',
-    coordinate:[87.68,	43.77	]
+    coordinate:[87.68,43.77]
   },
   {
     pro:'西藏',
-    coordinate:[91.11,	29.97		]
+    coordinate:[91.11,29.97]
   }
 ]
 export default coordinatearr;

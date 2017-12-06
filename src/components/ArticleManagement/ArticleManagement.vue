@@ -1,22 +1,14 @@
 <template>
     <div class="posts">
-        <Subnav :secondLevel="secondLevel" :threeLevel="threeLevel" @refresh="refresh"></Subnav>
-        <div style="padding:20px;font-size:14px" class="postsTop_wap">
+        <Subnav :subSrc="subSrc" :secondLevel="secondLevel" :threeLevel="threeLevel" @refresh="refresh"></Subnav>
+        <div style="padding:20px;font-size:12px" class="postsTop_wap">
             <div class="postsSeek">
                 <div>
                     <div class="bao">
-                        <span>按：</span>
-                        <el-select style="width:100px" v-model="filterForm.seekType" class="postsOption">
-                            <el-option
-                            v-for="item in seekOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value" >
-                            </el-option>
-                        </el-select>
-                        <el-input v-model="filterForm.seekValue" style="width:140px" class="postsInputSeek"></el-input>
+                        <span>文章名</span>
+                        <el-input v-model="filterForm.title" style="width:140px" class="postsInputSeek"></el-input>
                         <span style="margin-left:10px">分类：</span>
-                        <el-select v-model="filterForm.type" :clearable="true" placeholder="分类"  style="width:80px;">
+                        <el-select v-model="filterForm.newsTypeId" :clearable="true" placeholder="分类"  style="width:120px;">
                             <el-option
                             v-for="item in classOptions"
                             :key="item.value"
@@ -24,55 +16,73 @@
                             :value="item.value" >
                             </el-option>
                         </el-select>
-                        <span style="margin-left:10px">文章状态：</span>
-                        <el-select v-model="filterForm.state" :clearable="true" placeholder="状态" style="width:80px;">
+                        <span style="margin-left:10px">发布人：</span>
+                        <el-select v-model="filterForm.backstageUserId" :clearable="true" placeholder="分类"  style="width:120px;">
                             <el-option
-                            v-for="item in textOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value" >
+                            v-for="(item,index) in backstageUserIdList"
+                            :key="index"
+                            :label="item"
+                            :value="index" >
                             </el-option>
-                        </el-select>
+                        </el-select> 
                         <span style="margin-left:10px">区域：</span>
-                        <AreaAll :area="filterForm" :isshowqu="false"></AreaAll>
+                        <el-select @change="proChange" v-model="filterForm.provinceIds" :clearable="true" placeholder="省"  style="width:120px;">
+                            <el-option
+                            v-for="item in provinceIdsList"
+                            :key="item.cityId"
+                            :label="item.cityName"
+                            :value="item.cityId" >
+                            </el-option>
+                        </el-select> 
+                        <el-select v-model="filterForm.cityIds" :clearable="true" placeholder="市"  style="width:120px;">
+                            <el-option
+                            v-for="item in cityIdsList"
+                            :key="item.cityId"
+                            :label="item.cityName"
+                            :value="item.cityId" >
+                            </el-option>
+                        </el-select> 
                     </div>
                     <div class="bao">
                       
                         <span class="demonstration">发布时间：</span>
                         <el-date-picker
                           :clearable="true"
-                          v-model="filterForm.beginTime"
+                          v-model="filterForm.releaseTimeMin"
                           align="right"
-                          type="date"
+                          type="datetime"
+                          @change="timePreChange"
                           placeholder="选择日期"
                           :picker-options="pickerOptions1">
                         </el-date-picker>
+
                         <span class="demonstration">至</span>
+
                         <el-date-picker
                           :clearable="true"
-                          v-model="filterForm.endTime"
+                          v-model="filterForm.releaseTimeMax"
                           align="right"
-                          type="date"
+                          type="datetime"
+                          @change="timeNextChange"
                           placeholder="选择日期" 
                           :picker-options="pickerOptions1">
                         </el-date-picker>
                         <span style="margin-left:10px">头条：</span>
-                        <el-select v-model="filterForm.isTopLine" :clearable="true" placeholder="头条" style="width:80px;">
-                            <el-option
-                            v-for="item in titleOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value" >
-                            </el-option>
+                        <el-select v-model="filterForm.isHeadline" :clearable="true" placeholder="头条" style="width:100px;">
+                            <el-option label="是"  value="1"></el-option>
+                            <el-option label="否"  value="0"></el-option>
+                        </el-select>
+                        <span style="margin-left:10px">推荐位置：</span>
+                        <el-select v-model="filterForm.newsLocation" :clearable="true" placeholder="推荐位置" style="width:150px;">
+                            <el-option label="不推荐"  value="0"></el-option>
+                            <el-option label="推荐至banner位" value="2"></el-option>
+                            <el-option label="推荐至展示位" value="3"></el-option>  
+                            <el-option label="推荐至资讯列表" value="4"></el-option>
                         </el-select>
                         <span style="margin-left:10px">置顶：</span>
                         <el-select v-model="filterForm.isTop" :clearable="true" placeholder="置顶"  style="width:80px;">
-                            <el-option
-                            v-for="item in topOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value" >
-                            </el-option>
+                            <el-option label="是" value="1"></el-option>
+                            <el-option label="否" value="0"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -87,7 +97,7 @@
         <div class="postsSeekBtn">
             <el-table
                 ref="multipleTable"
-                :data="data.list"
+                :data="data.newsList"
                 v-loading="is_loading_tab"
                 border
                 tooltip-effect="dark"
@@ -97,57 +107,82 @@
                 type="selection"
                 width="50">
                 </el-table-column>
+
                 <el-table-column
                 label="ID"
                 width="50"
                 prop="id">
                 </el-table-column>
+
                 <el-table-column
                 prop="title"
                 label="标题"
-                width="200">
+                >
                 </el-table-column>
+
                 <el-table-column
-                prop="type"
+                prop="newsTypeId"
                 label="文章分类"
                 show-overflow-tooltip>
+                    <template scope="scope">
+                        <span v-if="scope.row.newsTypeId=='1'">验房维权</span>
+                        <span v-if="scope.row.newsTypeId=='3'">置业指引</span>
+                        <span v-if="scope.row.newsTypeId=='2'">行业动态</span>
+                        <span v-if="scope.row.newsTypeId=='4'">政策解读</span>
+                        <span v-if="scope.row.newsTypeId=='0'">不限</span>
+                    </template>
                 </el-table-column>
                 <el-table-column
-                prop="address"
                 label="发布城市"
                 show-overflow-tooltip>
+                    <template scope="scope">
+                        <p>{{scope.row.provinceList}}</p>
+                        <p>{{scope.row.cityList}}</p>
+                    </template>
                 </el-table-column>
+
                 <el-table-column
-                prop="publish_time"
+                prop="releaseTime"
                 label="发布时间"
                 show-overflow-tooltip>
                 </el-table-column>
+
                 <el-table-column
-                prop="isTopLine"
-                label="头条"
+                label="推荐位置"
                 show-overflow-tooltip>
+                    <template scope="scope">
+                        <span v-if="scope.row.newsLocation=='0'">不推荐</span>
+                        <span v-if="scope.row.newsLocation=='2'">推荐至banner位</span>
+                        <span v-if="scope.row.newsLocation=='3'">推荐至展示位</span>
+                        <span v-if="scope.row.newsLocation=='4'">推荐至资讯列表</span>
+                    </template>
                 </el-table-column>
+
                 <el-table-column
-                prop="isTop"
                 label="置顶"
                 show-overflow-tooltip>
+                    <template scope="scope">
+                        <span v-if="scope.row.isTop=='1'">是</span>
+                        <span v-if="scope.row.isTop=='0'">否</span>
+                    </template>
                 </el-table-column>
+
                 <el-table-column
-                prop="publisher"
+                prop="userName"
                 label="发布人"
                 show-overflow-tooltip>
                 </el-table-column>
+
                 <el-table-column
-                prop="source"
-                label="文章来源"
-                show-overflow-tooltip>
-                </el-table-column>
-                <el-table-column
-                prop="state"
                 label="状态"
                 show-overflow-tooltip>
+                    <template scope="scope">
+                        <span v-if="scope.row.status=='1'">在线</span>
+                        <span v-if="scope.row.status=='0'">离线</span>
+                    </template>
                 </el-table-column>
-                <el-table-column width="300px" fixed="right" label="操作">
+
+                <el-table-column width="300px" label="操作">
                     <template scope="scope" >
                         <el-button
                         size="small"
@@ -160,21 +195,31 @@
                         size="small"
                         type="primary"
                         @click="handleSee(scope.$index, scope.row)">查看</el-button>
+
                         <el-button
+                        v-if="scope.row.status==1"
                         size="small"
                         type="danger"
                         @click="noLonger(scope.$index, scope.row)">下线</el-button>
+
+                        <el-button
+                        v-if="scope.row.status==0"
+                        size="small"
+                        type="danger"
+                        @click="noLonger(scope.$index, scope.row)">上线</el-button>
+
                     </template>
                 </el-table-column>
             </el-table>
             <div class="blockPage">
                 <el-button type="danger" @click="removesHander()">批量删除</el-button>
                 <el-pagination
+                v-show="data.pageCount>0"
                 @current-change="handleCurrentChange"
                 :current-page.sync="currentPage"
-                :page-size="2"
+                :page-size="10"
                 layout="total, prev, pager, next"
-                :total="data.total">
+                :total="data.pageCount">
                 </el-pagination>
             </div>
         </div>
@@ -183,92 +228,62 @@
 
 <script>
     import Subnav from '../Subnav/Subnav.vue'
-    import AreaAll from '../Common/AreaAll/AreaAll'
     export default {
         name:'Posts',
         components:{
-            Subnav,
-            AreaAll
+            Subnav
         },
         data(){
             return {
                 secondLevel:'文章管理',
                 threeLevel:'文章管理',
+                subSrc:'/index/articlemanagement',
                 currentPage:1,
                 is_loading_tab:false,
                 multipleSelection: [],
                 removesArr:[],
                 filterForm: {
-                    page:1,
-                    id:'',
-                    seekType:'id',
-                    seekValue:'',
-                    isTopLine:'',
+                    pageNum:'0',
+                    pageSize:'10',
+                    title:'',
+                    backstageUserId:'',
+                    provinceIds:'',
+                    cityIds:'',
+                    isHeadline:'',
+                    newsLocation:'',
                     isTop:'',
-                    beginTime:'',
-                    endTime:'',
-                    type:'',
-                    state:'',
-                    sheng:'',
-                    shi:'',
-                    qu:'',
+                    releaseTimeMin:'',
+                    releaseTimeMax:'',
+                    newsTypeId:'',
                 },
                 data:{
-                    list:[]
+                    newsList:[]
                 },
-                seekOptions: [{
-                    value: 'id',
-                    label: 'ID'
-                 }, {
-                    value: 'publisher',
-                    label: '发布人'
-                 }, {
-                    value: 'title',
-                    label: '标题'
-                 }, {
-                    value: 'source',
-                    label: '来源'
-                }],
                 classOptions: [{
-                    value: '1',
+                    value: '',
                     label: '不限'
                  }, {
-                    value: '2',
-                    label: '严选头条'
+                    value: '1',
+                    label: '验房维权'
                  }, {
                     value: '3',
                     label: '置业指引'
                  }, {
-                    value: '4',
+                    value: '2',
                     label: '行业动态'
                  },{
-                    value: '5',
+                    value: '4',
                     label: '新政解读'
                 }],
-                textOptions: [{
-                    value: '1',
-                    label: '不限'
-                 }, {
-                    value: '2',
-                    label: '上线'
-                 }, {
-                    value: '3',
-                    label: '下线'
-                }],
-                titleOptions: [{
-                    value: '1',
-                    label: '是'
-                 }, {
-                    value: '2',
-                    label: '否'
-                }],
-                topOptions: [{
-                    value: '1',
-                    label: '是'
-                 }, {
-                    value: '2',
-                    label: '否'
-                }],
+                backstageUserIdList:[
+                    
+                ],
+                provinceIdsList:[
+                   
+                ],
+                cityIdsList:[
+                   
+                ],
                 pickerOptions0: {
                     disabledDate(time) {
                         return time.getTime() < Date.now() - 8.64e7;
@@ -292,7 +307,7 @@
                         onClick(picker) {
                             const date = new Date();
                             date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-                            picker.$emit('pick', date);
+                            picker.$emit('pick', date);[]
                         }
                     }]
                 },
@@ -306,26 +321,110 @@
         },
         created(){
             this.getdata()
+            this.getProCityData(1)
+            this.getUserListData()
         },
         methods: {
             getdata(){
                 let _this=this;
                 _this.is_loading_tab=true;
-                this.$http('/articlelist',{},_this.filterForm).then(function(res){
-                console.log(res)
-                if(res.data.code==1000){
-                    _this.data=res.data.data;
+                this.$http('/news/newsInfoList',{body:_this.filterForm},{},{},'post').then(function(res){
+                    _this.$store.dispatch('mainLoadingAction',false);
+                    if(res.data.code==0){
+                        
+                        _this.data=res.data.response;
+                        _this.data.newsList.forEach((item,index) => {
+                            item.provinceList = item.provinceList.join()
+                            item.cityList = item.cityList.join()
+                        })
+                       
+                    }else if(res.data.code==300){
+                        _this.$router.push('/login')
+                    }else{
+                        _this.$message({
+                          message: res.data.message,
+                          type: 'warning'
+                        });
+                    }
+                    _this.is_loading_tab=false;
+                }).catch(function(err){
+                    _this.is_loading_tab=false;
+                    _this.$store.dispatch('mainLoadingAction',false);
+                    console.log(err)
+                })
+            },
+            //获取省市数据
+            getProCityData(pramas){
+                let _this=this;
+                let body = '';
+                if(pramas == 1){
+                    body = {cityType:1}
+                }else{
+                    body = {cityType:2,parentid:_this.filterForm.provinceIds}
                 }
-                _this.is_loading_tab=false;
+                _this.$http('/citis/cityList',{body},{},{},'post').then(function(res){
+                   
+                    if(res.data.code==0){
+                        
+                        if(pramas==1){
+                            _this.provinceIdsList = res.data.response.cityList
+                        }else{
+                            _this.cityIdsList = res.data.response.cityList
+                            if(_this.filterForm.provinceIds == ''){
+                                _this.cityIdsList = []
+                            }
+                        }
+                        
+                    }else if(res.data.code==300){
+                        _this.$router.push('/login')
+                    }else{
+                        _this.$message({
+                          message: res.data.message,
+                          type: 'warning'
+                        });
+                    }
+                    _this.is_loading_tab=false;
                 }).catch(function(err){
                     _this.is_loading_tab=false;
                     console.log(err)
-                })
+                })   
+            },
+            //改变省份
+            proChange(){
+                this.filterForm.cityIds=''
+                this.getProCityData(2)
+            },
+            //改变时间格式
+            timePreChange(val){
+                this.filterForm.releaseTimeMin = val? val:''
+            },
+            //改变时间格式
+            timeNextChange(val){
+                this.filterForm.releaseTimeMax = val? val:''
+            },
+            //获取用户数据
+            getUserListData(){
+                let _this=this;
+                _this.$http('/backstageUser/userList',{},{},{},'post').then(function(res){
+                    
+                    if(res.data.code==0){
+                        _this.backstageUserIdList = res.data.response
+                    }else if(res.data.code==300){
+                        _this.$router.push('/login')
+                    }else{
+                        _this.$message({
+                            message: res.data.message,
+                            type: 'warning'
+                        });
+                    }
+                }).catch(function(err){
+                    console.log(err)
+                })   
             },
             //搜索
             search(){
                 this.currentPage=1;
-                this.filterForm.page=1;
+                this.filterForm.pageNum=0;
                 this.getdata()
             },
             //勾选变化
@@ -335,21 +434,40 @@
             },
             //page变化
             handleCurrentChange($val){
-                this.filterForm.page=$val;
+                this.filterForm.pageNum=$val-1;
                 this.getdata();
             },
             //是否删除
             handleDelete($index,row){
-                this.$confirm('确认删除吗?', '提示', {
+                let _this = this;
+                this.$confirm('确定删除该条资讯?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.getdata()
-                    this.$message({
-                        type: 'success',
-                        message: '删除成功!'
-                    });
+                    _this.$http('/news/delNewsInfo',{body:{newsId:row.id}},{},{},'post').then(function(res){
+                        console.log(res)
+                        if(res.data.code==0){
+                            
+                            _this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                            _this.getdata()
+                            
+                        }else if(res.data.code==300){
+                            _this.$router.push('/login')
+                        }else{
+                            _this.$message({
+                              message: res.data.message,
+                              type: 'warning'
+                            });
+                        }
+                        _this.is_loading_tab=false;
+                    }).catch(function(err){
+                        _this.is_loading_tab=false;
+                        console.log(err)
+                    })
                 }).catch(() => {
                     this.$message({
                         type: 'info',
@@ -368,17 +486,48 @@
                 this.$router.push({path:'/index/articledetail',query})
             },
             //是否下线
-            noLonger($index) {
-                this.$confirm('确定上线／下线该条资讯？', '提示', {
+            noLonger($index,row) {
+                let _this=this,
+                strText='',
+                strResultText='',
+                body={newsId:row.id,status:''};
+                if(row.status==1){
+                    strText='确定下线该条资讯？'
+                    strResultText='下线成功'
+                    body.status=0
+                }else{
+                    strText='确定上线该条资讯？'
+                    strResultText='上线成功'
+                    body.status=1
+                }
+                this.$confirm( strText, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.getdata()
-                    this.$message({
-                        type: 'success',
-                        message: '操作成功!'
-                    });
+                    _this.$http('/news/updateNewsInfo',{body},{},{},'post').then(function(res){
+                        console.log(res)
+                        if(res.data.code==0){
+                            
+                            _this.$message({
+                                type: 'success',
+                                message: strResultText
+                            });
+                            _this.getdata()
+                            
+                        }else if(res.data.code==300){
+                            _this.$router.push('/login')
+                        }else{
+                            _this.$message({
+                              message: res.data.message,
+                              type: 'warning'
+                            });
+                        }
+                        _this.is_loading_tab=false;
+                    }).catch(function(err){
+                        _this.is_loading_tab=false;
+                        console.log(err)
+                    })
                 }).catch(() => {
                     this.$message({
                         type: 'info',
@@ -396,17 +545,37 @@
                 });
                 return;
                 }
-                this.$confirm('此操作将永久删除所有选中文件, 是否继续?', '提示', {
+                this.$confirm('确定批量删除资讯?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
                     let ids = this.removesArr.map(item => item.id);//获取所有选中行的id组成的字符串，以逗号分隔
-                    _this.getdata()
-                    this.$message({
-                        type: 'success',
-                        message: '删除成功!'
-                    });
+                    
+                    ids=ids.join(',')
+                    _this.$http('/news/delNewsInfo',{body:{newsId:ids}},{},{},'post').then(function(res){
+                        
+                        if(res.data.code==0){
+                            
+                            _this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                            _this.getdata()
+                            
+                        }else if(res.data.code==300){
+                            _this.$router.push('/login')
+                        }else{
+                            _this.$message({
+                              message: res.data.message,
+                              type: 'warning'
+                            });
+                        }
+                        _this.is_loading_tab=false;
+                    }).catch(function(err){
+                        _this.is_loading_tab=false;
+                        console.log(err)
+                    })
                 }).catch(() => {
                     this.$message({
                         type: 'info',
@@ -417,22 +586,20 @@
             refresh(){
                 this.$store.dispatch('mainLoadingAction',true);  
                 for(var i in this.filterForm){
-                    this.filterForm[i]=''
+                    if(i == 'pageNum'){
+                        this.filterForm[i] = '0'
+                    }else if(i == 'pageSize'){
+                        this.filterForm[i] = '10'
+                    }else{
+                        this.filterForm[i] = ''
+                    }
                 }
                 this.search()
-                var that=this
-                setTimeout(function(){
-                    that.$store.dispatch('mainLoadingAction',false);
-                },300)
             },
         },
         mounted(){
             this.$store.dispatch('mainLoadingAction',true);
             this.$store.dispatch('defaultIndexAction','/index/articlemanagement');
-            var that=this;
-            setTimeout(function(){
-                that.$store.dispatch('mainLoadingAction',false);
-            },300)
         }
     }
 </script>

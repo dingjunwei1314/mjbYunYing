@@ -7,23 +7,31 @@
         </template>
         <el-menu-item index="/index/estatemanagement">楼盘管理</el-menu-item>
         <el-menu-item index="/index/rankinglist">排行榜</el-menu-item>
-        <el-menu-item index="/index/cityhousescore">城市楼盘分数均值</el-menu-item>
-        <el-menu-item index="/index/expectingbuildings">用户期待开放楼盘</el-menu-item>
+        <!-- <el-menu-item index="/index/expectingbuildings">用户期待开放楼盘</el-menu-item> -->
       </el-submenu>
       <el-submenu index="2">
+        <template slot="title">
+          <i class="fa fa-user-o" style="margin-right:10px"></i>
+          <span slot="title">文章管理</span>
+        </template>
+        <el-menu-item index="/index/articlemanagement">文章管理</el-menu-item>
+      </el-submenu>
+      <el-submenu index="8">
+        <template slot="title">
+          <i class="fa fa-user-o" style="margin-right:10px"></i>
+          <span slot="title">订阅管理</span>
+        </template>
+        <el-menu-item index="/index/bulletinsubscription">订阅简报</el-menu-item>
+        <el-menu-item index="/index/bulletinorder">预约简报</el-menu-item>
+      </el-submenu>
+      <el-submenu index="3">
         <template slot="title">
           <i class="fa fa-user-o" style="margin-right:10px"></i>
           <span slot="title">订单管理</span>
         </template>
         <el-menu-item index="/index/cooperorders">合作买房</el-menu-item>
       </el-submenu>
-    <el-submenu index="3">
-      <template slot="title">
-        <i class="fa fa-user-o" style="margin-right:10px"></i>
-        <span slot="title">文章管理</span>
-      </template>
-      <el-menu-item index="/index/articlemanagement">文章管理</el-menu-item>
-    </el-submenu>
+    
       <el-submenu index="4">
         <template slot="title">
           <i class="fa fa-user-o" style="margin-right:10px"></i>
@@ -79,10 +87,8 @@ export default {
     },
     methods: {
       handleOpen(key, keyPath) {
-        console.log(key, keyPath);
       },
       handleClose(key, keyPath) {
-        console.log(key, keyPath);
       },
     },
     mounted(){

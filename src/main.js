@@ -9,6 +9,7 @@ import 'element-ui/lib/theme-default/index.css'
 Vue.use(ElementUI);
 Vue.config.productionTip = false
 Vue.prototype.$http = axios;
+
 new Vue({
   el: '#app',
   router,
@@ -16,4 +17,3 @@ new Vue({
   template: '<App/>',
   components: { App }
 });
-

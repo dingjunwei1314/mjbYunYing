@@ -5,8 +5,8 @@
     
     <el-breadcrumb separator="/" style="float:left:margin-top:14px">
       <i class="fa fa-home" style="float:left;font-size:16px;color:#324157;position:relative;margin-right:3px;top:-2px"></i>
-      <el-breadcrumb-item to="/index/estatemanagement">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>{{secondLevel}}</el-breadcrumb-item>
+      <el-breadcrumb-item to = "/index/estatemanagement">首页</el-breadcrumb-item>
+      <el-breadcrumb-item :to = "subSrc">{{secondLevel}}</el-breadcrumb-item>
       <el-breadcrumb-item>{{threeLevel}}</el-breadcrumb-item>
     </el-breadcrumb>
     <el-button @click.native="refresh" style="float:right;margin-top:7px;"><i class="fa fa-refresh"></i></el-button>
@@ -28,6 +28,11 @@ export default {
         required:true,
         type:String,
         default:'三级导航'
+      },
+      subSrc:{
+        required:false,
+        type:String,
+        default:'/index/estatemanagement'
       }
     },
     data() {

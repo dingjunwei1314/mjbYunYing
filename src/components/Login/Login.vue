@@ -1,5 +1,5 @@
 <template>
-    <div class="login">
+    <div class="login" @keyup.enter="submitForm('ruleForm2')">
         <div class="header">
           买家帮楼盘管理审核系统
         </div>
@@ -12,7 +12,7 @@
                 <el-input type="password" v-model="ruleForm2.userPwd" auto-complete="off"></el-input>
               </el-form-item>
               <el-form-item label="验证码" prop="code">
-                <el-input type="text" style="width:70%"  v-model="ruleForm2.code" auto-complete="off"></el-input>
+                <el-input type="text" style="width:70%"    v-model="ruleForm2.code" auto-complete="off"></el-input>
                 <span class="code" @click="changeCode">
                   <i>{{code}}</i>
                 </span>
@@ -96,29 +96,23 @@ export default {
     },
     methods: {
       submitForm(formName) {
-      
-        console.log(JSON.stringify({name:'djw'}))
         let _this=this,
             body=this.ruleForm2;
         this.$refs[formName].validate((valid) => {
           if (valid) {
-
-            this.$http('/login',{body},{},{},'post').then(function(res){
+            this.$http('/backstageUser/login',{body},{},{},'post').then(function(res){
               if(res.data.code==0){
-                if(res.data.response.status==1){
-                  _this.$router.push('/index/estatemanagement')
-                  localStorage.token=res.data.response.data.token;
-                }else{
-                  _this.$message({
-                    message: res.data.response.message,
-                    type: 'warning'
-                  });
-                }
+                _this.$router.push('/index/articlemanagement')
+                localStorage.token=res.data.response.token;
+                
               }else{
                 _this.$message({
                   message: res.data.message,
                   type: 'warning'
                 });
+                if(res.data.message == '验证码已过期'){
+                  _this.changeCode()
+                }
               }
             }).catch(function(err){
               console.log(err)
@@ -140,16 +134,9 @@ export default {
       },
       changeCode(){
         let _this=this;
-        this.$http('/code',{},{},{},'post').then(function(res){
+        this.$http('/backstageUser/verifyCode',{},{},{},'get').then(function(res){
           if(res.data.code==0){
-            if(res.data.response.status==1){
-              _this.code=res.data.response.data.code
-            }else{
-              _this.$message({
-                message: res.data.response.message,
-                type: 'warning'
-              });
-            }
+              _this.code=res.data.response.code
           }else{
             _this.$message({
               message: res.data.message,

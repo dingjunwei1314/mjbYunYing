@@ -39,6 +39,7 @@ export default {
       }
     },
     computed:{
+    
     },
     methods: {
       area_change(val){

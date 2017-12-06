@@ -43,6 +43,24 @@ const RankingList=function(resolve){
     require.ensure([],function(){
         resolve(require('../components/RankingList/RankingList'))
     })
+}  
+
+const RankingListAdd=function(resolve){
+  require.ensure([],function(){
+      resolve(require('../components/RankingListAdd/RankingListAdd'))
+  })
+}   
+
+const RankingListEdit=function(resolve){
+  require.ensure([],function(){
+      resolve(require('../components/RankingListEdit/RankingListEdit'))
+  })
+}
+
+const RankingDetail=function(resolve){
+  require.ensure([],function(){
+      resolve(require('../components/RankingDetail/RankingDetail'))
+  })
 }
 
 const CityHouseScore=function(resolve){
@@ -56,6 +74,31 @@ const ExpectingBuildings=function(resolve){
         resolve(require('../components/ExpectingBuildings/ExpectingBuildings'))
     })
 }
+//订阅管理
+const BulletinSubscription=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/BulletinSubscription/BulletinSubscription'))
+    })
+}
+
+const BulletinOrder=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/BulletinOrder/BulletinOrder'))
+    })
+}  
+
+const DetailBulletinOrder=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/DetailBulletinOrder/DetailBulletinOrder'))
+    })
+}  
+
+const DetailBulletinSubscription=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/DetailBulletinSubscription/DetailBulletinSubscription'))
+    })
+}
+
 //订单管理
 const CooperOrders=function(resolve){
     require.ensure([],function(){
@@ -129,7 +172,6 @@ const ChangePassword = function (resolve) {
 }
 
 
-
 //新建管理员
 const CreateNewAccount = function (resolve) {
   require.ensure([],function () {
@@ -181,10 +223,38 @@ export default new Router({
                 {
                   path:'/index/rankinglist',
                   component:RankingList
+                },  
+                {
+                  path:'/index/rankinglistadd',
+                  component:RankingListAdd
+                },  
+                {
+                  path:'/index/rankinglistedit',
+                  component:RankingListEdit
                 },
                 {
                   path:'/index/cityhousescore',
                   component:CityHouseScore
+                },  
+                {
+                  path:'/index/rankingdetail',
+                  component:RankingDetail
+                },
+                {
+                  path:'/index/bulletinsubscription',
+                  component:BulletinSubscription
+                },
+                {
+                  path:'/index/bulletinorder',
+                  component:BulletinOrder
+                },
+                {
+                  path:'/index/detailbulletinOrder',
+                  component:DetailBulletinOrder
+                },
+                {
+                  path:'/index/detailbulletinsubscription',
+                  component:DetailBulletinSubscription
                 },
                 {
                   path:'/index/expectingbuildings',

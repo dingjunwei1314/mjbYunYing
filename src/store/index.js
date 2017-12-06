@@ -1,5 +1,6 @@
 import Vue  from 'vue';
 import Vuex from 'vuex';
+import estate from './modules/estate';
 
 Vue.use(Vuex)
 
@@ -10,9 +11,7 @@ let state = {
         flex:' 0 0 160px'
     },
     mainLoading:false,
-    defaultIndex:'',
-    provinceValue:"全国",
-    cityValue:"全国"
+    defaultIndex:''
 };
 
 const mutations = {
@@ -24,10 +23,6 @@ const mutations = {
     },
     changedefaultIndex:function(state,n){
         state.defaultIndex=n
-    },
-    SETPROVINCEVAlUE(state) {
-      state.provinceValue = 1;
-      state.cityValue = "东城区"
     }
 };
 
@@ -41,12 +36,8 @@ const actions = {
     },
     defaultIndexAction:function({commit},n){
         commit('changedefaultIndex',n)
-    },
-    setProvinceValue:function({commit}) {
-    commit('SETPROVINCEVAlUE')
-  }
+    }
 };
-
 
 const getters = {
     GetNavStyle:function(state){
@@ -57,19 +48,15 @@ const getters = {
     },
     GetDefaultIndex:function(){
         return state.defaultIndex
-    },
-    getProvinceValue : function() {
-      return state.provinceValue
-    },
-    getCityValue : function() {
-      return state.cityValue
     }
 };
-
 
 export default new Vuex.Store({
     state,
     mutations,
     actions,
-    getters
+    getters,
+    modules:{
+        estate
+    }
 })

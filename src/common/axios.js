@@ -1,29 +1,52 @@
 import axios from 'axios'
+import qs from 'qs'
 
-export default function(url='',data={},params,headers,method='get'){
-    let token=localStorage.token,baseURL=''
-    if(token==undefined||token==''){
-        data.token=''
-        baseURL='http://easy-mock.com/mock/59b0d677e0dc663341a070d2/example_1504761463460'
-        // baseURL='http://192.168.2.200:8080'
-    }else{
-        baseURL='http://easy-mock.com/mock/59b0d677e0dc663341a070d2/example_1504761463460'
-        // baseURL='http://192.168.2.200:8080'
-        data.token=token;
+export default function(url='',data={},params={},headers,method='get'){
+   
+    // let baseURL='http://192.168.1.193:8088/',
+    // let baseURL='http://192.168.1.64:8088/',
+    // let baseURL='http://192.168.1.59:8088',
+    // let baseURL='http://192.168.1.243:8088/',
+    let baseURL='http://47.93.185.205:8081/maijiabangbackstate-1.0-SNAPSHOT',
+    // let baseURL='http://47.95.233.255:8081/maijiabangbackstate-1.0-SNAPSHOT',
+        pa = {},
+        da = {},
+        token = localStorage.token;
+    
+    if(method == 'post'){
+        data.platform = 3
+        data.requestTime = new Date().getTime()
+        data.uniqueId = ''
+        data.versionName = ''
+        data.systemVerion = ''
+        data.phoneBand = ''
+        data.token = token
+        da = qs.stringify({d:JSON.stringify(data)})
     }
-    data.platform="3";
-    data.requestTime=new Date().getTime();
-    data.uniqueId="";
-    data.versionName="";
-    data.systemVerion="";
+
+    if(method == 'get'){
+        params.platform = 3
+        params.requestTime = new Date().getTime()
+        params.uniqueId = ''
+        params.versionName = ''
+        params.systemVerion = ''
+        params.phoneBand = ''
+        params.token = token
+        pa = {d:params}
+    }
+    
     return axios({
         url:url,
         baseURL:baseURL,
         responseType:'json',
-        data:data,
-        params:params,
-        headers: headers,
+        data:da,
+        params:pa,
+        timeout:15000,
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+        },
         method:method,  
-        withCredentials:false
+        withCredentials:true
     })
+
 }
