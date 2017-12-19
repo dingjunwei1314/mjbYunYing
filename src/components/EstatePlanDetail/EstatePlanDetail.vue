@@ -324,7 +324,7 @@
 					  }else{
 						message(_this,'删除失败','warning');
 					  }
-					}).catch(err => {
+					}).catch(err => {144869 
 					  console.log(err)
 					})
 				}).catch(() => {

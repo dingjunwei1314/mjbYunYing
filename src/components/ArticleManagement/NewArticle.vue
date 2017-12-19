@@ -133,7 +133,7 @@
     import Subnav from '../Subnav/Subnav.vue'
     import uploader from '../../common/uploader.js'
     import trim from '../../common/trim.js'
-    import ImgUploader from '../common/ImgUploader/ImgUploader'
+    import ImgUploader from '../Common/ImgUploader/ImgUploader'
     Vue.use(VueQuillEditor);
     export default {
         name:'Posts',
