@@ -75,7 +75,7 @@
       <el-pagination
         v-show="tableData.total>0"
         style="margin: 0 auto;text-align:center;margin-top:20px"
-        layout="prev, pager, next"
+        layout="prev, pager, next,jumper"
         :page-size=2
         :currentPage="currentPage"
         @current-change="currentChange"

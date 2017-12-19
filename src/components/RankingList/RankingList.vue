@@ -8,11 +8,12 @@
         <el-col :span="18">
           <el-form :inline="true" style="" :model="filterForm" class="demo-form-inline">         
             <el-form-item label="排行榜列表">
-              <el-input  v-model="filterForm.rankName" placeholder="排行榜列表"></el-input>
+              <el-input size="small" v-model="filterForm.rankName" placeholder="排行榜列表"></el-input>
             </el-form-item>
             
             <el-form-item label="所在地区" required>
               <el-select 
+                size="small"
                 v-model="filterForm.province" 
                 clearable  
                 @change = "provinceChange(filterForm.province,1)"
@@ -24,7 +25,7 @@
                   :value="item.cityId">
                 </el-option>
               </el-select>
-              <el-select v-model="filterForm.city" clearable  placeholder="市">
+              <el-select size="small" v-model="filterForm.city" clearable  placeholder="市">
                 <el-option
                   v-for="item in cityIdsList"
                   :key="item.cityId"
@@ -35,7 +36,7 @@
             </el-form-item>
 
             <el-form-item label="状态" style="margin-left:10px">
-              <el-select clearable v-model="filterForm.status" placeholder="不限">
+              <el-select size="small" clearable v-model="filterForm.status" placeholder="不限">
                 <el-option label="在线" value="1"></el-option>
                 <el-option label="离线" value="0"></el-option>
               </el-select>
@@ -105,13 +106,11 @@
             </el-button>
             <el-button
               size="small"
-              type="danger"
               @click="handleEdit(scope.$index, scope.row)">
               编辑
             </el-button>
             <el-button
               size="small"
-              type="danger"
               @click="handleLine(scope.$index, scope.row)">
               <span v-if = "scope.row.buildingStatus === 1">下线</span>
               <span v-if = "scope.row.buildingStatus === 0">上线</span>
@@ -135,6 +134,7 @@
         <el-form ref="form" :inline="true" :model="pxAllData.pxForm"  style="margin:0px auto;width:620px">
           <el-form-item label="区域：">
             <el-select 
+              size="small"
               v-model="pxAllData.pxForm.province" 
               clearable  
               @change = "provinceChange(pxAllData.pxForm.province,2)"
@@ -146,7 +146,7 @@
                 :value="item.cityId">
               </el-option>
             </el-select>
-            <el-select v-model="pxAllData.pxForm.city" clearable  placeholder="市">
+            <el-select size="small" v-model="pxAllData.pxForm.city" clearable  placeholder="市">
               <el-option
                 v-for="item in cityIdsList2"
                 :key="item.cityId"

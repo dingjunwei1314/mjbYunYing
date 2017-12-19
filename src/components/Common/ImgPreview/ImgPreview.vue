@@ -1,6 +1,6 @@
 <template>
 	<div v-show="backgroundPicUrl" class="uploadImgCon">
-      <img :src="backgroundPicUrl"alt="">
+      <img :src="backgroundPicUrl" alt="">
       <div class="upWap">
         <i @click="previewImg" class="el-icon-view"></i>
         <i v-if="isShowDelete" @click="deleteImg" class="el-icon-delete"></i>
@@ -15,14 +15,14 @@
 
 		},
 		props:{
-			backgroundPicUrl:{
-		        type:String,
-		        default:''
-		    },
-		    isShowDelete:{
-		    	type:Boolean,
-		    	default:true
-		    }
+		  backgroundPicUrl:{
+        type:String,
+        default:''
+	    },
+	    isShowDelete:{
+	    	type:Boolean,
+	    	default:true 
+	    }
 		},
 		data(){
 			return{
@@ -30,11 +30,11 @@
 		},
 		methods:{
 			previewImg(){
-		    	this.$emit('previewImg')
-		    },
-		    deleteImg(){
-		    	this.$emit('deleteImg')
-		    },
+	    	this.$emit('previewImg')
+	    },
+	    deleteImg(){
+	    	this.$emit('deleteImg')
+	    },
 		}
 	}
 </script>

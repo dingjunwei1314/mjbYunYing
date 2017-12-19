@@ -6,9 +6,9 @@
                 <div>
                     <div class="bao">
                         <span>文章名</span>
-                        <el-input v-model="filterForm.title" style="width:140px" class="postsInputSeek"></el-input>
+                        <el-input size="small" v-model="filterForm.title" style="width:140px" class="postsInputSeek"></el-input>
                         <span style="margin-left:10px">分类：</span>
-                        <el-select v-model="filterForm.newsTypeId" :clearable="true" placeholder="分类"  style="width:120px;">
+                        <el-select size="small" v-model="filterForm.newsTypeId" :clearable="true" placeholder="分类"  style="width:120px;">
                             <el-option
                             v-for="item in classOptions"
                             :key="item.value"
@@ -17,7 +17,7 @@
                             </el-option>
                         </el-select>
                         <span style="margin-left:10px">发布人：</span>
-                        <el-select v-model="filterForm.backstageUserId" :clearable="true" placeholder="分类"  style="width:120px;">
+                        <el-select size="small" v-model="filterForm.backstageUserId" :clearable="true" placeholder="分类"  style="width:120px;">
                             <el-option
                             v-for="(item,index) in backstageUserIdList"
                             :key="index"
@@ -26,7 +26,7 @@
                             </el-option>
                         </el-select> 
                         <span style="margin-left:10px">区域：</span>
-                        <el-select @change="proChange" v-model="filterForm.provinceIds" :clearable="true" placeholder="省"  style="width:120px;">
+                        <el-select size="small" @change="proChange" v-model="filterForm.provinceIds" :clearable="true" placeholder="省"  style="width:120px;">
                             <el-option
                             v-for="item in provinceIdsList"
                             :key="item.cityId"
@@ -34,7 +34,7 @@
                             :value="item.cityId" >
                             </el-option>
                         </el-select> 
-                        <el-select v-model="filterForm.cityIds" :clearable="true" placeholder="市"  style="width:120px;">
+                        <el-select size="small" v-model="filterForm.cityIds" :clearable="true" placeholder="市"  style="width:120px;">
                             <el-option
                             v-for="item in cityIdsList"
                             :key="item.cityId"
@@ -47,6 +47,7 @@
                       
                         <span class="demonstration">发布时间：</span>
                         <el-date-picker
+                          size="small"
                           :clearable="true"
                           v-model="filterForm.releaseTimeMin"
                           align="right"
@@ -59,6 +60,7 @@
                         <span class="demonstration">至</span>
 
                         <el-date-picker
+                          size="small"
                           :clearable="true"
                           v-model="filterForm.releaseTimeMax"
                           align="right"
@@ -68,19 +70,19 @@
                           :picker-options="pickerOptions1">
                         </el-date-picker>
                         <span style="margin-left:10px">头条：</span>
-                        <el-select v-model="filterForm.isHeadline" :clearable="true" placeholder="头条" style="width:100px;">
+                        <el-select size="small" v-model="filterForm.isHeadline" :clearable="true" placeholder="头条" style="width:100px;">
                             <el-option label="是"  value="1"></el-option>
                             <el-option label="否"  value="0"></el-option>
                         </el-select>
                         <span style="margin-left:10px">推荐位置：</span>
-                        <el-select v-model="filterForm.newsLocation" :clearable="true" placeholder="推荐位置" style="width:150px;">
+                        <el-select size="small" v-model="filterForm.newsLocation" :clearable="true" placeholder="推荐位置" style="width:150px;">
                             <el-option label="不推荐"  value="0"></el-option>
                             <el-option label="推荐至banner位" value="2"></el-option>
                             <el-option label="推荐至展示位" value="3"></el-option>  
                             <el-option label="推荐至资讯列表" value="4"></el-option>
                         </el-select>
                         <span style="margin-left:10px">置顶：</span>
-                        <el-select v-model="filterForm.isTop" :clearable="true" placeholder="置顶"  style="width:80px;">
+                        <el-select size="small" v-model="filterForm.isTop" :clearable="true" placeholder="置顶"  style="width:80px;">
                             <el-option label="是" value="1"></el-option>
                             <el-option label="否" value="0"></el-option>
                         </el-select>
@@ -218,7 +220,7 @@
                 @current-change="handleCurrentChange"
                 :current-page.sync="currentPage"
                 :page-size="10"
-                layout="total, prev, pager, next"
+                layout="total, prev, pager, next,jumper"
                 :total="data.pageCount">
                 </el-pagination>
             </div>
@@ -640,7 +642,7 @@
         .inquireBtn button{
             width:100px;
             height:50px;
-          margin: 5px;
+            margin: 5px;
         }
         .inquireBtn{
           line-height: 50px;

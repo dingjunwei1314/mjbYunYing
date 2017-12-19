@@ -9,10 +9,11 @@
           <el-form :inline="true" style="" :model="filterForm" class="demo-form-inline">
             
             <el-form-item label="楼盘id">
-              <el-input   v-model="filterForm.buildingId" style="width:80px" placeholder="id"></el-input>
+              <el-input size="small"   v-model="filterForm.buildingId" style="width:80px" placeholder="id"></el-input>
             </el-form-item>
             <el-form-item label="楼盘名称">
               <el-autocomplete
+                size="small"
                 v-model="filterForm.buildingName"
                 :fetch-suggestions="querySearchAsync"
                 placeholder="请输入关键词"
@@ -21,7 +22,7 @@
             </el-form-item>
         
             <el-form-item label="区域：">
-              <el-select @change="proChange" v-model="filterForm.province" :clearable="true" placeholder="省"  style="width:120px;">
+              <el-select size="small" @change="proChange" v-model="filterForm.province" :clearable="true" placeholder="省"  style="width:120px;">
                   <el-option
                   v-for="item in provinceIdsList"
                   :key="item.cityId"
@@ -29,7 +30,7 @@
                   :value="item.cityId" >
                   </el-option>
               </el-select> 
-              <el-select v-model="filterForm.city" :clearable="true" placeholder="市"  style="width:120px;">
+              <el-select size="small" v-model="filterForm.city" :clearable="true" placeholder="市"  style="width:120px;">
                   <el-option
                   v-for="item in cityIdsList"
                   :key="item.cityId"
@@ -39,7 +40,7 @@
               </el-select>
             </el-form-item> 
             <el-form-item label="楼盘当前状态">
-              <el-select v-model="filterForm.buildStatus" placeholder="请选择">
+              <el-select size="small" v-model="filterForm.buildStatus" placeholder="请选择">
                 <el-option label="全部" value=""></el-option>
                 <el-option label="已支持订阅" value="1"></el-option>
                 <el-option label="仅预约" value="2"></el-option>
@@ -114,7 +115,7 @@
       <el-pagination
         v-show="tableData.subCount>0"
         style="margin: 0 auto;text-align:center;margin-top:20px"
-        layout="prev, pager, next"
+        layout="prev, pager, next,jumper"
         :page-size=10
         :currentPage="currentPage"
         @current-change="currentChange"

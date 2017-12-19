@@ -4,15 +4,15 @@
         <div style="padding:20px" class="newTextTop_wap">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="200px" class="demo-ruleForm">
                 <el-form-item label="标题" prop="title" required>
-                  <el-input v-model="ruleForm.title" placeholder="标题" style="width:30%;"  :maxlength="200"></el-input>
+                  <el-input size="small" v-model="ruleForm.title" placeholder="标题" style="width:30%;"  :maxlength="200"></el-input>
                   <el-button size="small" type="primary" @click="checkName">检测重名</el-button>
                   <span style="margin-left:5px">还可以输入 <i style="color:red">{{titleLenth}}</i> 字符</span>
                 </el-form-item>
                 <el-form-item label="作者">
-                  <el-input v-model="ruleForm.author" placeholder="作者" style="width:30%;"></el-input>
+                  <el-input size="small" v-model="ruleForm.author" placeholder="作者" style="width:30%;"></el-input>
                 </el-form-item>
                 <el-form-item label="来源">
-                  <el-input v-model="ruleForm.source" placeholder="来源" style="width:30%;"></el-input>
+                  <el-input size="small" v-model="ruleForm.source" placeholder="来源" style="width:30%;"></el-input>
                 </el-form-item>
                 <el-form-item label="缩略图">
                   <ImgUploader 
@@ -25,7 +25,7 @@
                   />
                 </el-form-item>
                 <el-form-item label="分类" prop="newsTypeId">
-                  <el-select v-model="ruleForm.newsTypeId" :clearable="true" placeholder="分类">
+                  <el-select size="small" v-model="ruleForm.newsTypeId" :clearable="true" placeholder="分类">
                     <el-option label="验房维权" value="1"></el-option>
                     <el-option label="行业动态" value="2"></el-option>
                     <el-option label="置业指引" value="3"></el-option>  
@@ -33,7 +33,7 @@
                   </el-select>
                 </el-form-item>
                 <el-form-item label="摘要" prop="abstracts" required>
-                  <el-input
+                  <el-input size="small"
                   type="textarea"
                   autosize
                   placeholder="摘要"
@@ -51,6 +51,7 @@
                 <el-form-item label="发布日期" required prop="releaseTime">
                   <el-form-item>
                     <el-date-picker 
+                    size="small"
                     type="datetime" 
                     placeholder="发布日期" 
                     @change="timeChange"
@@ -60,7 +61,7 @@
                   </el-form-item>
                 </el-form-item>
                   <el-form-item label="文章标签">
-                  <el-input v-model="ruleForm.articleKeyword" placeholder="多个关键词请以半角逗号分割" style="width:20%;"></el-input>
+                  <el-input size="small" v-model="ruleForm.articleKeyword" placeholder="多个关键词请以半角逗号分割" style="width:20%;"></el-input>
                 </el-form-item>
                 <el-form-item label="文章发布的城市" required>
                     
@@ -105,7 +106,7 @@
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="推荐位置">
-                    <el-select v-model="ruleForm.newsLocation">
+                    <el-select size="small" v-model="ruleForm.newsLocation">
                       <el-option label="不推荐"  value="0"></el-option>
                       <el-option label="推荐至banner位" value="2"></el-option>
                       <el-option label="推荐至展示位" value="3"></el-option>  

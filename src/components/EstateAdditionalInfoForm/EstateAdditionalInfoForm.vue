@@ -6,30 +6,30 @@
         </p>
         <el-form :model="additionalInformationForm" :inline="true"  label-width="100px" class="demo-dynamic" style="width:60%;margin-left:15%;margin-top:40px">
           <el-form-item label="得房率" style="width:300px">
-            <el-input style="width:100px" type="number"  v-model="additionalInformationForm.acquireBuilding"></el-input>
+            <el-input size="small" style="width:100px" type="number"  v-model="additionalInformationForm.acquireBuilding"></el-input>
             <span style="color:#999;font-size:12px">单位：%</span>
           </el-form-item>
           <el-form-item label="绿化率" style="width:300px">
-            <el-input style="width:100px" type="number" v-model="additionalInformationForm.greeningRate"></el-input>
+            <el-input size="small" style="width:100px" type="number" v-model="additionalInformationForm.greeningRate"></el-input>
             <span style="color:#999;font-size:12px">单位：%</span>
           </el-form-item>
           <el-form-item label="容积率" style="width:300px">
-            <el-input style="width:100px" type="number" v-model="additionalInformationForm.plotRatio"></el-input>
+            <el-input size="small" style="width:100px" type="number" v-model="additionalInformationForm.plotRatio"></el-input>
             <span style="color:#999;font-size:12px">例：2</span>
           </el-form-item>
           <el-form-item label="建筑面积" style="width:300px">
-            <el-input style="width:100px" type="number" v-model="additionalInformationForm.buildingArea"></el-input>
+            <el-input size="small" style="width:100px" type="number" v-model="additionalInformationForm.buildingArea"></el-input>
             <span style="color:#999;font-size:12px">单位：M2</span>
           </el-form-item>
           <el-form-item label="占地面积" style="width:300px">
-            <el-input style="width:100px" type="number" v-model="additionalInformationForm.areaCovered"></el-input>
+            <el-input size="small" style="width:100px" type="number" v-model="additionalInformationForm.areaCovered"></el-input>
             <span style="color:#999;font-size:12px">单位：M2</span>
           </el-form-item>
           <el-form-item label="停车位" style="width:300px">
-            <el-input style="width:100px" v-model="additionalInformationForm.parkingCount"></el-input>
+            <el-input size="small" style="width:100px" v-model="additionalInformationForm.parkingCount"></el-input>
           </el-form-item>
           <el-form-item label="学区所属" style="width:300px">
-            <el-input style="width:100px" v-model="additionalInformationForm.schoolDistrict"></el-input>
+            <el-input size="small" style="width:100px" v-model="additionalInformationForm.schoolDistrict"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -39,7 +39,7 @@
         </p>
         <el-form :model="additionalInformationForm"  label-width="100px" class="demo-dynamic" style="width:60%;margin-left:15%;margin-top:40px">
           <el-form-item label="楼盘视频">
-            <el-input style="width:430px" v-model="additionalInformationForm.videoUrl">
+            <el-input size="small" style="width:430px" v-model="additionalInformationForm.videoUrl">
               <template slot="prepend">Http://</template>
             </el-input>
             <span style="color:#999;font-size:12px">楼盘视频播放地址</span>
@@ -52,23 +52,23 @@
         </p>
         <el-form :model="additionalInformationForm" :inline="true" label-width="100px" class="demo-dynamic" style="width:60%;margin-left:15%;margin-top:40px">
           <el-form-item label="规划户数" style="width:300px">
-            <el-input style="width:100px" type="number" v-model="additionalInformationForm.livingCount"></el-input>
+            <el-input size="small" style="width:100px" type="number" v-model="additionalInformationForm.livingCount"></el-input>
             <span>户</span>
           </el-form-item>
           <el-form-item label="可售套数" style="width:300px">
-            <el-input style="width:100px" type="number" v-model="additionalInformationForm.salableNumber"></el-input>
+            <el-input size="small" style="width:100px" type="number" v-model="additionalInformationForm.salableNumber"></el-input>
             <span>套</span>
           </el-form-item>
           <el-form-item label="楼幢总量" style="width:300px">
-            <el-input style="width:100px" type="number" v-model="additionalInformationForm.buildingCount"></el-input>
+            <el-input size="small" style="width:100px" type="number" v-model="additionalInformationForm.buildingCount"></el-input>
             <span>栋</span>
           </el-form-item>
           <el-form-item label="开发期数" style="width:300px">
-            <el-input style="width:100px" type="number" v-model="additionalInformationForm.developNumber"></el-input>
+            <el-input size="small" style="width:100px" type="number" v-model="additionalInformationForm.developNumber"></el-input>
             <span>期</span>
           </el-form-item>
           <el-form-item label="面积区间" style="width:300px">
-            <el-input style="width:100px" v-model="additionalInformationForm.areaRegion"></el-input>
+            <el-input size="small" style="width:100px" v-model="additionalInformationForm.areaRegion"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -84,7 +84,7 @@
               <el-radio label="0">市政供水</el-radio>
               <el-radio label="2">其它</el-radio>
             </el-radio-group>
-            <el-input 
+            <el-input size="small" 
               style="width:200px;margin-left:10px" 
               placeholder="请填写其它选项"
               v-show="additionalInformationForm.waterSupplyTypeRadio == 2" 
@@ -98,7 +98,7 @@
               <el-radio label="0">市政供电</el-radio>
               <el-radio label="2">其它</el-radio>
             </el-radio-group>
-            <el-input 
+            <el-input size="small" 
               style="width:200px;margin-left:10px" 
               placeholder="请填写其它选项"
               v-show="additionalInformationForm.powerSupplyTypeRadio == 2" 
@@ -113,7 +113,7 @@
               <el-radio label="1">小区集中供暖</el-radio>
               <el-radio label="2">其它</el-radio>
             </el-radio-group>
-            <el-input 
+            <el-input size="small" 
               style="width:200px;margin-left:10px" 
               placeholder="请填写其它选项"
               v-show="additionalInformationForm.heatingMethodRadio == 2" 
@@ -129,15 +129,15 @@
         </p>
         <el-form :model="additionalInformationForm" :inline="true" label-width="100px" class="demo-dynamic" style="width:60%;margin-left:15%;margin-top:40px">
           <el-form-item label="楼体进度" style="width:300px">
-            <el-input style="width:100px" v-model="additionalInformationForm.buildingSchedule"></el-input>
+            <el-input size="small" style="width:100px" v-model="additionalInformationForm.buildingSchedule"></el-input>
             <span>%</span>
           </el-form-item>
           <el-form-item label="公共区域进度" style="width:300px">
-            <el-input style="width:100px" v-model="additionalInformationForm.publicAreaSchedule"></el-input>
+            <el-input size="small" style="width:100px" v-model="additionalInformationForm.publicAreaSchedule"></el-input>
             <span>%</span>
           </el-form-item>
           <el-form-item label="当前阶段">
-            <el-input style="width:420px" v-model="additionalInformationForm.currentStage"></el-input>
+            <el-input size="small" style="width:420px" v-model="additionalInformationForm.currentStage"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -147,7 +147,7 @@
         </p>
         <el-form :model="additionalInformationForm"  label-width="150px" class="demo-dynamic" style="width:60%;margin-left:15%;margin-top:40px">
           <el-form-item v-for="(item,index) in additionalInformationForm.id_arr" :key="index" label="添加往期楼盘id">
-            <el-input style="width:200px" v-model="item.historyBuilding"></el-input>
+            <el-input size="small" style="width:200px" v-model="item.historyBuilding"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button style="margin-left:150px" type="primary" size="mini" @click="addId">继续添加</el-button>

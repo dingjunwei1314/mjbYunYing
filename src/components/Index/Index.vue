@@ -50,3 +50,7 @@ export default {
 .main_content::-webkit-scrollbar-track{background: #ccc;width: 3px}
 .main_content::-webkit-scrollbar{width: 3px}
 </style>
+<style>
+  .el-table th>.cell{text-align: center!important}
+  .el-table .cell{text-align: center!important;}
+</style>

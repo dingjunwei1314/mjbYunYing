@@ -332,6 +332,11 @@
                   tooltip-effect="dark"
                   style="width: 100%;font-size:12px!important;">
                   <el-table-column
+                    prop="houseId"
+                    label="ID"
+                    min-width="80">
+                  </el-table-column>
+                  <el-table-column
                     label="图片"
                     min-width="100">
                     <template scope="scope">
@@ -376,7 +381,7 @@
                 <el-pagination
                   v-show="hxAllData.hxTableData.rowCount>0"
                   style="margin: 0 auto;text-align:center;margin-top:20px"
-                  layout="prev, pager, next"
+                  layout="prev, pager, next,jumper"
                   :page-size=10
                   :currentPage="hxAllData.currentPage"
                   @current-change="hxListCurrentChange"
@@ -520,7 +525,7 @@
                 <el-pagination
                   v-show="sjAllData.sjTableData.rowCount>0"
                   style="margin: 0 auto;text-align:center;margin-top:20px"
-                  layout="prev, pager, next"
+                  layout="prev, pager, next,jumper"
                   :page-size=10
                   :currentPage="sjAllData.currentPage"
                   @current-change="sjListCurrentChange"
@@ -647,7 +652,7 @@
         </el-tab-pane>
         <el-tab-pane label="楼盘报告" name="fourth" style="padding:20px">
           <div>
-            <h5>当前楼盘：金地铂悦</h5>
+            <!-- <h5>当前楼盘：金地铂悦</h5> -->
             <el-form :model="form"   label-width="100px" class="demo-dynamic">
               <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
               <div style="margin: 15px 0;"></div>
@@ -671,18 +676,26 @@
                   label="报告类型"
                   min-width="80">
                   <template scope = "scope">
-                    <span v-if = "scope.row.reportType === '0'">【施工质量评测报告】</span>
-                    <span v-if = "scope.row.reportType === '1'">【周边配套评测报告】</span>
-                    <span v-if = "scope.row.reportType === '2'">【规划落实评测报告】</span>
-                    <span v-if = "scope.row.reportType === '3'">【规划设计评测报告】</span>
-                    <span v-if = "scope.row.reportType === '4'">【景观规划评测报告】</span>
-                    <span v-if = "scope.row.reportType === '5'">【楼盘物业评测报告】</span>
+                    <span v-if = "scope.row.reportType == '0'">【施工质量评测报告】</span>
+                    <span v-if = "scope.row.reportType == '1'">【周边配套评测报告】</span>
+                    <span v-if = "scope.row.reportType == '2'">【规划落实评测报告】</span>
+                    <span v-if = "scope.row.reportType == '3'">【规划设计评测报告】</span>
+                    <span v-if = "scope.row.reportType == '4'">【景观规划评测报告】</span>
+                    <span v-if = "scope.row.reportType == '5'">【楼盘物业评测报告】</span>
                   </template>
                 </el-table-column>
                 <el-table-column
                   prop="onlineTime"
                   label="发布时间"
                   width="200">
+                </el-table-column>
+                <el-table-column
+                  label="状态"
+                  width="200">
+                  <template scope = "scope">
+                    <span v-if = "scope.row.isOnline == '1'">离线</span>
+                    <span v-if = "scope.row.isOnline == '2'">在线</span>
+                  </template>
                 </el-table-column>
                 <el-table-column
                   prop="operateMan"
@@ -702,14 +715,14 @@
                 </el-table-column>
               </el-table>
               <el-pagination
-                  v-show="report_data.rowCount>0"
-                  style="margin: 0 auto;text-align:center;margin-top:20px"
-                  layout="prev, pager, next"
-                  :page-size=10
-                  :currentPage="report_data.currentPage"
-                  @current-change="reportCurrentChange"
-                  :total="report_data.rowCount">
-                </el-pagination>
+                v-show="report_data.rowCount>0"
+                style="margin: 0 auto;text-align:center;margin-top:20px"
+                layout="prev, pager, next,jumper"
+                :page-size=10
+                :currentPage="report_data.currentPage"
+                @current-change="reportCurrentChange"
+                :total="report_data.rowCount">
+              </el-pagination>
             </div>
         </el-tab-pane>
         <el-tab-pane label="楼盘设置" name="six">
@@ -724,7 +737,7 @@
                 <span v-if="form.configList[1].configValue===1">是</span>
                 <span v-if="form.configList[1].configValue===0">否</span>
               </el-form-item>
-              <el-form-item label="加入严选：">
+              <el-form-item label="加入关注：">
                 <span v-if="form.configList[2].configValue==='' || form.configList[2].configValue===null">--</span>
                 <span v-if="form.configList[2].configValue===1">是</span>
                 <span v-if="form.configList[2].configValue===0">否</span>
@@ -759,7 +772,7 @@ export default {
         activeName:"first",
         activeName2:'first', 
         secondLevel:'楼盘管理',
-        threeLevel:'添加楼盘',
+        threeLevel:'楼盘详情',
         //楼盘基本数据
         houseBasicData:{
           province:'',

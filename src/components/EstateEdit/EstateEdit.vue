@@ -21,6 +21,11 @@
                   tooltip-effect="dark"
                   style="width: 100%;font-size:12px!important;">
                   <el-table-column
+                    prop="houseId"
+                    label="ID"
+                    min-width="80">
+                  </el-table-column>
+                  <el-table-column
                     label="图片"
                     min-width="100">
                     <template scope="scope">
@@ -68,7 +73,7 @@
                 <el-pagination
                   v-show="hxAllData.hxtableData.rowCount>0"
                   style="margin: 0 auto;text-align:center;margin-top:20px"
-                  layout="prev, pager, next"
+                  layout="prev, pager, next,jumper"
                   :page-size=10
                   :currentPage="hxAllData.currentPage"
                   @current-change="hxListCurrentChange"
@@ -87,7 +92,7 @@
                   
                   <h4 class="addtit">添加户型图</h4>
                   <el-form-item label="标题" style="width:400px" :required="true" prop="title">
-                    <el-input v-model="hxAllData.addNewHouseType.houseName"></el-input>
+                    <el-input size="small" v-model="hxAllData.addNewHouseType.houseName"></el-input>
                   </el-form-item>
                   <el-form-item label="户型" style="width:800px" :required="true"  prop="room">
                     <el-select :clearable="true" style="width:150px" v-model="hxAllData.addNewHouseType.room" placeholder="室">
@@ -112,9 +117,9 @@
                   </el-form-item>
 
                   <el-form-item label="面积区间" :required="true"  prop="areaMin">
-                    <el-input v-model="hxAllData.addNewHouseType.areaMin" type="number" style="width:100px" ></el-input>
+                    <el-input size="small" v-model="hxAllData.addNewHouseType.areaMin" type="number" style="width:100px" ></el-input>
                     <span style="color:#999;font-size:12px">-</span>
-                    <el-input v-model="hxAllData.addNewHouseType.areaMax" type="number" style="width:100px" ></el-input>
+                    <el-input size="small" v-model="hxAllData.addNewHouseType.areaMax" type="number" style="width:100px" ></el-input>
                     <span style="color:#999;font-size:12px">如果该户型只有一种面积，面积填入第一个输入框</span>
                   </el-form-item>
 
@@ -130,13 +135,13 @@
                   </el-form-item>
 
                   <el-form-item label="描述"  prop="dec">
-                    <el-input style="width:300px" v-model="hxAllData.addNewHouseType.dec" type="textarea" ></el-input>
+                    <el-input size="small" style="width:300px" v-model="hxAllData.addNewHouseType.dec" type="textarea" ></el-input>
                   </el-form-item>
 
                   <el-form-item label="总价区间" :required="true"  prop="priceMin">
-                    <el-input v-model="hxAllData.addNewHouseType.priceMin" type="number" style="width:100px" ></el-input>
+                    <el-input size="small" v-model="hxAllData.addNewHouseType.priceMin" type="number" style="width:100px" ></el-input>
                     <span style="color:#999;font-size:12px">-</span>
-                    <el-input v-model="hxAllData.addNewHouseType.priceMax" type="number" style="width:100px" ></el-input>
+                    <el-input size="small" v-model="hxAllData.addNewHouseType.priceMax" type="number" style="width:100px" ></el-input>
                     <span style="color:#999;font-size:12px">如果该户型只有一种价格，价格填入第一个输入框</span>
                   </el-form-item>
 
@@ -149,19 +154,19 @@
                   </el-form-item>
 
                   <el-form-item label="总套数"  prop="houseNum">
-                    <el-input style="width:300px" type="number" v-model="hxAllData.addNewHouseType.houseNum" ></el-input>
+                    <el-input size="small" style="width:300px" type="number" v-model="hxAllData.addNewHouseType.houseNum" ></el-input>
                   </el-form-item>
 
                   <el-form-item  label="可售套数"  prop="saleNum">
-                    <el-input style="width:300px" type="number" v-model="hxAllData.addNewHouseType.saleNum" ></el-input>
+                    <el-input size="small" style="width:300px" type="number" v-model="hxAllData.addNewHouseType.saleNum" ></el-input>
                   </el-form-item>
 
                   <el-form-item label="待售套数"  prop="forSaleNum">
-                    <el-input style="width:300px" type="number" v-model="hxAllData.addNewHouseType.forSaleNum" ></el-input>
+                    <el-input size="small" style="width:300px" type="number" v-model="hxAllData.addNewHouseType.forSaleNum" ></el-input>
                   </el-form-item>
 
                   <el-form-item label="套数占比"  prop="scaleRoom">
-                    <el-input style="width:300px" type="number" v-model="hxAllData.addNewHouseType.scaleRoom" ></el-input>
+                    <el-input size="small" style="width:300px" type="number" v-model="hxAllData.addNewHouseType.scaleRoom" ></el-input>
                   </el-form-item>
                   
                   <el-form-item label="标签">
@@ -238,7 +243,7 @@
                 <el-pagination
                   v-show="sjAllData.sjtableData.rowCount>0"
                   style="margin: 0 auto;text-align:center;margin-top:20px"
-                  layout="prev, pager, next"
+                  layout="prev, pager, next,jumper"
                   :page-size=10
                   :currentPage="sjAllData.currentPage"
                   @current-change="sjListCurrentChange"
@@ -254,6 +259,7 @@
                   <h5 style="text-align:center">添加实景图</h5>
                   <el-form-item label="拍摄时间" :required="true" prop="title">
                     <el-date-picker
+                      size="small"
                       v-model="sjAllData.addNewsjType.takeTime"
                       type="date"
                       placeholder="拍摄时间">
@@ -458,44 +464,45 @@
               <el-form :model="slAllData.addNewslType" label-width="100px" class="demo-dynamic"> 
                 <el-form-item label="上传">
                   <ImgUploader2
-                    :btnName = "btnName1"
-                    style = "float:left;margin-right:5px"
-                    :btnId="slAllData.btnList[0]"
-                    @imgUploader="imgUploaderSl(0)"
-                    />
-                    <ImgUploader2
-                    :btnName = "btnName2"
-                    style = "float:left;margin-right:5px"
-                    :btnId="slAllData.btnList[1]"
-                    @imgUploader="imgUploaderSl(1)"
-                    />
-                    <ImgUploader2
-                    :btnName = "btnName3"
-                    style = "float:left;margin-right:5px"
-                    :btnId="slAllData.btnList[2]"
-                    @imgUploader="imgUploaderSl(2)"
-                    />
-                    <ImgUploader2
-                    :btnName = "btnName4"
-                    style = "float:left;margin-right:5px"
-                    :btnId="slAllData.btnList[3]"
-                    @imgUploader="imgUploaderSl(3)"
-                    />
-                    <ImgUploader2
-                    :btnName = "btnName5"
-                    style = "float:left;margin-right:5px"
-                    :btnId="slAllData.btnList[4]"
-                    @imgUploader="imgUploaderSl(4)"
-                    />
+                  :btnName = "btnName1"
+                  style = "float:left;margin-right:5px"
+                  :btnId="slAllData.btnList[0]"
+                  @imgUploader="imgUploaderSl(0)"
+                  />
+                  <ImgUploader2
+                  :btnName = "btnName2"
+                  style = "float:left;margin-right:5px"
+                  :btnId="slAllData.btnList[1]"
+                  @imgUploader="imgUploaderSl(1)"
+                  />
+                  <ImgUploader2
+                  :btnName = "btnName3"
+                  style = "float:left;margin-right:5px"
+                  :btnId="slAllData.btnList[2]"
+                  @imgUploader="imgUploaderSl(2)"
+                  />
+                  <ImgUploader2
+                  :btnName = "btnName4"
+                  style = "float:left;margin-right:5px"
+                  :btnId="slAllData.btnList[3]"
+                  @imgUploader="imgUploaderSl(3)"
+                  />
+                  <ImgUploader2
+                  :btnName = "btnName5"
+                  style = "float:left;margin-right:5px"
+                  :btnId="slAllData.btnList[4]"
+                  @imgUploader="imgUploaderSl(4)"
+                  />
                 </el-form-item>
                 <el-form-item label="预览" class="previewFormItem">
-                  <ImgPreview 
-                    v-for = "(item,index) in slAllData.preImgSrcList"
-                    :key = "index"
-                    :backgroundPicUrl="item.imgUrl"
-                    @previewImg="previewImgSl(index)"
-                    @deleteImg="deleteImgSl(index)"
-                  />
+                  <div style="display:inline-block" v-for = "(item,index) in slAllData.preImgSrcList" :key = "index">
+                    <ImgPreview 
+                      :backgroundPicUrl="item.imgUrl"
+                      @previewImg="previewImgSl(index)"
+                      @deleteImg="deleteImgSl(index)"
+                    />
+                    <p v-if="item.imgUrl" style="text-align:center;font-size:12px;margin-right:20px">缩略图{{index+1}}</p>
+                  </div>
                   <p 
                     v-if = "slAllData.preImgSrcList[0].imgUrl == '' &&
                             slAllData.preImgSrcList[1].imgUrl == '' &&
@@ -530,11 +537,11 @@
 </template>
 
 <script>
+import Subnav from '../Subnav/Subnav'
 import formatTime from '../../common/formatTime'
 import message from '../../common/message'
 import uploader2 from '../../common/uploader2.js'
 import ImgUploader2 from '../Common/ImgUploader2/ImgUploader2'
-import Subnav from '../Subnav/Subnav'
 import ImgPreview from '../Common/ImgPreview/ImgPreview'
 import EstateBasicInfoForm from '../EstateBasicInfoForm/EstateBasicInfoForm'
 import EstateAdditionalInfoForm from '../EstateAdditionalInfoForm/EstateAdditionalInfoForm'
@@ -600,7 +607,7 @@ export default {
 
       return {
         secondLevel:'楼盘管理',
-        threeLevel:'添加楼盘',
+        threeLevel:'编辑楼盘',
         dialogVisible:false,
         dialogImgSrc:'',
         activeName:"first",
@@ -962,6 +969,8 @@ export default {
               this.hxAllData.addNewHouseType[i] = []
             }else if(i == 'room' || i == 'hall' || i == 'kitchen' || i=='bathRoom'){
               this.hxAllData.addNewHouseType[i] = 1
+            }else if(i == 'houseNum' || i == 'saleNum' || i == 'forSaleNum' || i == 'scaleRoom'){
+              this.hxAllData.addNewHouseType[i] = 0
             }else{
               this.hxAllData.addNewHouseType[i] = ''
             }
@@ -1323,12 +1332,10 @@ export default {
       },
       //样板间-开始上传
       imgUploaderYbj(index){
-      
         if (this.ybjAllData.uploaderList[index].uploader == null) {
           return;
         }     
         this.ybjAllData.uploaderList[index].uploader.start()
-        
       },
 
 

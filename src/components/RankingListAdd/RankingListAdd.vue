@@ -6,10 +6,11 @@
     <div class="itemA">
       <el-form  ref="form" :model="addAllData.addForm" label-width="150px" style="width:80%">
         <el-form-item label="排行榜名称：" style="width:50%">
-          <el-input  v-model="addAllData.addForm.rankName" placeholder="排行榜名称"></el-input>
+          <el-input size="small"  v-model="addAllData.addForm.rankName" placeholder="排行榜名称"></el-input>
         </el-form-item>
         <el-form-item label="区域：">
           <el-select 
+            size="small"
             v-model="addAllData.addForm.province" 
             clearable  
             @change = "provinceChange(addAllData.addForm.province)"
@@ -21,7 +22,7 @@
               :value="item.cityId">
             </el-option>
           </el-select>
-          <el-select v-model="addAllData.addForm.city" clearable  placeholder="市">
+          <el-select size="small" v-model="addAllData.addForm.city" clearable  placeholder="市">
             <el-option
               v-for="item in cityIdsList"
               :key="item.cityId"
@@ -61,6 +62,7 @@
       <el-form  ref="buildForm" :model="addAllData.buildForm" :rules="addAllData.buildFormRules"  label-width="150px" style="width:80%">
         <el-form-item label="添加楼盘：" style="width:400px" :required="true" prop="buildingId">
           <el-select
+            size="small"
             v-model="addAllData.buildForm.buildingId"
             filterable
             remote
@@ -78,10 +80,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="排位次序：" style="width:50%" required prop="weight">
-          <el-input  v-model="addAllData.buildForm.weight" type="number" placeholder="排位次序"></el-input>
+          <el-input size="small"  v-model="addAllData.buildForm.weight" type="number" placeholder="排位次序"></el-input>
         </el-form-item>
         <el-form-item label="上榜理由：" required prop="reason" >
-          <el-input  v-model="addAllData.buildForm.reason" type="textarea" placeholder="上榜理由"></el-input>
+          <el-input size="small"  v-model="addAllData.buildForm.reason" type="textarea" placeholder="上榜理由"></el-input>
         </el-form-item>
         <el-form-item label="楼盘详情分析：" required prop="detailedAnalysis">
           <quill-editor

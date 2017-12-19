@@ -102,7 +102,7 @@ export default {
           if (valid) {
             this.$http('/backstageUser/login',{body},{},{},'post').then(function(res){
               if(res.data.code==0){
-                _this.$router.push('/index/articlemanagement')
+                _this.$router.push('/index/estatemanagement')
                 localStorage.token=res.data.response.token;
                 
               }else{

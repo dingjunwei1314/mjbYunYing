@@ -99,10 +99,71 @@ const DetailBulletinSubscription=function(resolve){
     })
 }
 
-//订单管理
-const CooperOrders=function(resolve){
+//全流程监控管理
+const EstateProcessMonitoringManagement=function(resolve){
     require.ensure([],function(){
-        resolve(require('../components/CooperOrders/CooperOrders'))
+        resolve(require('../components/EstateProcessMonitoringManagement/EstateProcessMonitoringManagement'))
+    })
+}  
+
+
+const EstateProcessMonitoringDetail=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/EstateProcessMonitoringDetail/EstateProcessMonitoringDetail'))
+    })
+}  
+
+const EstateProcessMonitoringService=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/EstateProcessMonitoringService/EstateProcessMonitoringService'))
+    })
+} 
+
+const EstateProcessMonitoringUser=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/EstateProcessMonitoringUser/EstateProcessMonitoringUser'))
+    })
+}   
+
+const EstateParkReportList=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/EstateParkReportList/EstateParkReportList'))
+    })
+}   
+
+const EstateBanReportList=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/EstateBanReportList/EstateBanReportList'))
+    })
+}  
+
+const EstateIndoorReportList=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/EstateIndoorReportList/EstateIndoorReportList'))
+    })
+}   
+
+const EstateParkReportListDetail=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/EstateParkReportListDetail/EstateParkReportListDetail'))
+    })
+}    
+
+const EstateBanReportListDetail=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/EstateBanReportListDetail/EstateBanReportListDetail'))
+    })
+}   
+
+const EstateIndoorReportListDetail=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/EstateIndoorReportListDetail/EstateIndoorReportListDetail'))
+    })
+}  
+
+const EstateProcessMonitoringUserDetail=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/EstateProcessMonitoringUserDetail/EstateProcessMonitoringUserDetail'))
     })
 }
 
@@ -122,6 +183,15 @@ const ArticleDetail=function(resolve){
     resolve(require('../components/ArticleManagement/ArticleDetail'))
   })
 }
+
+//订单管理
+const CooperOrders=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/CooperOrders/CooperOrders'))
+    })
+}
+
+
 //活动管理
 const ActivityManagement=function(resolve){
     require.ensure([],function(){
@@ -156,7 +226,7 @@ const MessageManagement=function(resolve){
     require.ensure([],function(){
         resolve(require('../components/MessageManagement/MessageManagement'))
     })
-}
+}   
 
 //账户管理
 const AccountManagement = function (resolve) {
@@ -169,7 +239,7 @@ const ChangePassword = function (resolve) {
     require.ensure([],function () {
       resolve(require('../components/ChangePassword/ChangePassword'))
     })
-}
+} 
 
 
 //新建管理员
@@ -320,6 +390,50 @@ export default new Router({
                   path: '/index/changePassword',
                   component: ChangePassword,
                 },
+                {
+                  path:'/index/estateprocessmonitoringmanagement',
+                  component:EstateProcessMonitoringManagement
+                },
+                {
+                  path:'/index/estateprocessmonitoringdetail',
+                  component:EstateProcessMonitoringDetail
+                },
+                {
+                  path:'/index/estateprocessmonitoringservice',
+                  component:EstateProcessMonitoringService
+                },
+                {
+                  path:'/index/estateprocessmonitoringuser',
+                  component:EstateProcessMonitoringUser
+                },
+                {
+                  path:'/index/estateparkreportList',
+                  component:EstateParkReportList
+                },
+                {
+                  path:'/index/estatebanreportlist',
+                  component:EstateBanReportList
+                },
+                {
+                  path:'/index/estateindoorreportlist',
+                  component:EstateIndoorReportList
+                },
+                {
+                  path:'/index/estateparkreportlistdetail',
+                  component:EstateParkReportListDetail
+                },
+                {
+                  path:'/index/estatebanreportlistdetail',
+                  component:EstateBanReportListDetail
+                },
+                {
+                  path:'/index/estateindoorreportlistdetail',
+                  component:EstateIndoorReportListDetail
+                },
+                {
+                  path:'/index/estateprocessmonitoringuserdetail',
+                  component:EstateProcessMonitoringUserDetail
+                }
             ]
         }
     ]

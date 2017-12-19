@@ -7,8 +7,8 @@ Vue.use(Vuex)
 // 这里定义初始值
 let state = {
     navStyle:{
-        width:'160px',
-        flex:' 0 0 160px'
+        width:'200px',
+        flex:' 0 0 200px'
     },
     mainLoading:false,
     defaultIndex:''

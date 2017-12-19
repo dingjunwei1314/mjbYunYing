@@ -24,18 +24,26 @@
 		        label="报告类型"
 		        min-width="80">
 		        <template scope = "scope">
-		        	<span v-if = "scope.row.reportType === '0'">【施工质量评测报告】</span>
-		        	<span v-if = "scope.row.reportType === '1'">【周边配套评测报告】</span>
-		        	<span v-if = "scope.row.reportType === '2'">【规划落实评测报告】</span>
-		        	<span v-if = "scope.row.reportType === '3'">【规划设计评测报告】</span>
-		        	<span v-if = "scope.row.reportType === '4'">【景观规划评测报告】</span>
-		        	<span v-if = "scope.row.reportType === '5'">【楼盘物业评测报告】</span>
+		        	<span v-if = "scope.row.reportType == '0'">【施工质量评测报告】</span>
+		        	<span v-if = "scope.row.reportType == '1'">【周边配套评测报告】</span>
+		        	<span v-if = "scope.row.reportType == '2'">【规划落实评测报告】</span>
+		        	<span v-if = "scope.row.reportType == '3'">【规划设计评测报告】</span>
+		        	<span v-if = "scope.row.reportType == '4'">【景观规划评测报告】</span>
+		        	<span v-if = "scope.row.reportType == '5'">【楼盘物业评测报告】</span>
 		        </template>
 		      </el-table-column>
 		      <el-table-column
 		        prop="onlineTime"
 		        label="发布时间"
 		        width="200">
+		      </el-table-column>
+		      <el-table-column
+		        label="状态"
+		        width="200">
+		       	<template scope = "scope">
+		        	<span v-if = "scope.row.isOnline == '1'">离线</span>
+		        	<span v-if = "scope.row.isOnline == '2'">在线</span>
+		        </template>
 		      </el-table-column>
 		      <el-table-column
 		        prop="operateMan"
@@ -57,11 +65,7 @@
 		          	<span v-if = "scope.row.isOnline == 1">上线</span>
 		          	<span v-else>下线</span>
 		          </el-button>
-		          <el-button
-		          size="small"
-		          @click="handleRepeat(scope.row,3)">
-		            删除
-		          </el-button>
+		          
 		        </template>
 		      </el-table-column>
 		    </el-table>
@@ -133,6 +137,7 @@
 		          ],
 		          rowCount:2,
 		        },
+		        reportType:''
 			}
 		},
 		computed:{
@@ -170,8 +175,8 @@
 	      handleCheckAllChange(val) {
 	        this.form.reportType = this.checkAll ? ['0','1','2','3','4','5'] : [];
 	        this.isIndeterminate = false;
-	        let reportType = this.checkAll ? '-1' : ''
-	        this.getreportdata(reportType)
+	        this.reportType = this.checkAll ? '-1' : ''
+	        this.getreportdata(this.reportType)
 	      },
 	      //搜索
 	      formTypeChange(val){
@@ -181,14 +186,14 @@
 	      		this.checkAll = false;
 	      	}
 
-	      	let _reportType = _.cloneDeep(this.form.reportType),
-	      	reportType;
+	      	let _reportType = _.cloneDeep(this.form.reportType);
+	      
 			if(_reportType.length >= 6){
-				reportType = '-1'
+				this.reportType = '-1'
 			}else{
-				reportType = _reportType.join(',')
+				this.reportType = _reportType.join(',')
 			}
-			this.getreportdata(reportType)
+			this.getreportdata(this.reportType)
 	      },
 	      //上线查看删除报告
 	      handleRepeat(scope,type){
@@ -224,7 +229,7 @@
 		          	_this.$http('/backstageBuilding/editBuildingReportOperator',{body},{},{},'post').then(res =>{ 
 			          if(res.data.code == 0){
 			          	message(_this,msg,'warning')
-			            _this.getreportdata()
+			            _this.getreportdata(this.reportType)
 			          }else{
 					    message(_this,res.data.message,'warning')
 			          }
@@ -249,8 +254,14 @@
 		            msg = scope.isOnline == 2? '下线成功':'上线成功';
 		            _this.$http('/backstageBuilding/editBuildingReportOperator',{body},{},{},'post').then(res =>{ 
 			          if(res.data.code == 0){
-			          	message(_this,msg,'warning')
-			            _this.getreportdata()
+			          	if(res.data.response.status == 1){
+							message(_this,msg,'success')
+			            	_this.getreportdata(this.reportType)
+			          	}else if(res.data.response.status == 0){
+							message(_this,'操作失败','warning')
+			          	}else if(res.data.response.status == 2){
+							message(_this,'已存在上线报告，需先下线原来报告在进行上线','warning')
+			          	}
 			          }else{
 					    message(_this,res.data.message,'warning')
 			          }
@@ -270,7 +281,7 @@
 		},
 		mounted(){
 			if(this.$route.query.type && this.$route.query.type == 'edit'){
-				this.getreportdata()
+				this.getreportdata(this.reportType)
 			}
 			
 		}

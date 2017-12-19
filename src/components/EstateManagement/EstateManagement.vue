@@ -7,35 +7,37 @@
       <el-row style="padding:20px 10px 0px 10px;border:1px solid #eee;margin-bottom:20px">
         <el-col :span="20">
           <el-form :inline="true" style="" :model="filterForm" class="demo-form-inline">
-            <div>
-              <el-form-item label="楼盘id">
-                <el-input   v-model="filterForm.buildingId" style="width:80px" placeholder="id"></el-input>
-              </el-form-item>
-              <el-form-item label="楼盘名称">
-                <el-autocomplete
-                  v-model="filterForm.buildingName"
-                  :fetch-suggestions="querySearchAsync"
-                  placeholder="请输入关键词"
-                  @select="handleSelect"
-                ></el-autocomplete>
-              </el-form-item>
-              <el-form-item label="开发商">
-                <el-input  v-model="filterForm.developer" style="width:200px" placeholder="开发商"></el-input>
-              </el-form-item>
-              <el-form-item label="更新时间">
-                <el-date-picker
-                  style="width:180px"
-                  @change="pickerChange"
-                  v-model="editTime"
-                  type="daterange"
-                  align="right"
-                  placeholder="选择日期范围"
-                  :picker-options="pickerOptions">
-                </el-date-picker>
-              </el-form-item> 
-            </div>
+            
+            <el-form-item label="楼盘id">
+              <el-input  size="small" v-model="filterForm.buildingId" style="width:80px" placeholder="id"></el-input>
+            </el-form-item>
+            <el-form-item label="楼盘名称">
+              <el-autocomplete
+                size="small"
+                v-model="filterForm.buildingName"
+                :fetch-suggestions="querySearchAsync"
+                placeholder="请输入关键词"
+                @select="handleSelect"
+              ></el-autocomplete>
+            </el-form-item>
+            <el-form-item label="开发商">
+              <el-input size="small"  v-model="filterForm.developer" style="width:200px" placeholder="开发商"></el-input>
+            </el-form-item>
+            <el-form-item label="更新时间">
+              <el-date-picker
+                size="small"
+                style="width:180px"
+                @change="pickerChange"
+                v-model="editTime"
+                type="daterange"
+                align="right"
+                placeholder="选择日期范围"
+                :picker-options="pickerOptions">
+              </el-date-picker>
+            </el-form-item> 
+            
             <el-form-item label="区域：">
-              <el-select @change="proChange" v-model="filterForm.province" :clearable="true" placeholder="省"  style="width:120px;">
+              <el-select size="small" @change="proChange" v-model="filterForm.province" :clearable="true" placeholder="省"  style="width:120px;">
                   <el-option
                   v-for="item in provinceIdsList"
                   :key="item.cityId"
@@ -43,7 +45,7 @@
                   :value="item.cityId" >
                   </el-option>
               </el-select> 
-              <el-select @change="cityChange" v-model="filterForm.city" :clearable="true" placeholder="市"  style="width:120px;">
+              <el-select size="small" @change="cityChange" v-model="filterForm.city" :clearable="true" placeholder="市"  style="width:120px;">
                   <el-option
                   v-for="item in cityIdsList"
                   :key="item.cityId"
@@ -51,7 +53,7 @@
                   :value="item.cityId" >
                   </el-option>
               </el-select> 
-              <el-select v-model="filterForm.area" :clearable="true" placeholder="区"  style="width:120px;">
+              <el-select size="small" v-model="filterForm.area" :clearable="true" placeholder="区"  style="width:120px;">
                   <el-option
                   v-for="item in areaIdsList"
                   :key="item.cityId"
@@ -61,7 +63,7 @@
               </el-select> 
             </el-form-item>
             <el-form-item label="关注">
-              <el-select v-model="filterForm.ICareU" style="width:150px" placeholder="关注">
+              <el-select size="small" v-model="filterForm.ICareU" style="width:150px" placeholder="关注">
                 <el-option label="不限" value="2"></el-option>
                 <el-option label="是" value="1"></el-option>
                 <el-option label="否" value="0"></el-option>
@@ -82,7 +84,7 @@
               </el-select>
             </el-form-item> -->
             <el-form-item label="状态">
-              <el-select v-model="filterForm.onlineStatus" style="width:150px" placeholder="状态">
+              <el-select size="small" v-model="filterForm.onlineStatus" style="width:150px" placeholder="状态">
                 <el-option label="不限" value="2"></el-option>
                 <el-option label="在线" value="1"></el-option>
                 <el-option label="离线" value="0"></el-option>
@@ -157,7 +159,7 @@
         </el-table-column>
         <el-table-column
           prop="editTime"
-          width="100"
+          min-width="80"
           label="更新时间">
         </el-table-column>
         <el-table-column
@@ -187,7 +189,7 @@
       <el-pagination
         v-show="tableData.rowCount>0"
         style="margin: 0 auto;text-align:center;margin-top:20px"
-        layout="prev, pager, next"
+        layout="prev, pager, next,jumper"
         :page-size=10
         :currentPage="currentPage"
         @current-change="currentChange"

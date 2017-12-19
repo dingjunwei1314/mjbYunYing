@@ -6,19 +6,26 @@
           <el-radio :label="1">是</el-radio>
           <el-radio :label="0">否</el-radio>
         </el-radio-group>
-        <el-button type="text" class="submitBtn"  @click="submit(1)">保存</el-button>
+        <el-button type="text" class="submitBtn"  @click="submit(0)">保存</el-button>
       </el-form-item>
       <el-form-item label="楼盘置顶">
       	<el-radio-group v-model="form.configList[1].configValue">
           <el-radio :label="1">是</el-radio>
           <el-radio :label="0">否</el-radio>
         </el-radio-group>
-        <el-button type="text" class="submitBtn"  @click="submit(2)">保存</el-button>
+        <el-button type="text" class="submitBtn"  @click="submit(1)">保存</el-button>
       </el-form-item>
       <el-form-item label="加入关注">
         <el-radio-group v-model="form.configList[2].configValue">
           <el-radio :label="1">是</el-radio>
           <el-radio :label="0">否</el-radio>
+        </el-radio-group>
+        <el-button type="text" class="submitBtn"  @click="submit(2)">保存</el-button>
+      </el-form-item>
+      <el-form-item label="全流程监控楼盘">
+        <el-radio-group v-model="form.configList[3].configValue">
+          <el-radio :label="1">启动</el-radio>
+          <el-radio :label="0">停止</el-radio>
         </el-radio-group>
         <el-button type="text" class="submitBtn"  @click="submit(3)">保存</el-button>
       </el-form-item>
@@ -41,6 +48,7 @@
 						{configType:0,configValue:''},
 						{configType:1,configValue:''},
 						{configType:2,configValue:''},
+						{configType:3,configValue:''},
 			        ]
 		    	}
 			}
@@ -52,20 +60,14 @@
 		},
 		methods:{
 			//获取数据
-			getsettingdata(){
+			getSettingData(){
 		        let _this = this,
 		        body = {buildingId:this.$route.query.buildingId};
 		        this.$http('/backstageBuilding/getBuildingConfig',{},{body},{}).then(function(res){
 		          if(res.data.code == 0){
 		            let _form = res.data.response.configList;
 		            _form.forEach((item,index) => {
-		              if(item.configType == 0){
-		                _this.form.configList[0].configValue = item.configValue
-		              }else if(item.configType == 1){
-		                _this.form.configList[1].configValue = item.configValue
-		              }else if(item.configType == 2){
-					    _this.form.configList[2].configValue = item.configValue
-		              }
+		              _this.form.configList[item.configType].configValue = item.configValue
 		            })
 		          }
 		        }).catch(function(err){
@@ -73,24 +75,14 @@
 		        })
 		    },
 			//提交数据
-	    	submit(type){
+	    	submit(configType){
 		        let _this = this,
 		        	url = '/backstageBuilding/editBuildingConfig',
 		        	body = {
 		        		buildingId:this.id,
-						configType:'',
-						configValue:''
+						configType,
+						configValue:this.form.configList[configType].configValue
 		        	};
-		        if(type == 1){
-					body.configType = 0
-					body.configValue = this.form.configList[0].configValue
-		        }else if(type == 2){
-					body.configType = 1
-					body.configValue = this.form.configList[1].configValue
-		        }else{
-					body.configType = 2
-					body.configValue = this.form.configList[2].configValue
-		        }	
 
 		        _this.$confirm('确认保存吗?', '提示', {
 		          confirmButtonText: '确定',
@@ -120,7 +112,7 @@
 		},
 		mounted(){
 			if(this.$route.query.type && this.$route.query.type === 'edit'){
-				this.getsettingdata()
+				this.getSettingData()
 			}
 		}
 

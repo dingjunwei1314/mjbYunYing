@@ -5,6 +5,10 @@
     <router-link to="/index/managers" style="color:#f1f1f1;line-height:45px;">
       <span style="font-size:14px">买家帮运营管理平台</span>
     </router-link>
+    
+    <el-button style="padding:3px 7px;margin-left:15px"  @click.native="changeNav">
+      <i class="fa fa-bars"></i>
+    </el-button>
     <el-submenu index="" style="height:45px;line-height:45px;float:right">
       <template slot="title" style="height:45px;line-height:45px">管理员</template>
       <el-menu-item  index="" style="height:45px;line-height:45px">个人信息</el-menu-item>
@@ -28,6 +32,14 @@ export default {
 
     },
     methods: {
+      changeNav(){
+        var navStyleWidth = this.$store.getters.GetNavStyle.width
+        if(navStyleWidth=='200px'){
+          this.$store.dispatch('navStyleAction',{width:'0px',flex:'0 0 0px'});
+        }else{
+          this.$store.dispatch('navStyleAction',{width:'200px',flex:'0 0 200px'});
+        }
+      },
       loginOut(){
         window.localStorage.token = ''
         this.$router.push('/login')
