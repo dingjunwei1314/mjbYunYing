@@ -1,18 +1,18 @@
 <template>
 	<div>
-		<Subnav :secondLevel="secondLevel" :threeLevel="threeLevel" @refresh="refresh"></Subnav>
+		<Subnav2 :navList="navList" @refresh="refresh"></Subnav2>
 		<div style="padding:20px">
 			<el-row style="border:1px solid #ccc;padding:20px 10px 0px">
 				<el-col :span="20">
 					<el-form :inline="true" style="" :model="filterForm" class="demo-form-inline">
 						<el-form-item label="状态：">
-							<el-select size="small" v-model="filterForm.name" style="width:150px;">
+							<el-select size="small" v-model="filterForm.onlineStatus" style="width:150px;">
 						      <el-option  label="在线" value="1"></el-option>
-						      <el-option  label="离线" value="2"></el-option>
+						      <el-option  label="离线" value="0"></el-option>
 						    </el-select>
 						</el-form-item>
 						<el-form-item label="时间：">
-							<el-select size="small" v-model="filterForm.name" style="width:150px;">
+							<el-select size="small" v-model="timeType" @change="timeTypeChange" style="width:150px;">
 						      <el-option  label="创建时间" value="1"></el-option>
 						      <el-option  label="更新时间" value="2"></el-option>
 						    </el-select>
@@ -20,7 +20,7 @@
 						<el-form-item label="更新时间">
 			              <el-date-picker
 			                size="small"
-			                style="width:180px"
+			                style="width:280px"
 			                @change="pickerChange"
 			                v-model="editTime"
 			                type="daterange"
@@ -32,39 +32,43 @@
 					</el-form>
 				</el-col>
 				<el-col :span="4">
-					<el-button type="primary" @click="onSearchSubmit">查询</el-button>
-	            	<el-button type="primary" @click="addNew">添加报告</el-button>
+					<el-button type="primary" style="float: right;margin-left: 10px" v-if="$route.query.type=='edit'" @click="addNew">添加报告</el-button>
+					<el-button type="primary" style="float: right;" @click="onSearchSubmit">查询</el-button>
 				</el-col>
 			</el-row>
 			<el-row style="margin-top:20px">
 				<div class="tabletopbar">
-			        <span>所有数据：共</span> <span style="color:#111">{{tableData.rowCount}}</span> <span>条</span>
+			        <span>所有数据：共</span> <span style="color:#111">{{tableData.oneReCount}}</span> <span>条</span>
 			        <span style="margin-left:20px">查询结果：共</span> 
-			        <span style="color:#111">{{tableData.rowCount}}</span> <span>条</span>
+			        <span style="color:#111">{{tableData.oneReCount}}</span> <span>条</span>
 			    </div>
 			    <el-table
 			        v-loading="tabLoading"
-			        :data="tableData.rankList"
+			        :data="tableData.oneReportInfoList"
 			        border
 			        tooltip-effect="dark"
 			        style="width: 100%;font-size:12px!important;">
 			        <el-table-column
-			          prop=""
+			          prop="rName"
 			          label="报告名称"
 			          min-width="100">
 			        </el-table-column>
 			        <el-table-column
-			          prop=""
+			          prop="onlineStatus"
 			          label="状态"
 			          min-width="100">
+			          <template scope="scope">
+			            <span v-if="scope.row.onlineStatus==0">离线</span>
+			            <span v-if="scope.row.onlineStatus==1">在线</span>    
+			          </template>
 			        </el-table-column>       
 			        <el-table-column
-			          prop="creationTime"
+			          prop="submitTime"
 			          min-width="100"
 			          label="创建时间">
 			        </el-table-column>
 			        <el-table-column
-			          prop="founder"
+			          prop="updateTime"
 			          min-width="100"
 			          label="更新时间">
 			        </el-table-column>
@@ -79,33 +83,37 @@
 			            </el-button>
 			            <el-button
 			              size="small"
+			              v-if="$route.query.type=='edit'"
 			              @click="handle(scope.row,2)">
 			              编辑
 			            </el-button>
 			            <el-button
 			              size="small"
+			              v-if="$route.query.type=='edit'"
 			              @click="handle(scope.row,3)">
 			              删除
 			            </el-button>
 			            <el-button
 			              size="small"
+			              v-if="$route.query.type=='edit'"
 			              @click="handle(scope.row,4)">
-			              下线
+			              <span v-if="scope.row.onlineStatus==1">下线</span>
+			              <span v-else>上线</span>
 			            </el-button>
 			          </template>
 			        </el-table-column>
 			    </el-table>
 				<el-pagination
-					v-show="tableData.rowCount>0"
+					v-show="tableData.oneReCount>0"
 					style="margin: 0 auto;text-align:center;margin-top:20px"
 					layout="prev, pager, next"
 					:page-size="10"
 					:currentPage="currentPage"
 					@current-change="currentChange"
-					:total="tableData.rowCount">
+					:total="tableData.oneReCount">
 				</el-pagination>
 			</el-row>
-			<BigDialog dialogTitle="添加户内全景" :dialogFormVisible="dialogFormVisible" @dialogCancel="dialogCancel" @dialogConfirm="dialogConfirm">
+			<BigDialog dialogTitle="添加报告" :dialogFormVisible="dialogFormVisible" @dialogCancel="dialogCancel" @dialogConfirm="dialogConfirm">
 				<div slot="dia_body">
 					<el-form style="" :model="paParkDetail" class="demo-form-inline" label-width="150px">
 						<el-form-item label="添加报告：">
@@ -125,16 +133,12 @@
 					</el-form>
 				</div>
 			</BigDialog>
-
-			<el-dialog :visible.sync="dialogVisible" size="tiny">
-		    	<img width="100%" :src="dialogImgSrc" alt="">
-		    </el-dialog>
 		</div>
 	</div>
 </template>
 
 <script>
-	import Subnav from '../Subnav/Subnav';
+	import Subnav2 from '../Subnav2/Subnav2';
 	import uploaderFile from '../../common/uploaderFile.js'
 	import FileUploader from '../Common/FileUploader/FileUploader'
 	import BigDialog from '../Common/BigDialog/BigDialog';
@@ -142,53 +146,73 @@
 	export default{
 		name:'EstatePanoramaPark',
 		components:{
-			Subnav,
+			Subnav2,
 			BigDialog,
 			FileUploader,
 		},
 		data(){
 			return{
+				navList:[
+					
+				],
 				tabLoading:false,
-				dialogVisible:false,
-				dialogImgSrc:'',
 				dialogFormVisible:false,
-				secondLevel:'全流程监控',
-        		threeLevel:'金地博悦',
         		activeName:'first',
-        		editTime:'',
+
         		btnList:['Btn0'],
 		        preFiles:[{preFile:null}],
 		        uploaderList:[{uploader:null}],
-        		floorList:[
-					{label:'1层',value:'1'}
-				],
+				
+				timeType:'1',
+				editTime:'',
         		filterForm:{
-        			pageIndex:0,
-        			pageSie:10,
-        			editTimeBegin:'',
-        			editTimeEnd:''
+        			pageNum:0,
+        			pageSize:10,
+        			buildingId:this.$route.query.buildingId,
+        			reOneId:this.$route.query.rOneId,
+        			onlineStatus:'',
+        			crStartTime:'',
+        			crStopTime:'',
+        			upStartTime:'',
+        			upStopTime:''
         		},
+
         		paParkDetail:{	
 					fileUrl:''
         		},
+
         		currentPage:1,
         		tableData:{
-					rankList:[{}],
-					rowCount:10
+					oneReportInfoList:[{}],
+					oneReCount:10
         		}
 			}
 		},
 		created(){
-      		
+      		this.initNav();
+      		this.$store.dispatch('defaultIndexAction','/index/estateprocessmonitoringmanagement');
 		},
 		methods:{
-			//tab切换
-			handleClick(){
-
+			//初始化导航
+			initNav(){
+				let q = this.$route.query,
+	      		buildingName = q.buildingName,
+	      		rRootName = q.rRootName,
+	      		rOneName = q.rOneName,
+	      		fullPath = this.$route.fullPath,
+	      		path1 = '/index/estateprocessmonitoringdetail?type=edit&buildingId='+q.buildingId+'&buildingName='+q.buildingName,
+				path2 = '/index/estateparkreportList?type=edit&buildingId='+q.buildingId+'&buildingName='+q.buildingName;
+	      		this.navList = [
+					{path:'/index/estateprocessmonitoringmanagement',name:'首页'},
+					{path:path1,name:buildingName},
+					{path:path2,name:'园区报告'},
+					{path:path2,name:rRootName},
+					{path:fullPath,name:rOneName}
+	      		]
 			},
 			//搜索
 			onSearchSubmit(){
-				this.filterForm.pageIndex = 0;
+				this.filterForm.pageNum = 0;
 				this.getData();
 			},
 			//新增
@@ -198,11 +222,6 @@
 		        	this.initUploader(0);
 		        };
 			},
-			//页码改变
-		    currentChange(page){
-		    	this.filterForm.pageNum = page-1;
-		    	this.getData();
-		    },
 			//初始化上传插件对象
 		    initUploader(index){
 		        let _this = this,
@@ -239,8 +258,23 @@
 			},
 			//改变时间格式
 		    pickerChange(val){
-		        this.filterForm.editTimeBegin=val.slice(0,10)
-		        this.filterForm.editTimeEnd=val.slice(13)
+		    	if(this.timeType == 1){
+					this.filterForm.crStartTime=val.slice(0,10)
+		        	this.filterForm.crStopTime=val.slice(13)
+		    	}else{
+					this.filterForm.upStartTime=val.slice(0,10)
+		        	this.filterForm.upStopTime=val.slice(13)
+		    	}
+		    },
+		    timeTypeChange(val){
+				this.editTime = '';
+				if(val == 1){
+					this.filterForm.upStartTime = '';
+        			this.filterForm.upStopTime = '';
+				}else{
+					this.filterForm.crStartTime = '';
+        			this.filterForm.crStopTime = '';
+				}
 		    },
 		    //获取数据
 		    getData(){
@@ -267,23 +301,75 @@
 		    //操作
 		    handle(row,type){
 				if(type == 1){
-					this.$router.push({
-						path:'/index/estateprocessmonitoringdetail',
-						query:{
-							type:'view'	
-						}
-					})
+					
 				}else if(type == 2){
-					this.$router.push({
-						path:'/index/estateprocessmonitoringdetail',
-						query:{
-							type:'edit'
-						}
-					})
+					
+				}else if(type == 3){
+					let _this = this,
+					body = {
+						id:row.id
+					};
+	                this.$confirm('是否确定删除该条数据?', '提示', {
+	                    confirmButtonText: '确定',
+	                    cancelButtonText: '取消',
+	                    type: 'warning'
+	                }).then(() => {
+	                    _this.$http('/buildingPanorama/delInfo',{body},{},{},'post').then(res =>{
+	                        if(res.data.code==0){
+	                        	if(res.data.response.res == 1){
+	                        		message(_this,'删除成功!','success');
+	                            	_this.getData();
+	                        	}else{
+	                        		message(_this,'删除失败','warning');
+	                        	}
+	                        }else if(res.data.code==300){
+	                            _this.$router.push('/login');
+	                        }else{
+	                        	message(_this,'删除失败','warning');
+	                        }
+	                    }).catch(function(err){
+	                        console.log(err)
+	                    })
+	                }).catch(() => {
+	                });
 				}else{
-					this.$router.push({
-						path:'/index/estateprocessmonitoringdetail'
-					})
+					let _this = this,
+					body = {
+						id:row.id
+					},
+					text1,text2,text3;
+					if(row.onlineStatus == 1){
+						text1 = '确认下线吗？';
+						text2 = '下线成功';
+						text3 = '下线失败';
+					}else{
+						text1 = '确认上线吗？';
+						text2 = '上线成功';
+						text3 = '上线失败';
+					}
+	                this.$confirm(text1, '提示', {
+	                    confirmButtonText: '确定',
+	                    cancelButtonText: '取消',
+	                    type: 'warning'
+	                }).then(() => {
+	                    _this.$http('/buildingPanorama/delInfo',{body},{},{},'post').then(res =>{
+	                        if(res.data.code==0){
+	                        	if(res.data.response.res == 1){
+	                        		message(_this,text2,'success');
+	                            	_this.getData();
+	                        	}else{
+	                        		message(_this,text3,'warning');
+	                        	}
+	                        }else if(res.data.code==300){
+	                            _this.$router.push('/login');
+	                        }else{
+	                        	message(_this,'删除失败','warning');
+	                        }
+	                    }).catch(function(err){
+	                        console.log(err)
+	                    })
+	                }).catch(() => {
+	                });
 				}
 		    },
 		    //刷新

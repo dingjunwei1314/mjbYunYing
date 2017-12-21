@@ -1,33 +1,33 @@
 <template>
 	<div>
-		<Subnav :secondLevel="secondLevel" :threeLevel="threeLevel" @refresh="refresh"></Subnav>
+		<Subnav2 :navList="navList" @refresh="refresh"></Subnav2>
 		<div style="padding:20px">
 			<el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-			    <el-tab-pane label="地基础报告" name="1">
+			    <el-tab-pane :label="item.rRootName" :name="item.rRootId" v-for="(item,index) in rRootNameList" :key="index">
 			    	<h5 style="color:#333;font-weight:normal">园区评测报告</h5>
 			   		<el-table
 				        v-loading="tabLoading"
-				        :data="tableData.rankList"
+				        :data="tableData[item.rRootId].rOneNameList"
 				        border
 				        tooltip-effect="dark"
 				        style="font-size:12px!important;">
 				        <el-table-column
-				          prop=""
+				          prop="rOneName"
 				          label="报告类别"
 				          min-width="60">
 				        </el-table-column>
 				        <el-table-column
-				          prop=""
+				          prop="reportNum"
 				          label="报告份数（在线／全部)"
 				          min-width="100">
 				        </el-table-column>       
 				        <el-table-column
-				          prop="creationTime"
+				          prop="submitTime"
 				          min-width="100"
 				          label="创建时间">
 				        </el-table-column>
 				        <el-table-column
-				          prop="founder"
+				          prop="updateTime"
 				          min-width="100"
 				          label="最近更新时间">
 				        </el-table-column>
@@ -50,28 +50,28 @@
 				    </el-table>
 				    <h5 style="color:#333;font-weight:normal">问题点及未整改报告</h5>
 				    <el-table
-				        v-loading="tabLoading"
-				        :data="tableData.rankList"
+				        v-loading="tabLoading2"
+				        :data="tableData[item.rRootId].questionReportInfo"
 				        border
 				        tooltip-effect="dark"
 				        style="font-size:12px!important;">
 				        <el-table-column
-				          prop=""
+				          prop="rOneName"
 				          label="报告类别"
 				          min-width="60">
 				        </el-table-column>
 				        <el-table-column
-				          prop=""
+				          prop="reportNum"
 				          label="报告份数（在线／全部)"
 				          min-width="100">
 				        </el-table-column>       
 				        <el-table-column
-				          prop="creationTime"
+				          prop="submitTime"
 				          min-width="100"
 				          label="创建时间">
 				        </el-table-column>
 				        <el-table-column
-				          prop="founder"
+				          prop="updateTime"
 				          min-width="100"
 				          label="最近更新时间">
 				        </el-table-column>
@@ -81,26 +81,17 @@
 				          <template scope="scope">
 				            <el-button
 				              size="small"
-				              @click="handle(scope.row,1)">
+				              @click="handle(scope.row,3)">
 				              查看
 				            </el-button>
 				            <el-button
 				              size="small"
-				              @click="handle(scope.row,2)">
+				              @click="handle(scope.row,4)">
 				              编辑
 				            </el-button>
 				          </template>
 				        </el-table-column>
 				    </el-table>
-			    </el-tab-pane>
-			    <el-tab-pane label="屋面工程" name="2">
-			   		
-			    </el-tab-pane>
-			    <el-tab-pane label="外墙工程" name="3">
-			   		
-			    </el-tab-pane>
-			    <el-tab-pane label="核心筒" name="4">
-			   		
 			    </el-tab-pane>
 			</el-tabs>
 		</div>
@@ -109,34 +100,105 @@
 </template>
 
 <script>
-	import Subnav from '../Subnav/Subnav';
+	import Subnav2 from '../Subnav2/Subnav2';
 	import message from '../../common/message';
 	export default{
-		name:'EstateParkBanList',
+		name:'EstateParkReportList',
 		components:{
-			Subnav,
+			Subnav2,
 		},
 		data(){
+			let name = this.$route.query.buildingName;
 			return{
-				secondLevel:'全流程监控',
-        		threeLevel:'金地博悦',
-        		activeName:'1',
+				navList:[
+					{path:'/index/estateprocessmonitoringmanagement',name:'首页'},
+					{path:this.$route.fullPath.replace(/estatebanreportlist/,'estateprocessmonitoringdetail'),name},
+					{path:this.$route.fullPath,name:'楼栋报告'}
+				],
+				rRootNameList:[],
+        		activeName:'',
         		tabLoading:false,
+        		tabLoading2:false,
         		tableData:{
-        			rankList:[{}]
-        		}
+
+        		},
 			}
 		},
 		created(){
+			this.getReportData('');
       		this.$store.dispatch('defaultIndexAction','/index/estateprocessmonitoringmanagement');
 		},
 		methods:{
-			//tab切换
-			handleClick(){
+			//获取评测报告数据
+			getReportData(rRootId){
+				let _this = this,
+				body = {
+					buildingId:this.$route.query.buildingId,
+					rType:2,
+					rRootId
+				};
+				this.tabLoading = true;
+				this.$http('/buildingReport/getReportHomePageInfo',{body},{},{},'post').then(res => {
+				  _this.tabLoading = false;
+				  if(res.data.code == 0){
+				  	if(rRootId == ''){
+				  	  _this.rRootNameList = res.data.response.rRootNameList;
+					  _this.rRootNameList.forEach((item,index) => {
+					    _this.rRootNameList[index].rRootId = item.rRootId.toString();
+					    let str = item.rRootId.toString();
+					    _this.tableData[str] = {rOneNameList:[],questionReportInfo:[]};
+					  })
+				  	  _this.activeName = _this.rRootNameList[0].rRootId;
+				    }
+				    let rId = rRootId == ''? _this.rRootNameList[0].rRootId : rRootId;
+				    _this.tableData[rId].rOneNameList = res.data.response.rOneNameList;
+				    _this.getRectificationReportData(rRootId);
+				    console.log(_this.tableData)
+				  }else if(res.data.code == 300){
+					_this.$router.push('/login')
+				  }
+				}).catch(err => {
+				  _this.tabLoading = false;
+				  console.log(err)
+				})
+			},
+			//获取整改报告数据
+			getRectificationReportData(rRootId){
+				let _this = this,
+				body = {
+					buildingId:this.$route.query.buildingId,
+					rType:1,
+					rRootId
+				};
+				this.tabLoading2 = true;
+				this.$http('/buildingReport/getReportQuestionInfo',{body},{},{},'post').then(res => {
+				  _this.tabLoading2 = false;
+				  if(res.data.code == 0){
 
+				  	let rId = rRootId == ''? _this.rRootNameList[0].rRootId : rRootId;
+				  	_this.tableData[rId].questionReportInfo = res.data.response.questionReportInfo;
+				  	_this.tableData[rId].questionReportInfo.forEach((item,index) => {
+					  _this.tableData[rId].questionReportInfo[index].rOneName = '问题点及未整改报告'
+				  	})
+
+				  }else if(res.data.code == 300){
+					_this.$router.push('/login')
+				  }
+				}).catch(err => {
+				  _this.tabLoading2 = false;
+				  console.log(err)
+				})
+			},
+			//tab切换
+			handleClick(tab){
+				let rRootId = tab.name,
+				len = this.tableData[tab.name].rOneNameList.length;
+				if(len <= 0){
+					this.getReportData(rRootId);
+				}
 			},
 			handle(){
-				this.$router.push('/index/estatebanreportlistdetail')
+				this.$router.push('/index/estateparkreportlistdetail')
 			},
 			//刷新
 			refresh(){

@@ -138,7 +138,7 @@
                     <el-input size="small" style="width:300px" v-model="hxAllData.addNewHouseType.dec" type="textarea" ></el-input>
                   </el-form-item>
 
-                  <el-form-item label="总价区间" :required="true"  prop="priceMin">
+                  <el-form-item label="总价区间">
                     <el-input size="small" v-model="hxAllData.addNewHouseType.priceMin" type="number" style="width:100px" ></el-input>
                     <span style="color:#999;font-size:12px">-</span>
                     <el-input size="small" v-model="hxAllData.addNewHouseType.priceMax" type="number" style="width:100px" ></el-input>
@@ -595,13 +595,6 @@ export default {
           callback();
         }
       }; 
-      const validatehxPriceMin = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入价格区间'));
-        }else{
-          callback();
-        }
-      }; 
       const validatehxSale_state = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入销售状态'));
@@ -672,9 +665,6 @@ export default {
             ],
             roomLocation:[
               { validator: validatehxOrientation, trigger: 'blur' }
-            ],
-            priceMin:[
-              { validator: validatehxPriceMin, trigger: 'blur' }
             ],
             saleStatus:[
               { validator: validatehxSale_state, trigger: 'blur' }

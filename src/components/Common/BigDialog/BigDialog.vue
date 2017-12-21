@@ -3,8 +3,8 @@
       
   <el-dialog :title="dialogTitle" top="7%" :visible.sync="dialogFormVisible" :before-close="beforeClose" >
     <slot name="dia_body"></slot>
-    <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogCancel">取 消</el-button>
+    <div slot="footer" class="dialog-footer" style="text-align: center">
+      <el-button v-show="isShowCancel" @click="dialogCancel">取 消</el-button>
       <el-button type="primary" @click="dialogConfirm">确 定</el-button>
     </div>
   </el-dialog>
@@ -25,6 +25,10 @@ export default {
         required:true,
         type:Boolean,
         default:false,
+      },
+      isShowCancel:{
+        default:true,
+        type:Boolean
       }
     },
     data() {

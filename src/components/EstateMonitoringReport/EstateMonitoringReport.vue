@@ -2,34 +2,34 @@
 	<div style="padding:20px">
 		<el-row>
 			<el-col :span="4">
-				<router-link to="/index/estateparkreportList">
+				<router-link :to="{path:'/index/estateparkreportList',query:$route.query}">
 					<el-card :body-style="{ padding: '0px' }" class="report-card">
 				      <div >
 				        <p>园区报告</p>
-				        <p>100份</p>
-				        <p>2017-10-20</p>
+				        <p>{{reportInfoList[0].reportNum}}份</p>
+				        <p>{{reportInfoList[0].updateTime}}</p>
 				      </div>
 				    </el-card>
 				</router-link>
 			</el-col>
 			<el-col :span="4">
-				<router-link to="/index/estatebanreportlist">
+				<router-link :to="{path:'/index/estatebanreportlist',query:$route.query}">
 				    <el-card :body-style="{ padding: '0px' }" class="report-card">
 				      <div >
 				        <p>楼栋报告</p>
-				        <p>100份</p>
-				        <p>2017-10-20</p>
+				        <p>{{reportInfoList[1].reportNum}}份</p>
+				        <p>{{reportInfoList[1].updateTime}}</p>
 				      </div>
 				    </el-card>
 				</router-link>
 			</el-col>
 			<el-col :span="4">
-				<router-link to="/index/estateindoorreportlist">
+				<router-link :to="{path:'/index/estateindoorreportlist',query:$route.query}">
 				    <el-card :body-style="{ padding: '0px' }" class="report-card">
-				      <div >
+				      <div>
 				        <p>户内报告</p>
-				        <p>100份</p>
-				        <p>2017-10-20</p>
+				        <p>{{reportInfoList[2].reportNum}}份</p>
+				        <p>{{reportInfoList[2].updateTime}}</p>
 				      </div>
 				    </el-card>
 				</router-link>
@@ -48,14 +48,35 @@
 		},
 		data(){
 			return{
-				
+				reportInfoList:[
+					{reportNum:'',updateTime:''},
+					{reportNum:'',updateTime:''},
+					{reportNum:'',updateTime:''}
+				]
 			}
 		},
 		created(){
-      		
+      		this.getReportData();
 		},
 		methods:{
-		
+			//获取数据
+		    getReportData(){
+		        let _this = this,
+		        body = {
+		        	buildingId:this.$route.query.buildingId
+		        };
+		        this.$http('/buildingReport/getReportNumAndTime',{body},{},{},'post').then(res => {
+		          if(res.data.code == 0){
+		            _this.reportInfoList = res.data.response.reportInfoList;
+		          }else if(res.data.code == 300){
+					_this.$router.push('/login')
+		          }else{
+		          	message(_this,'请求失败','warning')
+		          }
+		        }).catch(err => {
+		          console.log(err)
+		        })
+		    },
 		}
 	}
 </script>

@@ -89,7 +89,7 @@
 					pageSize:10
         		},
         		tableData:{
-					buildingMonitorInfo:[{}],
+					buildingMonitorInfo:[],
 					totalCount:0
         		}
 			}

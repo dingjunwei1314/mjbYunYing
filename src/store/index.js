@@ -1,6 +1,7 @@
 import Vue  from 'vue';
 import Vuex from 'vuex';
 import estate from './modules/estate';
+import processmonitoring from './modules/processmonitoring';
 
 Vue.use(Vuex)
 
@@ -57,6 +58,7 @@ export default new Vuex.Store({
     actions,
     getters,
     modules:{
-        estate
+        estate,
+        processmonitoring
     }
 })

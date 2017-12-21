@@ -149,6 +149,7 @@
 				  if(res.data.code == 0){
 				  	let response = res.data.response;
 				    _this.buildingNumArray = response.buildingNumArray;
+				    window.localStorage.buildingNumArray = JSON.stringify(response.buildingNumArray);
 				    _this.unitNumArray = response.unitNumArray;
 				    _this.floorArray = response.floorArray;
 				    _this.accountNumArray = response.accountNumArray;
