@@ -1,19 +1,18 @@
 <template>
   <div class="changePassword">
-    <Subnav :secondLevel="secondLevel" :threeLevel="threeLevel" @refresh="refresh"></Subnav>
-    <p>修改密码</p>
+    <Subnav2 :navList="navList" @refresh="refresh"></Subnav2>
     <div class="changePasswordTop">
       <div>
         <span>原密码 ：</span>
-        <el-input type="password" v-model="updata.old_password"></el-input>
+        <el-input type="password" size="small" v-model="updata.oldPwd"></el-input>
       </div>
       <div>
         <span>新密码 ：</span>
-        <el-input type="password" v-model="updata.new_password"></el-input>
+        <el-input type="password" size="small" v-model="updata.newPwd"></el-input>
       </div>
       <div>
         <span>确认密码 ：</span>
-        <el-input type="password" v-model="updata.new_password_sure"></el-input>
+        <el-input type="password" size="small" v-model="updata.newPwd2"></el-input>
       </div>
     </div>
     <div class="consultParticularsFoot">
@@ -22,81 +21,88 @@
   </div>
 </template>
 <script>
-  import Subnav from '../Subnav/Subnav.vue'
-
+  import Subnav2 from '../Subnav2/Subnav2.vue'
+  import message from '../../common/message';
   export default {
     name:'changePassword',
     components:{
-      Subnav,
+      Subnav2,
     },
     data(){
       return{
-        secondLevel:'修改密码',
-        threeLevel:'修改密码',
+        navList:[
+          {path:this.$route.fullPath,name:'首页'},
+          {path:this.$route.fullPath,name:'修改密码'},
+        ],
         updata:{
-          old_password:'',
-          new_password:'',
-          new_password_sure:''
+          oldPwd:'',
+          newPwd:'',
+          newPwd2:''
         }
       }
     },
     methods: {
       updata_btn(){
-        if(this.updata.old_password.length<6 || this.updata.old_password.length>16){
-          this.$message({
-            type: 'warning',
-            message: '旧密码必须是6-16位字符!'
-          });
+        if(this.updata.oldPwd.length<6 || this.updata.oldPwd.length>16){
+          message(this,'旧密码必须是6-16位字符!','warning')
           return;
         }
-        if(this.updata.new_password.length<6 || this.updata.new_password.length>16){
-          this.$message({
-            type: 'warning',
-            message: '新密码必须是6-16位字符!'
-          });
+        if(this.updata.newPwd.length<6 || this.updata.newPwd.length>16){
+          message(this,'新密码必须是6-16位字符!','warning')
           return;
         }
-        if(this.updata.new_password_sure.length<6 || this.updata.new_password_sure.length>16){
-          this.$message({
-            type: 'warning',
-            message: '确认密码必须是6-16位字符!'
-          });
+        if(this.updata.newPwd2.length<6 || this.updata.newPwd2.length>16){
+          message(this,'确认密码必须是6-16位字符!','warning')
           return;
         }
-        if(this.updata.new_password_sure!==this.updata.new_password){
-          this.$message({
-            type: 'warning',
-            message: '两次输入的密码不一致!'
-          });
+        if(this.updata.newPwd2!==this.updata.newPwd){
+          message(this,'两次输入的密码不一致!','warning')
           return;
         }
-        this.$message({
-          type: 'success',
-          message: '修改成功!'
-        });
+
+        if(this.updata.oldPwd === this.updata.newPwd){
+          message(this,'新密码不能与原密码一致','warning')
+          return;
+        }
+
+        this.$confirm('确认修改吗?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              let body = _.cloneDeep(this.updata);
+              delete body.newPwd2;
+              this.$http('/backstageUser/resetPwd',{body},{},{},'post').then(res => {
+                if(res.data.code == 0){
+                  if(res.data.response.res == 1){
+                    message(this,'修改成功，请重新登陆','success');
+                    setTimeout(() => {
+                      this.$router.push('/login');
+                    },800)
+                  }else{
+                    message(this,'修改失败','warning');
+                  }
+                }
+              })
+            }).catch((err) => {
+              console.log(err)
+            });
       },
       refresh(){
-        this.$store.dispatch('mainLoadingAction', true);
-        var that = this
-        setTimeout(function () {
-          that.$store.dispatch('mainLoadingAction', false);
-        }, 300)
+        for(let i in this.updata){
+          this.updata[i] = '';
+        }
       },
 
     },
     mounted(){
-      this.$store.dispatch('mainLoadingAction',true);
-      this.$store.dispatch('defaultIndexAction','/index/changePassword');
-      var that=this;
-      setTimeout(function(){
-        that.$store.dispatch('mainLoadingAction',false);
-      },300)
+      this.$store.dispatch('defaultIndexAction','/account/changePassword');
     }
   }
 </script>
 <style>
   .changePasswordTop{
-    border: 1px solid darkgray;margin:20px;
+    border: 1px solid #ccc;margin:20px;
   }
    p{
     padding: 15px;

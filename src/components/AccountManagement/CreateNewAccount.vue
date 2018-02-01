@@ -1,132 +1,142 @@
 <template>
   <div class="createNewAdmin">
-    <Subnav :secondLevel="secondLevel" :threeLevel="threeLevel" @refresh="refresh"></Subnav>
-    <p>新建管理员</p>
-    <div class="createNewAdminTop">
-      <div class="spans">
-          <span>用户名</span><span>:</span>
-          <el-input v-model="updataForm.user_name" placeholder="用户名"></el-input>
-      </div>
-      <div class="spans">
-        <span>真实姓名</span><span>:</span>
-        <el-input v-model="updataForm.real_name" placeholder="真实姓名"></el-input>
-      </div>
-    </div>
-    <div class="createNewAdminTop">
-      <div class="spans">
-        <span>密码</span><span>:</span>
-        <el-input v-model="updataForm.password" type="password" placeholder="密码"></el-input>
-      </div>
-      <div class="spans">
-        <span>确认密码</span><span>:</span>
-        <el-input v-model="updataForm.password_sure" type="password" placeholder="确认密码"></el-input>
-      </div>
-      <div class="spans">
-        <span style="width:81px">性别</span><span style="width:81px">:</span>
-        <el-radio-group v-model="updataForm.sex">
-          <el-radio :label="1">男</el-radio>
-          <el-radio :label="2">女</el-radio>
-        </el-radio-group>
-      </div>
-      <div class="spanb">
-        <span >角色分配</span><span>:</span>
-        <el-select v-model="updataForm.role" placeholder="角色分配">
-          <el-option
-            label="超级管理员"
-            value="1">
-          </el-option>
-          <el-option
-            label="普通管理员"
-            value="2">
-          </el-option>
-        </el-select>
-      </div>
-    </div>
-    <div class="consultParticularsFoot">
-      <el-button @click="updata_sure" type="primary">保存</el-button>
-    
-      <el-button type="danger" @click="give_up">取消</el-button>
-      
+    <Subnav2 :navList="navList" @refresh="refresh"></Subnav2>
+    <div style="padding:20px">
+      <el-form label-width="100px" :model="form" class="demo-form-inline">
+        <el-form-item label="用户名" required>
+          <el-input  size="small" v-model="form.user_name" style="width:200px" placeholder="用户名"></el-input>
+        </el-form-item>
+        <el-form-item label="所在区域" required>
+          <MjbArea 
+            :_province.sync="form.provinceId" 
+            :_city.sync="form.cityId" />
+        </el-form-item>
+        <el-form-item label="所在部门" required>
+          <el-select size="small" v-model="form.departmentId" style="width:200px;">
+            <el-option v-for="(item,index) in deptList" :key="index" :label="item.departmentName" :value="item.id"></el-option>  
+          </el-select>
+        </el-form-item>
+        <el-form-item label="密码" required>
+          <el-input  size="small" v-model="form.user_password" @focus="foucus('user_password')" type="password" style="width:200px" placeholder="密码"></el-input>
+          <span style="color: #777;font-size: 13px;">&nbsp密码必须是6到16位字符</span>
+        </el-form-item>
+        <el-form-item label="确认密码" required>
+          <el-input  size="small" v-model="form.user_password2" @focus="foucus('user_password2')" type="password" style="width:200px" placeholder="确认密码"></el-input>
+        </el-form-item>
+        <el-form-item label="角色分配" required>
+          <el-select size="small" v-model="form.roleId" style="width:200px;">
+            <el-option v-for="(item,index) in roleList" :key="index" :label="item.value" :value="item.key"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="设备ip">
+          <el-input  size="small" v-model="form.equipmentId" style="width:200px" placeholder="设备ip"></el-input>
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input  size="small" v-model="form.describ" style="width:600px" type="textarea" placeholder="备注"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button style="margin-left:100px" type="primary" @click="onSubmit">确认</el-button>
+          <el-button  @click="back">取消</el-button>
+        </el-form-item>
+      </el-form>
     </div>
   </div>
 </template>
 
 <script>
-  import Subnav from '../Subnav/Subnav.vue'
-  import AreaAll from '../Common/AreaAll/AreaAll'
-
+  import Subnav2 from '../Subnav2/Subnav2.vue'
+  import message from '../../common/message';
+  import MjbArea from '../Common/MjbArea/MjbArea';
   export default {
     name:'CreateNewAdmin',
     components:{
-      Subnav,
-      AreaAll
+      Subnav2,
+      MjbArea
     },
     data(){
       return{
-        secondLevel:'账户管理',
-        threeLevel:'新建管理员',
-        updataForm: {
+        navList:[
+          {path:'/account/accountmanagement',name:'首页'},
+          {path:'/account/accountmanagement',name:'账户管理'},
+          {path:this.$route.fullPath,name:'新增账户'}
+        ],
+        deptList:[],
+        roleList:[],
+        form: {
           user_name:'',
-          real_name:'',
-          password:'',
-          sex:'',
-          password_sure:'',
-          role:''
+          departmentId:'',
+          roleId:'',
+          equipmentId:'',
+          user_password:'',
+          user_password2:'',
+          describ:'',
+          provinceId:'',
+          cityId:''
         },
       }
     },
     created(){
+      this.getApartData()
+      this.getRoleData()
       if(this.$route.query.type=='edit'){
-        this.getdata();
+        this.initUser()
       }
     },
     methods:{
-      getdata(){
-        let _this=this;
-        this.$http('/accountdetail',{},{id:_this.$route.query.id}).then(function(res){
-          console.log(res)
-          if(res.data.code==1000){
-              _this.updataForm=res.data.data;
+      foucus(key){
+        this.form[key] = '';
+      },
+      //初始化数据
+      initUser(){
+        let info = JSON.parse(this.$route.query.info);
+        for(var i in this.form){
+          this.form[i] = info[i]
+        }
+        this.form.user_password2 = this.form.user_password
+      },
+      //获取部门数据
+      getApartData(){
+        this.$http('/backstageUser/queryDeptListInfo',{},{},{},'post').then(res => {
+          if(res.data.code==0){
+            this.deptList = res.data.response;
           }
-        }).catch(function(err){
-          console.log(err)
+        })  
+      },
+      //获取角色列表
+      getRoleData(){
+        this.$http('/backstageRole/queryRoleListInfo',{},{},{},'post').then(res => {
+          if(res.data.code == 0){
+            this.roleList = res.data.response.list;
+          }
         })
       },
-      updata_sure(){
-        if(this.updataForm.user_name==''){
-          this.$message({
-            type: 'warning',
-            message: '请输入用户名!'
-          });
-          return;
-        }
-        if(this.updataForm.real_name==''){
-          this.$message({
-            type: 'warning',
-            message: '请输入真实姓名!'
-          });
+      //提交
+      onSubmit(){
+        if(this.form.user_name==''){
+          message(this,'请输入用户名','warning')
           return;
         }
 
-        if(this.updataForm.password.length<6 || this.updataForm.password.length>16){
-          this.$message({
-            type: 'warning',
-            message: '密码必须是6到16位字符!'
-          });
+        if(this.form.provinceId=='' || this.form.cityId==''){
+          message(this,'请选择区域','warning')
           return;
         }
-        if(this.updataForm.password_sure!='' && this.updataForm.password_sure!== this.updataForm.password){
-          this.$message({
-            type: 'warning',
-            message: '两次输入的密码不一致!'
-          });
+        
+        if(this.form.departmentId==''){
+          message(this,'请选择部门','warning')
           return;
         }
-        if(this.updataForm.role==''){
-          this.$message({
-            type: 'warning',
-            message: '请选择角色!'
-          });
+
+        if(this.form.user_password.length<6 || this.form.user_password.length>16){
+          message(this,'密码必须是6到16位字符','warning')
+          return;
+        }
+        if(this.form.user_password2 !== this.form.user_password){
+          message(this,'两次输入的密码不一致','warning')
+          return;
+        }
+        if(this.form.roleId==''){
+          message(this,'请选择角色','warning')
           return;
         }
         this.$confirm('确认提交吗?', '提示', {
@@ -134,50 +144,51 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '提交成功!'
-          });
-          this.$router.push({path:'/index/accountmanagement'})
+          let
+          body = _.cloneDeep(this.form),
+          url;
+          
+          delete body.user_password2;
+
+          if(this.$route.query.type == 'edit'){
+            url = '/backstageUser/updateInfo';
+            body.id = JSON.parse(this.$route.query.info).id;
+          }else{
+            url = '/backstageUser/insertInfo';
+          }
+          
+          this.$http(url,{body},{},{},'post').then(res => {
+            if(res.data.code == 0){
+              if(this.$route.query.type == 'edit'){
+                if(res.data.response.res == 1){
+                  message(this,'提交成功','success')
+                  this.$router.push({path:'/account/accountmanagement'})
+                }else{
+                  message(this,'请求失败','warning');
+                }
+              }else{
+                message(this,'提交成功','success')
+                this.$router.push({path:'/account/accountmanagement'})
+              }
+            }else if(res.data.code == 500){
+              message(this,'该用户已注册','warning');
+            }
+          })
         }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消'
-          });
         });
       },
-      give_up(){
-        this.$router.push({path:'/index/accountmanagement'})
+      back(){
+        this.$router.push({path:'/account/accountmanagement'})
       },
       refresh(){
-        this.$store.dispatch('mainLoadingAction',true);
-        if(this.$route.query.type=='edit'){
-          this.getdata();
-        }else{
-          for(var i in this.updataForm){
-            this.updataForm[i]=''
-          }
-        }
-        var that=this
-        setTimeout(function(){
-          that.$store.dispatch('mainLoadingAction',false);
-        },300)
       }
     },
     mounted(){
-      this.$store.dispatch('mainLoadingAction',true);
-      this.$store.dispatch('defaultIndexAction','/index/accountmanagement');
-      var that=this;
-      setTimeout(function(){
-        that.$store.dispatch('mainLoadingAction',false);
-      },300)
+      this.$store.dispatch('defaultIndexAction','/account/accountmanagement');
     }
   }
 </script>
 <style scoped>
-  .createNewAdmin{
-    border: 1px solid darkgray;margin:20px;
-  }
  p{
   padding: 15px;
 }

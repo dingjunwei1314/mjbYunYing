@@ -12,7 +12,7 @@
 							@change="getFile($event)">
 						<el-button size="small" v-show="fileObj.isHaveExcel==0" @click="choiceFile">选择文件</el-button>
 						<span style="font-size:12px;" v-show="fileObj.isHaveExcel==1">文件名称：</span>
-						<span style="font-size:12px;color:#1d90e6" v-show="fileObj.isHaveExcel==1">{{fileObj.excelName}}/{{fileObj.fileSize}}kb</span>
+						<span style="font-size:12px;color:#1d90e6" v-show="fileObj.isHaveExcel==1">{{fileObj.excelName}}/{{fileObj.fileSize}}MB</span>
 						<el-button size="small" @click="deleteFile" v-show="fileObj.isHaveExcel==1">删除规划数据</el-button>
 					</el-form-item>
 				</el-form>
@@ -26,17 +26,16 @@
 					:_floor.sync="form.floor"
 					:_accountNum.sync="form.accountNum" 
 					:_houseType.sync="form.houseType"
+					:_reload = "reload"
 					/>
 				</el-col>
 				<el-col :span="4">
-					<el-button v-if="type=='edit'" style="float:right;margin-left:5px" type="danger" @click="onEditSubmit">确认</el-button>
 					<el-button style="float:right" type="primary" @click="onSearchSubmit">查询</el-button>
 				</el-col>	
 			</el-row>
 			<el-row v-show="fileObj.isHaveExcel==1">
 				<div class="tabletopbar">
-					<span>所有数据：共</span> <span style="color:#111">{{tableData.BuildCount}}</span> <span>条</span>
-					<span style="margin-left:20px">查询结果：共</span> 
+					<span>查询结果：共</span> 
 					<span style="color:#111">{{tableData.BuildCount}}</span> <span>条</span>
 				</div>
 				<el-table
@@ -48,6 +47,7 @@
 					tooltip-effect="dark"
 					style="width: 100%;font-size:12px!important;">
 					<el-table-column
+					  v-if="type == 'edit'"
 					  type="selection"
 					  :selectable="selectable"
 					  width="55">
@@ -104,6 +104,9 @@
 					  </template>
 					</el-table-column>
 				</el-table>
+				<div v-if="type=='edit'" style="text-align:center;margin-top:20px">
+					<el-button  type="danger" @click="onEditSubmit">确认</el-button>
+				</div>
 				<el-pagination
 					v-show="tableData.BuildCount>0"
 					style="margin: 0 auto;text-align:center;margin-top:20px"
@@ -120,9 +123,10 @@
 </template>
 
 <script>
-	import uploaderFile from '../../common/uploaderFile.js';
+	import uploaderFile from '../../common/uploaderFile';
 	import BuildingLinkage from '../Common/BuildingLinkage/BuildingLinkage';
 	import axios from 'axios';
+	import baseURL from '../../common/url'
 	import message from '../../common/message';
 	export default{
 		name:'EstatePlanDetail',
@@ -155,7 +159,8 @@
 				},
 				_BuildPlanningInfo:[],
 				selectIdsArr:[],
-				selectArr:[]
+				selectArr:[],
+				reload:false,
 			}
 		},
 		computed:{
@@ -195,7 +200,13 @@
 				this.$http('/buildingMonitor/pullDownExcelInfo',{body},{},{},'post').then(res => {
 				  if(res.data.code == 0){
 				  	let response = res.data.response;
-				    _this.houseTypeArray = response.houseTypeArray;
+				    
+				    if(response.houseTypeArray1[0] == null){
+						_this.houseTypeArray = [];
+				    }else{
+				    	_this.houseTypeArray = response.houseTypeArray1;
+				    }
+				  
 				  }else if(res.data.code == 300){
 					_this.$router.push('/login')
 				  }
@@ -213,11 +224,10 @@
 				    _this.fileObj.excelName = res.data.response.excelInfo[0].excelName;
 				    _this.fileObj.fileSize = res.data.response.excelInfo[0].fileSize;
 				    _this.getExcelData();
-				  }else if(res.data.code == 300){
-					_this.$router.push('/login')
+				    _this._reload = true;
 				  }
 				}).catch(err => {
-				  console.log(err)
+				  console.log(err);
 				})
 			},
 			//获取数据
@@ -233,8 +243,6 @@
 					_this.selectIdsArr = [];
 					_this.selectArr = [];
 					_this.$refs.multipleTable.clearSelection();
-				  }else if(res.data.code == 300){
-					_this.$router.push('/login')
 				  }
 				}).catch(err => {
 				  _this.tabLoading = false;
@@ -251,7 +259,7 @@
 				if(e.target.files.length>0){
 					let file = e.target.files[0];
 					this.fileObj.excelName = file.name;
-					this.fileObj.fileSize = (file.size/1024).toFixed(2);
+					this.fileObj.fileSize = (file.size/1024/1024).toFixed(2);
 					let formData = new FormData(),
 					config = {
 						headers:{
@@ -262,11 +270,12 @@
 					formData.append('buildingId',this.buildingId);
 					formData.append('excelName',this.fileObj.excelName);
 					formData.append('fileSize',this.fileObj.fileSize);
+					formData.append('d',JSON.stringify({token:localStorage._Mjb_token,body:{}}));
 					_this.$refs.fileInput.value = '';
-
+					
 					axios({
 						method: 'post',
-							url: 'http://192.168.1.243:8088/buildingMonitor/excelImport',
+							url: baseURL+'/buildingMonitor/excelImport',
 							responseType:'json',
 							data:formData,
 							headers:{
@@ -286,6 +295,8 @@
 								_this.fileObj.excelName = '';
 
 							}
+						}else if(res.data.code == 300){
+							_this.$router.push('/login');
 						}else{
 							message(_this,'上传失败','warning')
 							_this.fileObj.fileSize = '';
@@ -316,11 +327,11 @@
 						  };
 					    }else if(res.data.response.status == 2){
 						  message(_this,'已开通用户，不允许删除','warning');
+					    }else if(res.data.response.status == 3){
+                          message(_this,'已有楼盘全景或报告，不允许删除','warning');
 					    }else{
 					      message(_this,'删除失败','warning');
 					    }
-					  }else if(res.data.code == 300){
-						_this.$router.push('/login');
 					  }else{
 						message(_this,'删除失败','warning');
 					  }
@@ -389,8 +400,6 @@
 					  }else{
 						message(_this,'提交失败','warning');
 					  }
-					}else if(res.data.code == 300){
-					  _this.$router.push('/login')
 					}else{
 					  message(_this,'提交失败','warning');
 					}

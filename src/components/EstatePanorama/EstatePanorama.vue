@@ -135,8 +135,6 @@
 		          _this.loading = false;
 		          if(res.data.code == 0){
 		            _this.tableData = res.data.response;
-		          }else if(res.data.code == 300){
-		            _this.$router.push('/login')
 		          }else{
 		            message(_this,res.data.message,'warning')
 		          }

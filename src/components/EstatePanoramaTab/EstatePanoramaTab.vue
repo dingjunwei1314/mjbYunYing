@@ -2,13 +2,13 @@
 	<div>
 		<div>
 			<el-tabs v-model="activeName" @tab-click="handleClick">
-			    <el-tab-pane label="园区全景" name="first">
+			    <el-tab-pane label="园区全景" name="1">
 			   		<EstatePanoramaPark />
 			    </el-tab-pane>
-			    <el-tab-pane label="楼栋全景" name="second">
+			    <el-tab-pane label="楼栋全景" name="2">
 			    	<EstatePanoramaBan />
 			    </el-tab-pane>
-			    <el-tab-pane label="户内全景" name="third">
+			    <el-tab-pane label="户内全景" name="3">
 			    	<EstatePanoramaHouseType />
 			    </el-tab-pane>
 			</el-tabs>
@@ -32,11 +32,10 @@
 			return{
 				secondLevel:'全流程监控',
         		threeLevel:'金地博悦',
-        		activeName:'first'
+        		activeName:'1'
 			}
 		},
-		created(){
-      		
+		created(){	
 		},
 		methods:{
 			//tab切换

@@ -1,6 +1,6 @@
 <template>
   <div class="debusu">
-    <Subnav :secondLevel="secondLevel" :threeLevel="threeLevel" @refresh="refresh"></Subnav>
+    <Subnav2 :navList="navList" @refresh="refresh"></Subnav2>
 
     <div style="padding:20px">
       
@@ -73,19 +73,22 @@
 
 <script>
 
-import Subnav from '../Subnav/Subnav'
+import Subnav2 from '../Subnav2/Subnav2'
 import message from '../../common/message'
 
 export default {
     name:'debusu',
     components:{
-      Subnav
+      Subnav2
     },
     data() {
       return {
+        navList:[
+          {path:'/subscribe/bulletinsubscription',name:'首页'},
+          {path:'/subscribe/bulletinsubscription',name:'订阅管理'},
+          {path:this.$route.fullPath,name:'订阅用户详情'}
+        ],
         currentPage:1,
-        secondLevel:'订阅管理',
-        threeLevel:'订阅用户详情',
         filterForm: {
           pageNum:0,
           pageSize:10,
@@ -104,27 +107,18 @@ export default {
                                         
     },
     created(){
-      this.getdata()
+      this.getData()
     },
     methods: {
       //请求数据方法
-      getdata(){
+      getData(){
         let _this = this;
         _this.is_loading_tab = true;
-        this.$http('/backstageSub/getSubUserInfoList',{body:_this.filterForm},{},{},'post').then(function(res){
+        this.$http('/backstageSub/getSubUserInfoList',{body:_this.filterForm},{},{},'post').then(res => {
           _this.is_loading_tab = false;
-          _this.$store.dispatch('mainLoadingAction',false);
           if(res.data.code == 0){
             _this.tableData = res.data.response;
-          }else if(res.data.code == 300){
-            _this.$router.push('/login')
-          }else{
-            message(_this,res.data.message,'warning')
           }
-        }).catch(function(err){
-          console.log(err)
-          _this.is_loading_tab=false;
-          _this.$store.dispatch('mainLoadingAction',false);
         })
       },
       //触发搜索
@@ -133,22 +127,21 @@ export default {
         if(this.currentPage != 1){
           this.currentPage = 1;
         }else{
-          this.getdata()
+          this.getData()
         }
       },
       //改变页码
       currentChange(page){
         this.currentPage = page;
         this.filterForm.pageNum = page-1;
-        this.getdata()
+        this.getData()
       },
       //刷新方法
       refresh(){
       },
     },
     mounted(){
-      this.$store.dispatch('mainLoadingAction',true);
-      this.$store.dispatch('defaultIndexAction','/index/bulletinsubscription');
+      this.$store.dispatch('defaultIndexAction','/subscribe/bulletinsubscription');
     }
   }
 </script>

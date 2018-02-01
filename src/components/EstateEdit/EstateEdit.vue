@@ -521,7 +521,10 @@
             </el-tab-pane>
           </el-tabs>
         </el-tab-pane>
-        <el-tab-pane label="楼盘报告" name="fourth">
+        <el-tab-pane label="楼盘全景" name="fourth">
+          <EstatePa />
+        </el-tab-pane>
+        <el-tab-pane label="楼盘报告" name="five">
           <EstateReport />
         </el-tab-pane>
         <el-tab-pane label="楼盘设置" name="six">
@@ -529,7 +532,7 @@
         </el-tab-pane>
       </el-tabs>
     </div>    
-
+  
     <el-dialog :visible.sync="dialogVisible" size="tiny">
       <img width="100%" :src="dialogImgSrc" alt="">
     </el-dialog>
@@ -546,6 +549,7 @@ import ImgPreview from '../Common/ImgPreview/ImgPreview'
 import EstateBasicInfoForm from '../EstateBasicInfoForm/EstateBasicInfoForm'
 import EstateAdditionalInfoForm from '../EstateAdditionalInfoForm/EstateAdditionalInfoForm'
 import EstateReport from '../EstateReport/EstateReport'
+import EstatePa from '../EstatePa/EstatePa'
 import EstateScore from '../EstateScore/EstateScore'
 import EstateSetting from '../EstateSetting/EstateSetting'
 export default {
@@ -557,6 +561,7 @@ export default {
       EstateBasicInfoForm,
       EstateAdditionalInfoForm,
       EstateReport,
+      EstatePa,
       EstateScore,
       EstateSetting
     },
@@ -633,12 +638,12 @@ export default {
             hall:1,
             kitchen:1,
             bathRoom:1,
-            areaMin:'',
-            areaMax:'',
+            areaMin:0,
+            areaMax:0,
             roomLocation:'',
             dec:'',
-            priceMin:'',
-            priceMax:'',
+            priceMin:0,
+            priceMax:0,
             saleStatus:'',
             houseNum:0,
             saleNum:0,
@@ -866,13 +871,7 @@ export default {
         this.$http('/backstageBuilding/getBuildingLable', {}, {body}, {}, 'get').then(function (res) {
           if (res.data.code == 0) {
             _this.hxAllData.houseLableList = res.data.response.lableList;
-          } else if (res.data.code == 300) {
-            _this.$router.push('/login')
-          } else {
-            message(_this,res.data.message,'warning')
           }
-        }).catch(function (err) {
-          console.log(err)
         })
       },
       //户型获取户型数据请求
@@ -884,12 +883,7 @@ export default {
         this.$http('/backstageBuilding/getBuildingHouseList',{},{body},{}).then(function(res){
           if(res.data.code == 0){
             _this.hxAllData.hxtableData = res.data.response;
-          }else{
-            message(_this,res.data.message,'warning')
           }
-          _this.hxAllData.is_loading_hx_tab = false;
-        }).catch(function(err){
-          console.log(err)
           _this.hxAllData.is_loading_hx_tab = false;
         })
       },
@@ -907,11 +901,7 @@ export default {
             _this.hxAllData.addNewHouseType = res.data.response;
             _this.hxAllData.addNewHouseType.houseLable = _this.hxAllData.addNewHouseType.houseLable.split(',');
             _this.hxAllData.preImgSrcList[0].preImgSrc = res.data.response.houseImgUrl;
-          }else{
-            message(_this,res.data.message,'warning')
           }
-        }).catch(function(err){
-          console.log(err)
         })
       },
       //户型初始化上传插件对象
@@ -959,7 +949,7 @@ export default {
               this.hxAllData.addNewHouseType[i] = []
             }else if(i == 'room' || i == 'hall' || i == 'kitchen' || i=='bathRoom'){
               this.hxAllData.addNewHouseType[i] = 1
-            }else if(i == 'houseNum' || i == 'saleNum' || i == 'forSaleNum' || i == 'scaleRoom'){
+            }else if(i == 'houseNum' || i == 'saleNum' || i == 'forSaleNum' || i == 'scaleRoom' || i == 'areaMin' || i == 'areaMax' || i == 'priceMin' || i == 'priceMax'){
               this.hxAllData.addNewHouseType[i] = 0
             }else{
               this.hxAllData.addNewHouseType[i] = ''
@@ -990,8 +980,8 @@ export default {
               }
             })
           }).catch(() => {
-            message(_this,'已取消删除','info')        
-          });
+            
+          })
         }
       },
       //户型确认修改添加户型图
@@ -1026,8 +1016,8 @@ export default {
                 }
               })
             }).catch(() => {
-              message(_this,'已取消','info');       
-            });
+            
+            })
 
           } else {
             message(_this,'有必填项未填写','warning')
@@ -1047,9 +1037,6 @@ export default {
             _this.sjAllData.sjtableData = res.data.response;
             _this.sjAllData.is_loading_sj_tab = false;
           }
-        }).catch(err => {
-          console.log(err)
-          _this.sjAllData.is_loading_sj_tab = false;
         })
       },
       //实景-获取实景图详情
@@ -1065,8 +1052,6 @@ export default {
             _this.sjAllData.is_show_sj_edit = true;
             _this.sjAllData._preImgSrcList[0].preImgSrc = _this.sjAllData.editNewsjType.imgUrl;
           }
-        }).catch(function(err){
-          console.log(err) 
         })
       },
       //实景-页码切换
@@ -1122,17 +1107,13 @@ export default {
                 if(res.data.response.status == 1){
                   message(_this,'删除成功','success')
                   _this.getsjdata()
-                }else{
-                  message(_this,'删除失败','success')
                 }
               }
-            }).catch(function(err){
-              console.log(err) 
             })
             
           }).catch(() => {
-            message(_this,'已取消','info');       
-          });
+            
+          })
         }
       },
       //实景-确认更新添加实景图
@@ -1188,13 +1169,11 @@ export default {
             }else{
               message(_this,res.data.message,'warning')
             }
-          }).catch(err => {
-            console.log(err)
           })
 
         }).catch(() => {
-          message(_this,'已取消','info');       
-        });   
+            
+        })  
       },
       //实景-初始化上传插件对象
       initUploaderSj(index){
@@ -1230,7 +1209,8 @@ export default {
         this.dialogVisible = true;
       },
       _previewImgSj(index){
-        this.dialogImgSrc = this.sjAllData.preImgSrcList[index].preImgSrc
+        
+        this.dialogImgSrc = this.sjAllData._preImgSrcList[index].preImgSrc
         this.dialogVisible = true;
       },
       //实景-删除图片
@@ -1239,7 +1219,7 @@ export default {
         this.sjAllData.addNewsjType.imgList.splice(index,1);
       },
       _deleteImgSj(index){
-        this.sjAllData._preImgSrcList[0].imgUrl = '';
+        this.sjAllData._preImgSrcList[0].preImgSrc = '';
         this.sjAllData.editNewsjType.imgUrl = ''
       },
       //实景-开始上传
@@ -1486,8 +1466,6 @@ export default {
               _this.slAllData.preImgSrcList[index].imgUrl = item.imgUrl;
             })
           }
-        }).catch(err => {
-          console.log(err)
         })
       },
       //缩略图-提交
@@ -1506,12 +1484,10 @@ export default {
             }else{
               message(_this,'提交失败','warning')
             }
-          }).catch(err => {
-            console.log(err)
           })
         }).catch(() => {
-          message(_this,'已取消','info');       
-        });
+            
+        })
       },
 
 
@@ -1576,8 +1552,6 @@ export default {
               })
             }
           }
-        }).catch(err => {
-          console.log(err)
         })
       },
       //效果图-提交后台
@@ -1609,12 +1583,10 @@ export default {
             }else{
               message(_this,'提交失败','warning')
             }
-          }).catch(err => {
-            console.log(err)
           })
         }).catch(() => {
-          message(_this,'已取消','info');       
-        });
+            
+        })
       },
 
 
@@ -1646,7 +1618,7 @@ export default {
       this.initUploaderSl(4);
       this._initUploaderSj(0);
       this.$store.dispatch('mainLoadingAction',true);
-      this.$store.dispatch('defaultIndexAction','/index/estatemanagement');
+      this.$store.dispatch('defaultIndexAction','/estate/estatemanagement');
 
       var that=this
       setTimeout(function(){

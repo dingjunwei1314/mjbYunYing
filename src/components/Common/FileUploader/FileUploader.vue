@@ -10,7 +10,7 @@
             </span>
           </el-button>
           <span v-if ="file" style="margin-left:20px;font-size:12px;">{{text1}}：</span>
-          <span v-if ="file" style="color:#20a0ff;font-size:12px;">{{file.name}}</span>
+          <span v-if ="file" style="color:#20a0ff;font-size:12px;">{{file}}</span>
           <el-button style="margin-left:10px" size="small" v-show ="file"  @click.native="fileDelete">
             <span>
               {{btnName}}
@@ -43,10 +43,8 @@ export default {
         default:'删除文件'
       },
       file:{
-        type:Object,
-        default:function(){
-          return {}
-        }
+       
+        default:''
       }
     },
     data(){

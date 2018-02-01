@@ -68,8 +68,6 @@
 		        this.$http('/buildingReport/getReportNumAndTime',{body},{},{},'post').then(res => {
 		          if(res.data.code == 0){
 		            _this.reportInfoList = res.data.response.reportInfoList;
-		          }else if(res.data.code == 300){
-					_this.$router.push('/login')
 		          }else{
 		          	message(_this,'请求失败','warning')
 		          }

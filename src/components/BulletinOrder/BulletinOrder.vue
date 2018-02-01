@@ -1,7 +1,6 @@
 <template>
   <div class="buor">
-    <Subnav :secondLevel="secondLevel" :threeLevel="threeLevel" @refresh="refresh"></Subnav>
-
+    <Subnav2 :navList="navList" @refresh="refresh"></Subnav2>
     <div style="padding:20px">
       
       <el-row style="padding:20px 10px 0px 10px;border:1px solid #eee;margin-bottom:20px">
@@ -12,32 +11,13 @@
               <el-input size="small"   v-model="filterForm.buildingId" style="width:80px" placeholder="id"></el-input>
             </el-form-item>
             <el-form-item label="楼盘名称">
-              <el-autocomplete
-                size="small"
-                v-model="filterForm.buildingName"
-                :fetch-suggestions="querySearchAsync"
-                placeholder="请输入关键词"
-                @select="handleSelect"
-              ></el-autocomplete>
+              <MjbBuildingSearch :_buildingName.sync="filterForm.buildingName"/>
             </el-form-item>
         
             <el-form-item label="区域：">
-              <el-select size="small" @change="proChange" v-model="filterForm.province" :clearable="true" placeholder="省"  style="width:120px;">
-                  <el-option
-                  v-for="item in provinceIdsList"
-                  :key="item.cityId"
-                  :label="item.cityName"
-                  :value="item.cityId" >
-                  </el-option>
-              </el-select> 
-              <el-select size="small" v-model="filterForm.city" :clearable="true" placeholder="市"  style="width:120px;">
-                  <el-option
-                  v-for="item in cityIdsList"
-                  :key="item.cityId"
-                  :label="item.cityName"
-                  :value="item.cityId" >
-                  </el-option>
-              </el-select>
+              <MjbArea 
+                :_province.sync="filterForm.province" 
+                :_city.sync="filterForm.city"/>
             </el-form-item> 
             <el-form-item label="楼盘当前状态">
               <el-select size="small" v-model="filterForm.buildStatus" placeholder="请选择">
@@ -127,23 +107,26 @@
 </template>
 
 <script>
-
-import Subnav from '../Subnav/Subnav'
+import Subnav2 from '../Subnav2/Subnav2'
 import message from '../../common/message'
-
+import MjbArea from '../Common/MjbArea/MjbArea';
+import MjbBuildingSearch from '../Common/MjbBuildingSearch/MjbBuildingSearch';
 export default {
     name:'buor',
     components:{
-      Subnav
+      Subnav2,
+      MjbArea,
+      MjbBuildingSearch
     },
     data() {
       return {
+        navList:[
+          {path:this.$route.fullPath,name:'首页'},
+          {path:this.$route.fullPath,name:'订阅管理'},
+          {path:this.$route.fullPath,name:'预约简报'}
+        ],
         currentPage:1,
-        secondLevel:'订阅管理',
-        threeLevel:'预约简报',
         buidingList:[],
-        provinceIdsList:[],
-        cityIdsList:[],
         
         editTime:'',
         filterForm: {
@@ -166,13 +149,11 @@ export default {
                                         
     },
     created(){
-      this.getProCityData(1)
-      this.getdata()
-      this.remoteMethod('')
+      this.getData()
     },
     methods: {
       //请求数据方法
-      getdata(){
+      getData(){
         let _this = this;
         _this.is_loading_tab = true;
         this.$http('/backstageSub/getBesReportList',{body:_this.filterForm},{},{},'post').then(function(res){
@@ -180,90 +161,8 @@ export default {
           _this.$store.dispatch('mainLoadingAction',false);
           if(res.data.code == 0){
             _this.tableData = res.data.response;
-          }else if(res.data.code == 300){
-            _this.$router.push('/login')
-          }else{
-            message(_this,res.data.message,'warning')
           }
-        }).catch(function(err){
-          console.log(err)
-          _this.is_loading_tab=false;
-          _this.$store.dispatch('mainLoadingAction',false);
         })
-      },
-      //获取省市数据
-      getProCityData(pramas){
-          let _this=this;
-          let body = '';
-          if(pramas == 1){
-              body = {cityType:1}
-          }else if(pramas == 2){
-              body = {cityType:2,parentid:_this.filterForm.province}
-          }else{
-              body = {cityType:3,parentid:_this.filterForm.city}
-          }
-          _this.$http('/citis/cityList',{body},{},{},'post').then(function(res){
-             
-              if(res.data.code==0){
-                  
-                  if(pramas == 1){
-                      _this.provinceIdsList = res.data.response.cityList
-                  }else if(pramas == 2){
-                      _this.cityIdsList = res.data.response.cityList
-                  }else{
-                      _this.areaIdsList = res.data.response.cityList
-                  }
-                  
-              }else if(res.data.code==300){
-                  _this.$router.push('/login')
-              }else{
-                  _this.$message({
-                    message: res.data.message,
-                    type: 'warning'
-                  });
-              }
-              _this.is_loading_tab=false;
-          }).catch(function(err){
-              _this.is_loading_tab=false;
-              console.log(err)
-          })   
-      },
-      //改变省份
-      proChange(){
-          this.filterForm.city = ''
-          this.filterForm.area = ''
-          this.getProCityData(2)
-      },
-      //模糊搜索
-      remoteMethod(val){
-        let _this = this,
-        body = {buildingName: val};
-       
-        this.$http('/backstageBuilding/getBuildingNameList', {body}, {}, {}, 'post').then(function (res) {
-          if (res.data.code == 0) {
-            _this.buidingList = res.data.response;
-          } else if (res.data.code == 300) {
-            _this.$router.push('/login')
-          } else {
-            message(_this,res.data.message,'warning')
-          }
-        }).catch(function (err) {
-          console.log(err)
-        })
-      },
-      //搜索
-      querySearchAsync(queryString,cb){
-        let buidingList = this.buidingList;
-        var results = queryString ? buidingList.filter(this.createStateFilter(queryString)) : buidingList;
-        cb(results)
-      },
-      createStateFilter(queryString) {
-        return (state) => {
-          return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) >= 0);
-        };
-      },
-      handleSelect(str){
-        console.log(str)
       },
       //触发搜索
       onSearchSubmit(){
@@ -271,14 +170,14 @@ export default {
         if(this.currentPage != 1){
           this.currentPage = 1;
         }else{
-          this.getdata()
+          this.getData()
         }
       },
       //改变页码
       currentChange(page){
         this.currentPage = page;
         this.filterForm.pageNum = page-1;
-        this.getdata()
+        this.getData()
       },
       //刷新方法
       refresh(){
@@ -288,15 +187,14 @@ export default {
       handleEdit(index, row ,type) {
         if(type == 1){
           this.$router.push({
-            path:'/index/detailbulletinorder',
+            path:'/subscribe/detailbulletinorder',
             query:{buildingId:row.buildingId}
           })
         }
       },
     },
     mounted(){
-      this.$store.dispatch('mainLoadingAction',true);
-      this.$store.dispatch('defaultIndexAction','/index/bulletinorder');
+      this.$store.dispatch('defaultIndexAction','/subscribe/bulletinorder');
     }
   }
 </script>

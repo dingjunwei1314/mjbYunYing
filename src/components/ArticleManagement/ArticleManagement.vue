@@ -1,96 +1,104 @@
 <template>
     <div class="posts">
-        <Subnav :subSrc="subSrc" :secondLevel="secondLevel" :threeLevel="threeLevel" @refresh="refresh"></Subnav>
+        <Subnav2 :navList="navList" @refresh="refresh"></Subnav2>
         <div style="padding:20px;font-size:12px" class="postsTop_wap">
             <div class="postsSeek">
                 <div>
-                    <div class="bao">
-                        <span>文章名</span>
-                        <el-input size="small" v-model="filterForm.title" style="width:140px" class="postsInputSeek"></el-input>
-                        <span style="margin-left:10px">分类：</span>
-                        <el-select size="small" v-model="filterForm.newsTypeId" :clearable="true" placeholder="分类"  style="width:120px;">
-                            <el-option
-                            v-for="item in classOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value" >
-                            </el-option>
-                        </el-select>
-                        <span style="margin-left:10px">发布人：</span>
-                        <el-select size="small" v-model="filterForm.backstageUserId" :clearable="true" placeholder="分类"  style="width:120px;">
-                            <el-option
-                            v-for="(item,index) in backstageUserIdList"
-                            :key="index"
-                            :label="item"
-                            :value="index" >
-                            </el-option>
-                        </el-select> 
-                        <span style="margin-left:10px">区域：</span>
-                        <el-select size="small" @change="proChange" v-model="filterForm.provinceIds" :clearable="true" placeholder="省"  style="width:120px;">
-                            <el-option
-                            v-for="item in provinceIdsList"
-                            :key="item.cityId"
-                            :label="item.cityName"
-                            :value="item.cityId" >
-                            </el-option>
-                        </el-select> 
-                        <el-select size="small" v-model="filterForm.cityIds" :clearable="true" placeholder="市"  style="width:120px;">
-                            <el-option
-                            v-for="item in cityIdsList"
-                            :key="item.cityId"
-                            :label="item.cityName"
-                            :value="item.cityId" >
-                            </el-option>
-                        </el-select> 
-                    </div>
-                    <div class="bao">
-                      
-                        <span class="demonstration">发布时间：</span>
-                        <el-date-picker
-                          size="small"
-                          :clearable="true"
-                          v-model="filterForm.releaseTimeMin"
-                          align="right"
-                          type="datetime"
-                          @change="timePreChange"
-                          placeholder="选择日期"
-                          :picker-options="pickerOptions1">
-                        </el-date-picker>
+                    <el-form :inline="true" :model="filterForm" class="demo-form-inline">
+                        <el-form-item label="文章名">
+                            <el-input size="small" v-model="filterForm.title" style="width:140px" class="postsInputSeek"></el-input>
+                        </el-form-item>
+                        <el-form-item label="分类">
+                            <el-select size="small" v-model="filterForm.newsTypeId" :clearable="true" placeholder="分类"  style="width:120px;">
+                                <el-option
+                                v-for="item in classOptions"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value" >
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="发布人">
+                            <el-select size="small" v-model="filterForm.backstageUserId" :clearable="true" placeholder="分类"  style="width:120px;">
+                                <el-option
+                                v-for="(item,index) in backstageUserIdList"
+                                :key="index"
+                                :label="item.value"
+                                :value="item.key" >
+                                </el-option>
+                            </el-select> 
+                        </el-form-item>
+                        <el-form-item label="区域">
+                            <el-select size="small" @change="proChange" v-model="filterForm.provinceIds" :clearable="true" placeholder="省"  style="width:120px;">
+                                <el-option
+                                v-for="item in provinceIdsList"
+                                :key="item.cityId"
+                                :label="item.cityName"
+                                :value="item.cityId" >
+                                </el-option>
+                            </el-select>
+                            <el-select size="small" v-model="filterForm.cityIds" :clearable="true" placeholder="市"  style="width:120px;">
+                                <el-option
+                                v-for="item in cityIdsList"
+                                :key="item.cityId"
+                                :label="item.cityName"
+                                :value="item.cityId" >
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                         
+                        <el-form-item label="发布时间">
+                            <el-date-picker
+                              size="small"
+                              :clearable="true"
+                              v-model="filterForm.releaseTimeMin"
+                              align="right"
+                              type="datetime"
+                              @change="timePreChange"
+                              placeholder="选择日期"
+                              :picker-options="pickerOptions1">
+                            </el-date-picker>
 
-                        <span class="demonstration">至</span>
+                            <span class="demonstration">至</span>
 
-                        <el-date-picker
-                          size="small"
-                          :clearable="true"
-                          v-model="filterForm.releaseTimeMax"
-                          align="right"
-                          type="datetime"
-                          @change="timeNextChange"
-                          placeholder="选择日期" 
-                          :picker-options="pickerOptions1">
-                        </el-date-picker>
-                        <span style="margin-left:10px">头条：</span>
-                        <el-select size="small" v-model="filterForm.isHeadline" :clearable="true" placeholder="头条" style="width:100px;">
-                            <el-option label="是"  value="1"></el-option>
-                            <el-option label="否"  value="0"></el-option>
-                        </el-select>
-                        <span style="margin-left:10px">推荐位置：</span>
-                        <el-select size="small" v-model="filterForm.newsLocation" :clearable="true" placeholder="推荐位置" style="width:150px;">
-                            <el-option label="不推荐"  value="0"></el-option>
-                            <el-option label="推荐至banner位" value="2"></el-option>
-                            <el-option label="推荐至展示位" value="3"></el-option>  
-                            <el-option label="推荐至资讯列表" value="4"></el-option>
-                        </el-select>
-                        <span style="margin-left:10px">置顶：</span>
-                        <el-select size="small" v-model="filterForm.isTop" :clearable="true" placeholder="置顶"  style="width:80px;">
-                            <el-option label="是" value="1"></el-option>
-                            <el-option label="否" value="0"></el-option>
-                        </el-select>
-                    </div>
+                            <el-date-picker
+                              size="small"
+                              :clearable="true"
+                              v-model="filterForm.releaseTimeMax"
+                              align="right"
+                              type="datetime"
+                              @change="timeNextChange"
+                              placeholder="选择日期" 
+                              :picker-options="pickerOptions1">
+                            </el-date-picker>
+                        </el-form-item>
+                        
+                        <el-form-item label="头条">
+                            <el-select size="small" v-model="filterForm.isHeadline" :clearable="true" placeholder="头条" style="width:100px;">
+                                <el-option label="是"  value="1"></el-option>
+                                <el-option label="否"  value="0"></el-option>
+                            </el-select>
+                        </el-form-item>
+                       
+                        <el-form-item label="推荐位置">
+                            <el-select size="small" v-model="filterForm.newsLocation" :clearable="true" placeholder="推荐位置" style="width:150px;">
+                                <el-option label="不推荐"  value="0"></el-option>
+                                <el-option label="推荐至banner位" value="2"></el-option>
+                                <el-option label="推荐至展示位" value="3"></el-option>  
+                                <el-option label="推荐至资讯列表" value="4"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="置顶">
+                            <el-select size="small" v-model="filterForm.isTop" :clearable="true" placeholder="置顶"  style="width:80px;">
+                                <el-option label="是" value="1"></el-option>
+                                <el-option label="否" value="0"></el-option>
+                            </el-select>
+                        </el-form-item> 
+                    </el-form>
                 </div>
                 <div class="inquireBtn">
                     <el-button type="primary" @click="search">查询</el-button>
-                    <router-link :to="{path:'/index/newarticle',query:{type:'add'}}">
+                    <router-link :to="{path:'/article/newarticle',query:{type:'add'}}">
                       <el-button type="primary">发布文章</el-button>
                     </router-link>
                 </div>
@@ -138,8 +146,8 @@
                 label="发布城市"
                 show-overflow-tooltip>
                     <template scope="scope">
-                        <p>{{scope.row.provinceList}}</p>
-                        <p>{{scope.row.cityList}}</p>
+                        <span>{{scope.row.provinceList}}</span>
+                        <span>{{scope.row.cityList}}</span>
                     </template>
                 </el-table-column>
 
@@ -229,17 +237,19 @@
 </template>
 
 <script>
-    import Subnav from '../Subnav/Subnav.vue'
+    import Subnav2 from '../Subnav2/Subnav2.vue'
     export default {
         name:'Posts',
         components:{
-            Subnav
+            Subnav2
         },
         data(){
             return {
-                secondLevel:'文章管理',
-                threeLevel:'文章管理',
-                subSrc:'/index/articlemanagement',
+                navList:[
+                    {path:this.$route.fullPath,name:'首页'},
+                    {path:this.$route.fullPath,name:'文章管理'},
+                    {path:this.$route.fullPath,name:'列表'},
+                ],
                 currentPage:1,
                 is_loading_tab:false,
                 multipleSelection: [],
@@ -373,7 +383,7 @@
                         }else{
                             _this.cityIdsList = res.data.response.cityList
                             if(_this.filterForm.provinceIds == ''){
-                                _this.cityIdsList = []
+                               _this.cityIdsList = []
                             }
                         }
                         
@@ -411,8 +421,6 @@
                     
                     if(res.data.code==0){
                         _this.backstageUserIdList = res.data.response
-                    }else if(res.data.code==300){
-                        _this.$router.push('/login')
                     }else{
                         _this.$message({
                             message: res.data.message,
@@ -480,12 +488,12 @@
             //编辑
             handleEdit(index,row){
                 let query={id:row.id,type:'edit'}
-                this.$router.push({path:'/index/newarticle',query})
+                this.$router.push({path:'/article/newarticle',query})
             },
             //查看详情
             handleSee(index,row){
                 let query={id:row.id}
-                this.$router.push({path:'/index/articledetail',query})
+                this.$router.push({path:'/article/articledetail',query})
             },
             //是否下线
             noLonger($index,row) {
@@ -601,7 +609,7 @@
         },
         mounted(){
             this.$store.dispatch('mainLoadingAction',true);
-            this.$store.dispatch('defaultIndexAction','/index/articlemanagement');
+            this.$store.dispatch('defaultIndexAction','/article/articlemanagement');
         }
     }
 </script>
@@ -654,8 +662,9 @@
           display: flex;
         }
         .postsSeekBtn{
-            border: 1px solid darkgray;margin:20px;
-            padding:10px;
+            /*border: 1px solid darkgray;*/
+            margin:20px;
+            /*padding:10px;*/
         }
         .blockPage{
           display:-webkit-box;
@@ -665,5 +674,10 @@
           justify-content: space-between;
             padding: 20px;
         }
-
+        
+</style>
+<style type="text/css">
+    .posts .el-table .el-tooltip.cell{
+        white-space: normal;
+    }
 </style>

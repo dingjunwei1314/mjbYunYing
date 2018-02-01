@@ -35,8 +35,7 @@
 		</el-row>
 		<el-row style="margin-top:20px">
 			<div class="tabletopbar">
-		        <span>所有数据：共</span> <span style="color:#111">{{tableData.pageCount}}</span> <span>条</span>
-		        <span style="margin-left:20px">查询结果：共</span> 
+		        <span>查询结果：共</span> 
 		        <span style="color:#111">{{tableData.pageCount}}</span> <span>条</span>
 		    </div>
 		    <el-table
@@ -66,12 +65,12 @@
 		          min-width="100">
 		        </el-table-column>       
 		        <el-table-column
-		          prop="editTime"
+		          prop="submitTime"
 		          min-width="100"
 		          label="创建时间">  
 		        </el-table-column>
 		        <el-table-column
-		          prop="submitTime"
+		          prop="editTime"
 		          min-width="100"
 		          label="最近更新时间">
 		        </el-table-column>
@@ -102,7 +101,7 @@
 			<el-pagination
 				v-show="tableData.pageCount>0"
 				style="margin: 0 auto;text-align:center;margin-top:20px"
-				layout="prev, pager, next"
+				layout="prev, pager, next,jumper"
 				:page-size="10"
 				:currentPage="currentPage"
 				@current-change="currentChange"
@@ -160,7 +159,7 @@
 						<span>{{paParkDetail.pName}}</span>
 					</el-form-item>
 					<el-form-item label="楼栋全景图地址：">
-						<a :href="paParkDetail.httpUrl"  target="_blank">{{paParkDetail.httpUrl}}</a>
+						<a :href="paParkDetail.httpUrl" style="word-wrap:break-word" target="_blank">{{paParkDetail.httpUrl}}</a>
 					</el-form-item>
 					<el-form-item label="全景缩略图：">
 	                    <ImgPreview 
@@ -313,8 +312,6 @@
 		        this.$http('/buildingPanorama/queryListInfo',{body},{},{},'post').then(res => {
 		          if(res.data.code == 0){
 		            _this.tableData = res.data.response;
-		          }else if(res.data.code == 300){
-					_this.$router.push('/login')
 		          }else{
 		          	message(_this,'请求失败','warning')
 		          }
@@ -439,8 +436,6 @@
 			          	message(_this,'请求成功','success');
 			            _this.dialogFormVisible = false;
 			            _this.getData();
-			          }else if(res.data.code == 300){
-						_this.$router.push('/login');
 			          }else{
 			          	message(_this,'请求失败','warning');
 			          };
@@ -501,8 +496,6 @@
 	                        	}else{
 	                        		message(_this,'删除失败','warning');
 	                        	}
-	                        }else if(res.data.code==300){
-	                            _this.$router.push('/login');
 	                        }else{
 	                        	message(_this,'删除失败','warning');
 	                        }

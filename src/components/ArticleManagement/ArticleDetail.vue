@@ -1,6 +1,6 @@
 <template>
     <div class="newText">
-        <Subnav :subSrc= "subSrc" :secondLevel="secondLevel" :threeLevel="threeLevel" @refresh="refresh"></Subnav>
+        <Subnav2 :navList="navList" @refresh="refresh"></Subnav2>
         <div style="padding:20px;color:#777" class="newTextTop_wap">
             <el-form    label-width="200px" class="demo-ruleForm">
               <el-form-item label="标题：" required>
@@ -84,17 +84,19 @@
 </template>
 
 <script>
-    import Subnav from '../Subnav/Subnav.vue'
+    import Subnav2 from '../Subnav2/Subnav2.vue'
     export default {
         name:'Posts',
         components:{
-          Subnav,
+          Subnav2,
         },
         data() {
           return {
-            secondLevel:'文章管理',
-            threeLevel:'文章详情',
-            subSrc:'/index/articlemanagement',
+            navList:[
+                {path:'/article/articlemanagement',name:'首页'},
+                {path:'/article/articlemanagement',name:'文章管理'},
+                {path:this.$route.fullPath,name:'编辑'},
+            ],
             dialogVisible:false,
             dialogImageUrl:'',
             data:{
@@ -141,6 +143,14 @@
               if(res.data.code==0){
                     
                   _this.data = res.data.response;
+                  let reg = /(http:|https:|'')\/\//g;
+                  try{
+                    _this.data.content = _this.data.content.replace(reg,'https://images.weserv.nl/?url=');
+                  }catch(e){
+                    console.log(e)
+                  }
+                  
+                  
                  
                   if(_this.data.articleKeyword && _this.data.articleKeyword!==null){
                     _this.data.articleKeyword = _this.data.articleKeyword.split(',');
@@ -243,7 +253,7 @@
         },
         mounted(){
             this.$store.dispatch('mainLoadingAction',true);
-            this.$store.dispatch('defaultIndexAction','/index/articlemanagement');
+            this.$store.dispatch('defaultIndexAction','/article/articlemanagement');
         }
     }
 </script>

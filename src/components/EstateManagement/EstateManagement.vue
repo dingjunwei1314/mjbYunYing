@@ -12,13 +12,7 @@
               <el-input  size="small" v-model="filterForm.buildingId" style="width:80px" placeholder="id"></el-input>
             </el-form-item>
             <el-form-item label="楼盘名称">
-              <el-autocomplete
-                size="small"
-                v-model="filterForm.buildingName"
-                :fetch-suggestions="querySearchAsync"
-                placeholder="请输入关键词"
-                @select="handleSelect"
-              ></el-autocomplete>
+              <MjbBuildingSearch :_buildingName.sync="filterForm.buildingName"/>
             </el-form-item>
             <el-form-item label="开发商">
               <el-input size="small"  v-model="filterForm.developer" style="width:200px" placeholder="开发商"></el-input>
@@ -31,36 +25,16 @@
                 v-model="editTime"
                 type="daterange"
                 align="right"
-                placeholder="选择日期范围"
-                :picker-options="pickerOptions">
+                placeholder="选择日期范围">
               </el-date-picker>
             </el-form-item> 
             
             <el-form-item label="区域：">
-              <el-select size="small" @change="proChange" v-model="filterForm.province" :clearable="true" placeholder="省"  style="width:120px;">
-                  <el-option
-                  v-for="item in provinceIdsList"
-                  :key="item.cityId"
-                  :label="item.cityName"
-                  :value="item.cityId" >
-                  </el-option>
-              </el-select> 
-              <el-select size="small" @change="cityChange" v-model="filterForm.city" :clearable="true" placeholder="市"  style="width:120px;">
-                  <el-option
-                  v-for="item in cityIdsList"
-                  :key="item.cityId"
-                  :label="item.cityName"
-                  :value="item.cityId" >
-                  </el-option>
-              </el-select> 
-              <el-select size="small" v-model="filterForm.area" :clearable="true" placeholder="区"  style="width:120px;">
-                  <el-option
-                  v-for="item in areaIdsList"
-                  :key="item.cityId"
-                  :label="item.cityName"
-                  :value="item.cityId" >
-                  </el-option>
-              </el-select> 
+              <MjbArea 
+                :isShowArea="true"
+                :_province.sync="filterForm.province" 
+                :_city.sync="filterForm.city" 
+                :_area.sync="filterForm.area"/>
             </el-form-item>
             <el-form-item label="关注">
               <el-select size="small" v-model="filterForm.ICareU" style="width:150px" placeholder="关注">
@@ -69,20 +43,6 @@
                 <el-option label="否" value="0"></el-option>
               </el-select>
             </el-form-item>
-            <!-- <el-form-item label="合作买房">
-              <el-select v-model="filterForm.housePurchaseType" style="width:150px" placeholder="合作买房">
-                <el-option label="不限" value="2"></el-option>
-                <el-option label="是" value="1"></el-option>
-                <el-option label="否" value="0"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="租金返还">
-              <el-select v-model="filterForm.rentType" style="width:150px" placeholder="租金返还">
-                <el-option label="不限" value="2"></el-option>
-                <el-option label="是" value="1"></el-option>
-                <el-option label="否" value="0"></el-option>
-              </el-select>
-            </el-form-item> -->
             <el-form-item label="状态">
               <el-select size="small" v-model="filterForm.onlineStatus" style="width:150px" placeholder="状态">
                 <el-option label="不限" value="2"></el-option>
@@ -105,7 +65,7 @@
         <span style="color:#111">{{tableData.rowCount}}</span> <span>条</span>
       </div>
       <el-table
-        v-loading="is_loading_tab"
+        v-loading="tabLoading"
         ref="multipleTable"
         :data="tableData.buildingList"
         border
@@ -114,7 +74,7 @@
         <el-table-column
           prop="buildingId"
           label="ID"
-          width="60">
+          width="100">
         </el-table-column>
         <el-table-column
           prop="buildingName"
@@ -202,57 +162,26 @@
 
 <script>
 
-import Subnav from '../Subnav/Subnav'
-import message from '../../common/message'
-
+import Subnav from '../Subnav/Subnav';
+import message from '../../common/message';
+import MjbArea from '../Common/MjbArea/MjbArea';
+import MjbBuildingSearch from '../Common/MjbBuildingSearch/MjbBuildingSearch';
 export default {
     name:'managers',
     components:{
-      Subnav
+      Subnav,
+      MjbArea,
+      MjbBuildingSearch
     },
     data() {
       return {
         currentPage:1,
         secondLevel:'楼盘',
         threeLevel:'楼盘管理',
-        buidingList:[],
-        provinceIdsList:[],
-        cityIdsList:[],
-        areaIdsList:[],
         editTime:'',
-        pickerOptions:{
-          shortcuts: [{
-            text: '最近一周',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: '最近一个月',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: '最近三个月',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              picker.$emit('pick', [start, end]);
-            }
-          }]
-        },
         filterForm: {
           pageIndex:0,
           pageSize:10,
-          province:'',
-          city:'',
-          area:'',
           buildingId:'',
           buildingName:'',
           developer:'',
@@ -270,7 +199,7 @@ export default {
           rowCount:0,
           buildingList:[]
         },
-        is_loading_tab:false,
+        tabLoading:false,
         multipleSelection: [],
       };
     },
@@ -281,109 +210,24 @@ export default {
                                         
     },
     created(){
-      this.getProCityData(1)
-      this.getdata()
-      this.remoteMethod('')
+      this.getData()
     },
     methods: {
       //请求数据方法
-      getdata(){
+      getData(){
         let _this = this;
-        _this.is_loading_tab = true;
+        _this.tabLoading = true;
         this.$http('/backstageBuilding/getBuildingList',{},{body:_this.filterForm},{},'get').then(function(res){
-          _this.is_loading_tab = false;
+          _this.tabLoading = false;
           _this.$store.dispatch('mainLoadingAction',false);
           if(res.data.code == 0){
             _this.tableData = res.data.response;
-          }else if(res.data.code == 300){
-            _this.$router.push('/login')
-          }else{
-            message(_this,res.data.message,'warning')
           }
         }).catch(function(err){
           console.log(err)
-          _this.is_loading_tab=false;
+          _this.tabLoading=false;
           _this.$store.dispatch('mainLoadingAction',false);
         })
-      },
-      //获取省市数据
-      getProCityData(pramas){
-          let _this=this;
-          let body = '';
-          if(pramas == 1){
-              body = {cityType:1}
-          }else if(pramas == 2){
-              body = {cityType:2,parentid:_this.filterForm.province}
-          }else{
-              body = {cityType:3,parentid:_this.filterForm.city}
-          }
-          _this.$http('/citis/cityList',{body},{},{},'post').then(function(res){
-             
-              if(res.data.code==0){
-                  
-                  if(pramas == 1){
-                      _this.provinceIdsList = res.data.response.cityList
-                  }else if(pramas == 2){
-                      _this.cityIdsList = res.data.response.cityList
-                  }else{
-                      _this.areaIdsList = res.data.response.cityList
-                  }
-                  
-              }else if(res.data.code==300){
-                  _this.$router.push('/login')
-              }else{
-                  _this.$message({
-                    message: res.data.message,
-                    type: 'warning'
-                  });
-              }
-              _this.is_loading_tab=false;
-          }).catch(function(err){
-              _this.is_loading_tab=false;
-              console.log(err)
-          })   
-      },
-      //改变省份
-      proChange(){
-          this.filterForm.city = ''
-          this.filterForm.area = ''
-          this.getProCityData(2)
-      },
-      //改变市
-      cityChange(){
-          this.filterForm.area = ''
-          this.getProCityData(3)
-      },
-      //模糊搜索
-      remoteMethod(val){
-        let _this = this,
-        body = {buildingName: val};
-       
-        this.$http('/backstageBuilding/getBuildingNameList', {body}, {}, {}, 'post').then(function (res) {
-          if (res.data.code == 0) {
-            _this.buidingList = res.data.response;
-          } else if (res.data.code == 300) {
-            _this.$router.push('/login')
-          } else {
-            message(_this,res.data.message,'warning')
-          }
-        }).catch(function (err) {
-          console.log(err)
-        })
-      },
-      //搜索
-      querySearchAsync(queryString,cb){
-        let buidingList = this.buidingList;
-        var results = queryString ? buidingList.filter(this.createStateFilter(queryString)) : buidingList;
-        cb(results)
-      },
-      createStateFilter(queryString) {
-        return (state) => {
-          return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) >= 0);
-        };
-      },
-      handleSelect(str){
-        console.log(str)
       },
       //触发搜索
       onSearchSubmit(){
@@ -391,7 +235,7 @@ export default {
         if(this.currentPage != 1){
           this.currentPage = 1;
         }else{
-          this.getdata()
+          this.getData()
         }
       },
       //改变时间格式
@@ -403,7 +247,7 @@ export default {
       currentChange(page){
         this.currentPage = page;
         this.filterForm.pageIndex = page-1;
-        this.getdata()
+        this.getData()
       },
       //刷新方法
       refresh(){
@@ -423,24 +267,24 @@ export default {
         if(this.currentPage!=1){
           this.currentPage=1;
         }else{
-          this.getdata()
+          this.getData()
         }     
       },
       //添加新的数据
       addNew(){
-        this.$router.push({path:'/index/estateadd',query:{type:'add'}})
+        this.$router.push({path:'/estate/estateadd',query:{type:'add'}})
       },
       //操作
       handleEdit(index, row ,type) {
         let _this =this;
         if(type == 1){
           this.$router.push({
-            path:'/index/estatedetail',
+            path:'/estate/estatedetail',
             query:{buildingId:row.buildingId}
           })
         }else if(type==2){
           this.$router.push({
-            path:'/index/estateedit',
+            path:'/estate/estateedit',
             query:{buildingId:row.buildingId,type:'edit'}
           })
         }else if(type == 0){
@@ -468,14 +312,10 @@ export default {
               if (res.data.code == 0) {
                 if(res.data.response.status == 1){
                   message(_this,text2,'success')
-                  _this.getdata()
+                  _this.getData()
                 }else{
                   message(_this,text3,'warning')
                 }
-              } else if (res.data.code == 300) {
-                _this.$router.push('/login')
-              } else {
-                message(_this,res.data.message,'warning')
               }
             }).catch(function (err) {
               console.log(err)
@@ -493,7 +333,7 @@ export default {
     },
     mounted(){
       this.$store.dispatch('mainLoadingAction',true);
-      this.$store.dispatch('defaultIndexAction','/index/estatemanagement');
+      this.$store.dispatch('defaultIndexAction','/estate/estatemanagement');
     }
   }
 </script>

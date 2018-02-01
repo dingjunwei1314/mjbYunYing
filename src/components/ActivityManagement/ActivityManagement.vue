@@ -443,7 +443,7 @@ export default {
     mounted(){
       
       this.$store.dispatch('mainLoadingAction',true);
-      this.$store.dispatch('defaultIndexAction','/index/activitymanagement');
+      this.$store.dispatch('defaultIndexAction','/activity/activitymanagement');
       var that=this
       setTimeout(function(){
         that.$store.dispatch('mainLoadingAction',false);

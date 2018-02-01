@@ -42,6 +42,7 @@
 				            </el-button>
 				            <el-button
 				              size="small"
+				              v-if ="$route.query.type=='edit'"
 				              @click="handle(scope.row,2)">
 				              编辑
 				            </el-button>
@@ -86,6 +87,7 @@
 				            </el-button>
 				            <el-button
 				              size="small"
+				              v-if ="$route.query.type=='edit'"
 				              @click="handle(scope.row,4)">
 				              编辑
 				            </el-button>
@@ -111,9 +113,7 @@
 			let name = this.$route.query.buildingName;
 			return{
 				navList:[
-					{path:'/index/estateprocessmonitoringmanagement',name:'首页'},
-					{path:this.$route.fullPath.replace(/estatebanreportlist/,'estateprocessmonitoringdetail'),name},
-					{path:this.$route.fullPath,name:'楼栋报告'}
+					
 				],
 				rRootNameList:[],
         		activeName:'',
@@ -125,10 +125,30 @@
 			}
 		},
 		created(){
+			this.initNav();
 			this.getReportData('');
+			let _activeName = ''
+			if(this.$route.query.activeName){
+			  _activeName = this.$route.query.activeName
+			}
+			setTimeout(() => {
+				this.getReportData(_activeName);
+			},300)
       		this.$store.dispatch('defaultIndexAction','/index/estateprocessmonitoringmanagement');
 		},
 		methods:{
+			//初始化导航
+			initNav(){
+				let q = this.$route.query,
+	      		buildingName = q.buildingName,
+	      		fullPath = this.$route.fullPath,
+	      		path1 = '/index/estateprocessmonitoringdetail?type='+q.type+'&buildingId='+q.buildingId+'&buildingName='+buildingName;
+	      		this.navList = [
+					{path:'/index/estateprocessmonitoringmanagement',name:'首页'},
+					{path:path1,name:buildingName},
+					{path:fullPath,name:'楼栋报告'}
+	      		]
+			},
 			//获取评测报告数据
 			getReportData(rRootId){
 				let _this = this,
@@ -149,17 +169,14 @@
 					    _this.tableData[str] = {rOneNameList:[],questionReportInfo:[]};
 					  })
 				  	  _this.activeName = _this.rRootNameList[0].rRootId;
+				  	  if(_this.$route.query.activeName){
+			      	    _this.activeName = _this.$route.query.activeName;
+			      	  }
 				    }
 				    let rId = rRootId == ''? _this.rRootNameList[0].rRootId : rRootId;
 				    _this.tableData[rId].rOneNameList = res.data.response.rOneNameList;
 				    _this.getRectificationReportData(rRootId);
-				    console.log(_this.tableData)
-				  }else if(res.data.code == 300){
-					_this.$router.push('/login')
 				  }
-				}).catch(err => {
-				  _this.tabLoading = false;
-				  console.log(err)
 				})
 			},
 			//获取整改报告数据
@@ -167,7 +184,7 @@
 				let _this = this,
 				body = {
 					buildingId:this.$route.query.buildingId,
-					rType:1,
+					rType:2,
 					rRootId
 				};
 				this.tabLoading2 = true;
@@ -181,12 +198,7 @@
 					  _this.tableData[rId].questionReportInfo[index].rOneName = '问题点及未整改报告'
 				  	})
 
-				  }else if(res.data.code == 300){
-					_this.$router.push('/login')
 				  }
-				}).catch(err => {
-				  _this.tabLoading2 = false;
-				  console.log(err)
 				})
 			},
 			//tab切换
@@ -197,8 +209,40 @@
 					this.getReportData(rRootId);
 				}
 			},
-			handle(){
-				this.$router.push('/index/estateparkreportlistdetail')
+			handle(row,type){
+				let query = _.cloneDeep(this.$route.query),
+				path,
+				rRootName;
+				this.rRootNameList.forEach(item => {
+					if(item.rRootId == this.activeName){
+						rRootName = item.rRootName;
+					}
+				});
+				query.rOneName = row.rOneName;
+				query.rRootName = rRootName;
+				query.rOneId = row.rOneId;
+				query.activeName = this.activeName;
+				if(type == 2){
+					path='/index/estatebanreportlistdetail';
+					query.type = 'edit';
+				}else if(type == 4){
+					path='/index/estatebanreportlistdetailun';
+					query.type = 'edit';
+					query.rOneId = this.activeName;
+				}else if(type == 1){
+					path='/index/estatebanreportlistdetail';
+					query.type = 'view';
+				}else{
+					path='/index/estatebanreportlistdetailun';
+					query.rOneId = this.activeName;
+					query.type = 'view';
+				}
+				this.$router.push(
+					{
+						path,
+						query
+					}
+				)
 			},
 			//刷新
 			refresh(){

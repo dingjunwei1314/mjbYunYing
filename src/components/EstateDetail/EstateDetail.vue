@@ -650,9 +650,145 @@
             </el-tab-pane>
           </el-tabs>
         </el-tab-pane>
-        <el-tab-pane label="楼盘报告" name="fourth" style="padding:20px">
+        <el-tab-pane label="楼盘全景" name="fourth">
           <div>
-            <!-- <h5>当前楼盘：金地铂悦</h5> -->
+            <div v-show="showType == 1">
+                <el-table
+                  v-loading="tabLoading"
+                  :data="paData.buidingVRList"
+                  border
+                  tooltip-effect="dark"
+                  style="font-size:12px!important;text-align:center;margin-top:20px">
+                  <el-table-column
+                    prop="id"
+                    label="ID"
+                    min-width="100">
+                  </el-table-column>
+                  <el-table-column
+                    prop="airscapeUrl"
+                    label="鸟瞰图"
+                    min-width="80">
+                  </el-table-column>
+                  <el-table-column
+                    prop="sceneUrl"
+                    label="楼盘实景"
+                    min-width="100">
+                  </el-table-column>
+                  <el-table-column
+                    prop="sampleUrl"
+                    label="样板间"
+                    min-width="100">
+                  </el-table-column>
+                  <el-table-column
+                    prop="sandTableUrl"
+                    label="楼盘沙盘"
+                    min-width="100">
+                  </el-table-column>
+                  <el-table-column
+                    prop="perimetUrl"
+                    label="周边配套"
+                    min-width="100">
+                  </el-table-column>
+                  <el-table-column
+                    prop="createDate"
+                    label="创建时间"
+                    min-width="100">
+                  </el-table-column>
+                  <el-table-column
+                    prop="editTime"
+                    label="最近更新时间"
+                    min-width="100">
+                  </el-table-column>
+                  <el-table-column
+                    width="300"
+                    label="操作">
+                    <template scope="scope">
+                      <el-button
+                        size="small"
+                        @click="handle(scope.row,1)">
+                        查看
+                      </el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <el-pagination
+                    v-show="paData.rowCount>0"
+                    style="margin: 0 auto;text-align:center;margin-top:20px"
+                    layout="prev, pager, next"
+                    :page-size=10
+                    :currentPage="currentPage"
+                    @current-change="currentChange"
+                    :total="paData.rowCount">
+                  </el-pagination>
+              </div>
+              <div v-show="showType == 2">
+                <el-button type="text" @click="back">返回列表</el-button>
+                    <el-form 
+                      :model="handleForm" 
+                      label-width="100px" 
+                      class="demo-dynamic" 
+                      style="width:70%;margin:0 auto;margin-top:40px"> 
+                      
+                   
+                      <el-form-item label="全景缩略图" style="width:800px" required>
+                
+                        <ImgPreview 
+                          :backgroundPicUrl="preImgSrcList[0].preImgSrc"
+                          :isShowDelete="handleType != 'view'"
+                          @previewImg="previewImgPa(0)"
+                          @deleteImg="deleteImgPa(0)"
+                        />
+                      </el-form-item>
+
+                      <el-form-item label="鸟瞰图" :required="handleForm.vrType == 1">
+                        <a v-if="handleType=='view'" href="11" target="_blank">{{handleForm.airscapeUrl}}</a>
+                      </el-form-item>
+
+                      <el-form-item label="楼盘实景" :required="handleForm.vrType == 2">
+                        <a v-if="handleType=='view'" href="11" target="_blank">{{handleForm.sceneUrl}}</a>
+                      </el-form-item>
+
+                      <el-form-item label="样板间" :required="handleForm.vrType == 3">
+                        <a v-if="handleType=='view'" href="11" target="_blank">{{handleForm.sampleUrl}}</a>
+                      </el-form-item>
+
+                      <el-form-item label="楼盘沙盘" :required="handleForm.vrType == 4">
+                        <a v-if="handleType=='view'" href="11" target="_blank">{{handleForm.sandTableUrl}}</a>
+                      </el-form-item>
+
+                      <el-form-item label="周边配套" :required="handleForm.vrType == 5">
+                        <a v-if="handleType=='view'" href="11" target="_blank">{{handleForm.perimetUrl}}</a>
+                      </el-form-item>
+
+                      <el-form-item label="首张全景" required>
+                        <span v-if="handleType=='view' && handleForm.vrType==1">鸟瞰图</span>
+                        <span v-else-if="handleType=='view' && handleForm.vrType==2">楼盘实景</span>
+                        <span v-else-if="handleType=='view' && handleForm.vrType==3">样板间</span>
+                        <span v-else-if="handleType=='view' && handleForm.vrType==4">楼盘沙盘</span>
+                        <span v-else-if="handleType=='view' && handleForm.vrType==5">周边配套</span>
+                      </el-form-item>  
+
+                      <el-form-item label="本期更新内容" v-if="handleType!='add'">
+                        <span v-if="handleForm.updateMessage">{{handleForm.updateMessage}}</span>
+                        <span v-else>--</span>
+                      </el-form-item>
+
+                      <el-form-item label="创建人" v-if="handleType!='add'">
+                        <span v-if="handleForm.createMan">{{handleForm.createMan}}&nbsp&nbsp&nbsp{{handleForm.createDate}}</span>
+                        <span v-else>--</span>
+
+                      </el-form-item>
+
+                      <el-form-item label="最近编辑" v-if="handleType!='add'">
+                        <span v-if="handleForm.editMan">{{handleForm.editMan}}&nbsp&nbsp&nbsp{{handleForm.editTime}}</span>
+                        <span v-else>--</span>
+                      </el-form-item>
+                    </el-form> 
+              </div>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="楼盘报告" name="five" style="padding:20px">
+          <div>
             <el-form :model="form"   label-width="100px" class="demo-dynamic">
               <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
               <div style="margin: 15px 0;"></div>
@@ -741,6 +877,16 @@
                 <span v-if="form.configList[2].configValue==='' || form.configList[2].configValue===null">--</span>
                 <span v-if="form.configList[2].configValue===1">是</span>
                 <span v-if="form.configList[2].configValue===0">否</span>
+              </el-form-item>
+              <el-form-item label="全流程监控楼盘：">
+                <span v-if="form.configList[3].configValue==='' || form.configList[3].configValue===null">--</span>
+                <span v-if="form.configList[3].configValue===1">启动</span>
+                <span v-if="form.configList[3].configValue===0">停止</span>
+              </el-form-item>
+              <el-form-item label="加入关注：">
+                <span v-if="form.configList[4].configValue==='' || form.configList[4].configValue===null">--</span>
+                <span v-if="form.configList[4].configValue===1">启动</span>
+                <span v-if="form.configList[4].configValue===0">停止</span>
               </el-form-item>
             </el-form>         
         </el-tab-pane>
@@ -872,7 +1018,6 @@ export default {
             takeTime:'',
             imgUrl:''
           }
-
         },
         //效果图全部数据
         xgAllData:{
@@ -895,6 +1040,38 @@ export default {
           preImgSrcList:[],
         },
         
+        //楼盘全景数据
+        tabLoading:false,
+        currentPage:1,
+        handleType:'',
+        showType:1,
+        btnList:['paBtn0'],
+        preImgSrcList:[{preImgSrc:''}],
+        uploaderList:[{uploader:null}],
+        paForm:{
+          buidingId:'',
+          pageNum:0,
+          pageSize:10
+        },
+        handleForm:{
+          buidingId:'',
+          picUrl:'',
+          airscapeUrl:'',
+          sceneUrl:'',
+          sampleUrl:'',
+          sandTableUrl:'',
+          perimetUrl:'',
+          vrType:1,
+        },
+        paData:{
+          buidingVRList:[
+            
+          ],
+          rowCount:0,
+        },
+
+
+        //楼盘报告数据
         checkAll:false,
         isIndeterminate:false,
         typeList:[
@@ -925,7 +1102,6 @@ export default {
             name:'楼盘物业评测报告'
           },
         ],
-        //楼盘报告数据
         report_data:{
           currentPage:1,
           form:{
@@ -943,6 +1119,8 @@ export default {
             {configType:0,configValue:''},
             {configType:1,configValue:''},
             {configType:2,configValue:''},
+            {configType:3,configValue:''},
+            {configType:4,configValue:''},
           ]
         },
         
@@ -963,14 +1141,14 @@ export default {
      
     },
     created(){
-      
       this.getLabelsData(1)
       this.getLabelsData(2)
       this.getProData()
       this.getCityData('')
       this.getInfoData()
-      this.getreportdata('')
-      this.getsettingdata()
+      this.getPaData()
+      this.getReportData('')
+      this.getSettingdata()
       this.getHxData()
     },
     methods: {
@@ -1047,13 +1225,7 @@ export default {
             });
             _this.markers.push(marker)
 
-          }else if(res.data.code == 300){
-            _this.$router.push({
-              path:'/login'
-            })
           }
-        }).catch(function(err){
-          console.log(err)
         })
       },
       //获取附加信息
@@ -1066,8 +1238,6 @@ export default {
             _this.infoData = res.data.response;
             _this.infoData.historyBuilding = _this.infoData.historyBuilding.split(',')
           }
-        }).catch(function(err){
-          console.log(err)
         })
       },
 
@@ -1079,14 +1249,10 @@ export default {
           if(res.data.code==0){
             _this.provinceIdsList = res.data.response.cityList  
             _this.getbasicdata() 
-          }else if(res.data.code == 300){
-            _this.$router.push('/login')
           }else{
             message(_this,res.data.message,'warning')
           }
-        }).catch(function(err){
-          console.log(err)
-        })  
+        }) 
       },
       //获取市数据
       getCityData(province = ''){
@@ -1095,14 +1261,8 @@ export default {
         _this.$http('/citis/cityLists',{body},{},{},'post').then(function(res){
           if(res.data.code == 0){
             _this.cityIdsList = res.data.response.cityList 
-          }else if(res.data.code == 300){
-            _this.$router.push('/login')
-          }else{
-            message(_this,res.data.message,'warning')
           }
-        }).catch(function(err){
-          console.log(err)
-        })   
+        })  
       },
       
       //获取标签
@@ -1117,13 +1277,7 @@ export default {
               _this.hxAllData.houseLableList = res.data.response.lableList;
             }
             
-          } else if (res.data.code == 300) {
-            _this.$router.push('/login')
-          } else {
-            message(_this,res.data.message,'warning')
           }
-        }).catch(function (err) {
-          console.log(err)
         })
       },
 
@@ -1139,12 +1293,7 @@ export default {
         this.$http('/backstageBuilding/getBuildingHouseList',{},{body},{}).then(res => {
           if(res.data.code == 0){
             _this.hxAllData.hxTableData=res.data.response;
-          }else{
-            message(_this,res.data.message,'warning')
           }
-          _this.hxAllData.is_loading_hx_tab=false;
-        }).catch(err => {
-          console.log(err)
           _this.hxAllData.is_loading_hx_tab=false;
         })
       },
@@ -1179,16 +1328,12 @@ export default {
 
             _this.show_add_hx_form(false)
 
-          }else{
-            message(_this,res.data.message,'warning')
           }
-        }).catch(err => {
-          console.log(err)
         })
       },
       //户型详情-打开关闭
       show_add_hx_form(swit){
-        this.hxAllData.is_show_hx_main = swit
+          this.hxAllData.is_show_hx_main = swit
       },
 
 
@@ -1204,8 +1349,6 @@ export default {
             _this.sjAllData.sjTableData = res.data.response;
           }
           _this.sjAllData.is_loading_sj_tab = false;
-        }).catch(err => {
-          console.log(err)
         })
       },
       //实景-页码切换
@@ -1227,8 +1370,6 @@ export default {
           }else{
             message(_this,'获取失败','warning')
           }
-        }).catch(err => {
-          console.log(err)
         })
       },
 
@@ -1251,8 +1392,6 @@ export default {
           if(res.data.code == 0){
             _this.slAllData.preImgSrcList = res.data.response.imgList;
           }
-        }).catch(err => {
-          console.log(err)
         })
       },
 
@@ -1316,10 +1455,51 @@ export default {
         this.dialogVisible = true;
       },
       
+      //楼盘全景   
+      getPaData(){
+        let [_this,body] = [this,_.cloneDeep(this.paForm)];
+        body.buidingId = this.$route.query.buildingId;
+        _this.tabLoading = true;
+        this.$http('/backstageBuilding/getBuildVRList',{body},{},{},'post').then(res =>{ 
+          _this.tabLoading = false;
+          if(res.data.code == 0){
+            _this.paData = res.data.response;
+          }
+        })
+      },
+      //返回
+      back(){
+        this.showType = 1;
+      },
+      //预览上传图
+      previewImgPa(index){
+        this.dialogImgSrc = this.preImgSrcList[index].preImgSrc
+        this.dialogVisible = true;
+      },
+      //删除图片
+      deleteImgPa(index){
+        this.preImgSrcList[index].preImgSrc = '';
+        this.handleForm.picUrl = '';
+      },
+      //操作
+      handle(scope,type){
+        let _this = this;
+        if(type == 1){
+          this.handleType = 'view';
+          this.showType = 2;
+          this.handleForm = _.cloneDeep(scope);
+          this.preImgSrcList[0].preImgSrc = this.handleForm.picUrl;
+        }
+      },
+      //切换页码
+      currentChange(page){
+      this.form.pageIndex = page - 1;
+      }, 
+
 
 
       //获取楼盘报告请求
-      getreportdata(reportType = ''){
+      getReportData(reportType = ''){
         let _this = this,
         body = _.cloneDeep(this.report_data.form);
         body.buildingId = this.$route.query.buildingId;
@@ -1329,12 +1509,7 @@ export default {
           _this.is_loading_report_table=false;
           if(res.data.code == 0){
             _this.report_data.reportList = res.data.response.reportList;
-          }else{
-            message(_this,res.data.message,'warning')
           }
-        }).catch(function(err){
-          _this.is_loading_report_table=false;
-          console.log(err)
         })
       },
 
@@ -1342,7 +1517,7 @@ export default {
         this.report_data.form.reportType = this.checkAll ? ['0','1','2','3','4','5'] : [];
         this.isIndeterminate = false;
         let reportType = this.checkAll ? '-1' : ''
-        this.getreportdata(reportType)
+        this.getReportData(reportType)
       },
       //搜索
       formTypeChange(val){
@@ -1359,7 +1534,7 @@ export default {
         }else{
           reportType = _reportType.join(',')
         }
-        this.getreportdata(reportType)
+        this.getReportData(reportType)
       },
       //查看报告
       handleRepeat(scope,type){
@@ -1375,8 +1550,8 @@ export default {
               let url = res.data.response.reportUrl;
               newTab.location.href = url
             }else{
-          message(_this,res.data.message,'warning')
-          newTab.close()
+              message(_this,res.data.message,'warning')
+              newTab.close()
             }
           }).catch(err =>{
             console.log(err)
@@ -1389,7 +1564,7 @@ export default {
         this.report_data.form.pageIndex = page - 1
       }, 
       //获取楼盘设置请求
-      getsettingdata(){
+      getSettingdata(){
           let _this = this,
           body = {buildingId:this.$route.query.buildingId};
           this.$http('/backstageBuilding/getBuildingConfig',{},{body},{}).then(function(res){
@@ -1401,15 +1576,17 @@ export default {
                 }else if(item.configType == 1){
                   _this.form.configList[1].configValue = item.configValue
                 }else if(item.configType == 2){
-            _this.form.configList[2].configValue = item.configValue
+                  _this.form.configList[2].configValue = item.configValue
+                }else if(item.configType == 3){
+                  _this.form.configList[3].configValue = item.configValue
+                }else if(item.configType == 4){
+                  _this.form.configList[4].configValue = item.configValue
                 }
+
               })
             }
-          }).catch(function(err){
-            console.log(err)
           })
       },
-
       //初始化地图
       init_map(){
         let _this=this;
@@ -1429,25 +1606,12 @@ export default {
         });
       },
       refresh(){
-        this.$store.dispatch('mainLoadingAction',true);
-        this.getdata()
-        this.currentPage=1;
-        
-        var that=this
-        setTimeout(function(){
-          that.$store.dispatch('mainLoadingAction',false);
-        },300)        
+            
       }, 
-
     },
     mounted(){
       this.init_map()
-      this.$store.dispatch('mainLoadingAction',true);
-      this.$store.dispatch('defaultIndexAction','/index/estatemanagement');
-      var that=this
-      setTimeout(function(){
-        that.$store.dispatch('mainLoadingAction',false);
-      },300) 
+      this.$store.dispatch('defaultIndexAction','/estate/estatemanagement');
     }
   }
 </script>

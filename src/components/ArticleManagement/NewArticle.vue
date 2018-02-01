@@ -1,6 +1,6 @@
 <template>
     <div class="newText">
-        <Subnav :subSrc="subSrc" :secondLevel="secondLevel" :threeLevel="threeLevel" @refresh="refresh"></Subnav>
+        <Subnav2 :navList="navList" @refresh="refresh"></Subnav2>
         <div style="padding:20px" class="newTextTop_wap">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="200px" class="demo-ruleForm">
                 <el-form-item label="标题" prop="title" required>
@@ -129,8 +129,9 @@
 
 <script>
     import Vue from 'vue'
+    import message from '../../common/message'
     import VueQuillEditor from 'vue-quill-editor'
-    import Subnav from '../Subnav/Subnav.vue'
+    import Subnav2 from '../Subnav2/Subnav2.vue'
     import uploader from '../../common/uploader.js'
     import trim from '../../common/trim.js'
     import ImgUploader from '../Common/ImgUploader/ImgUploader'
@@ -138,7 +139,7 @@
     export default {
         name:'Posts',
         components:{
-            Subnav,
+            Subnav2,
             ImgUploader
         },
         data() {
@@ -176,9 +177,11 @@
                 dialogVisible:false,
                 qeUploader:null,
                 uploader:null,
-                secondLevel:'文章管理',
-                threeLevel:'新建文章',
-                subSrc:'/index/articlemanagement',
+                navList:[
+                    {path:'/article/articlemanagement',name:'首页'},
+                    {path:'/article/articlemanagement',name:'文章管理'},
+                    {path:this.$route.fullPath,name:'编辑'},
+                ],
                 provinceIdsList:[
                    
                 ],
@@ -250,10 +253,7 @@
           getdata(){
             let _this=this;
             if(_this.$route.query.id==''){
-              this.$message({
-                  type: 'warning',
-                  message: '参数错误'
-              });
+              message(this,'参数错误','warning')
               return;
             }
             this.$http('/news/queryNewsInfo',{body:{newsId:_this.$route.query.id}},{},{},'post').then(function(res){
@@ -261,6 +261,14 @@
                 if(res.data.code==0){
                     
                   _this.ruleForm = res.data.response;
+
+                  let reg = /(http:|https:|'')\/\//g;
+                  try{
+                    _this.ruleForm.content = _this.ruleForm.content.replace(reg,'https://images.weserv.nl/?url=');
+                  }catch(e){
+                    console.log(e);
+                  }
+                  
                  
                   
                   if(_this.ruleForm.provinceIds[0] == 0){
@@ -295,16 +303,19 @@
                     },300)
 
                   }
+                  setTimeout(() => {
+                    if(_this.ruleForm.cityIds.length == _this.cityIdsList.length){
+                      _this.checkAllCity = true;
+                    }
+                    if(_this.ruleForm.provinceIds.length == _this.provinceIdsList.length){
+                      _this.checkAllPro = true;
+                    }
+                  },1000)
+                  
+                  
 
                   _this.preImgSrc = _this.ruleForm.backgroundPicUrl;
                     
-                }else if(res.data.code==300){
-                    _this.$router.push('/login')
-                }else{
-                    _this.$message({
-                      message: res.data.message,
-                      type: 'warning'
-                    });
                 }
 
             }).catch(function(err){
@@ -334,23 +345,14 @@
                         }
                     }
                           
-                  }else if(res.data.code == 300){
-                      _this.$router.push('/login')
-                  }else{
-                      _this.$message({
-                        message: res.data.message,
-                        type: 'warning'
-                      });
                   }
-                  _this.is_loading_tab=false;
-              }).catch(function(err){
-                  _this.is_loading_tab=false;
-                  console.log(err)
-              })   
+              }) 
           },
           proAllChange(val){
             
             let _this = this;
+            this.checkAllCity = false;
+            this.ruleForm.cityIds = [];
             if(this.checkAllPro){
               this.ruleForm.provinceIds = []
               this.provinceIdsList.forEach((item) => {
@@ -412,24 +414,12 @@
                   return;
               }
               let body={newsId:this.ruleForm.newsId,title:this.ruleForm.title}
-              this.$http('/news/queryByTitle',{body},{},{},'post').then(function(res){
-                
-                if(res.data.code==1){
-                  _this.$message({
-                    message: '文章名字已存在',
-                    type: 'warning'
-                  });
-                }else if(res.data.code==300){
-                    _this.$router.push('/login')
+              this.$http('/news/queryByTitle',{body},{},{},'post').then(res => {
+                if(res.data.code == 1){
+                  message(_this,'文章名字已存在','warning')
                 }else{
-                    _this.$message({
-                      message: '检测通过',
-                      type: 'warning'
-                    });
+                  message(_this,'检测通过','success')
                 }
-
-              }).catch(function(err){
-                  console.log(err)
               })
           },
           //预览图片
@@ -472,45 +462,21 @@
                           _ruleForm.cityIds = _ruleForm.cityIds==''? '0':_ruleForm.cityIds
 
                           this.$http(url,{body:_ruleForm},{},{},'post').then(function(res){
-                   
                             if(res.data.code==0){
-
-                              _this.$router.push({path:'/index/articlemanagement'})
-                              _this.$message({
-                                  type: 'success',
-                                  message: res.data.message,
-                              });
-
-                            }else if(res.data.code==300){
-                              _this.$router.push('/login')
-                            }else{
-                              _this.$message({
-                                message: res.data.message,
-                                type: 'warning'
-                              });
+                              _this.$router.push({path:'/article/articlemanagement'});
+                              message(_this,'提交成功','success');
                             }
-                        }).catch(function(err){
-                            console.log(err)
                         })
-                      }).catch(() => {
-                          _this.$message({
-                              type: 'info',
-                              message: '已取消'
-                          });
-                      });
+                      }).catch(() => {});
                   } else {
-                      this.$message({
-                          type: 'warning',
-                          message: '有必填项未填写或者格式错误'
-                      });
-                      console.log('error submit!!');
+                      message(this,'有必填项未填写或者格式错误','warning')
                       return false;
                   }
               });
           },
           //取消
           resetForm() {
-            this.$router.push({path:'/index/articlemanagement'})
+            this.$router.push({path:'/article/articlemanagement'})
           },
           //富文本提交图片
           imgHandler(){
@@ -520,21 +486,12 @@
             this.qeUploader.start()
           },
           refresh(){
-            this.$store.dispatch('mainLoadingAction',true);
-            var that=this
-            setTimeout(function(){
-              that.$store.dispatch('mainLoadingAction',false);
-            },300)
+           
           },
         },
         mounted(){
+            this.$store.dispatch('defaultIndexAction','/article/articlemanagement');
             let _this=this;
-            this.$store.dispatch('mainLoadingAction',true);
-            this.$store.dispatch('defaultIndexAction','/index/articlemanagement');
-            var that=this
-            setTimeout(function(){
-                that.$store.dispatch('mainLoadingAction',false);
-            },300)
             
             uploader(function(src){
               _this.preImgSrc=src;

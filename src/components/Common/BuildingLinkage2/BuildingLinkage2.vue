@@ -138,6 +138,10 @@
 			},
 		},
 		created(){
+			if(this._buildingId != ''){
+				this.form.buildingId = this._buildingId
+				this.conditionChange('buildingNum')
+			}
 		},
 		methods:{
 			conditionChange(name){

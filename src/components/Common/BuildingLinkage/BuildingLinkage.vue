@@ -92,6 +92,9 @@
 			isDisabled:{
 				required:false,
 				default:false
+			},
+			_reload:{
+				default:false
 			}
 		},
 		data(){
@@ -111,11 +114,19 @@
 				houseTypeArray:[],
 			}
 		},
+		watch:{
+			'_reload':{
+				handler:function(val){
+					this.conditionChange();
+				}
+			},
+		},
 		created(){
-			this.conditionChange(name)
+			this.conditionChange()
 		},
 		methods:{
 			conditionChange(name){
+				
 				this.$emit('update:'+'_'+name,this.form[name]);
 				if(name === 'buildingNum'){
 					this.form.unitNum = '';
@@ -153,7 +164,14 @@
 				    _this.unitNumArray = response.unitNumArray;
 				    _this.floorArray = response.floorArray;
 				    _this.accountNumArray = response.accountNumArray;
-				    _this.houseTypeArray = response.houseTypeArray;
+				   
+					if(response.houseTypeArray){
+					  _this.houseTypeArray = response.houseTypeArray.filter(item => {
+							return item != null
+					  })
+					}
+				    
+
 				  }else if(res.data.code == 300){
 					_this.$router.push('/login')
 				  }

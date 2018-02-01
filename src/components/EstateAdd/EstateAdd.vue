@@ -853,13 +853,7 @@ export default {
         this.$http('/backstageBuilding/getBuildingLable', {}, {body}, {}, 'get').then(function (res) {
           if (res.data.code == 0) {
             _this.hxAllData.houseLableList = res.data.response.lableList;
-          } else if (res.data.code == 300) {
-            _this.$router.push('/login')
-          } else {
-            message(_this,res.data.message,'warning')
           }
-        }).catch(function (err) {
-          console.log(err)
         })
       },
       //户型获取户型数据请求
@@ -871,12 +865,7 @@ export default {
         this.$http('/backstageBuilding/getBuildingHouseList',{},{body},{}).then(function(res){
           if(res.data.code == 0){
             _this.hxAllData.hxtableData = res.data.response;
-          }else{
-            message(_this,res.data.message,'warning')
           }
-          _this.hxAllData.is_loading_hx_tab = false;
-        }).catch(function(err){
-          console.log(err)
           _this.hxAllData.is_loading_hx_tab = false;
         })
       },
@@ -894,11 +883,7 @@ export default {
             _this.hxAllData.addNewHouseType = res.data.response;
             _this.hxAllData.addNewHouseType.houseLable = _this.hxAllData.addNewHouseType.houseLable.split(',');
             _this.hxAllData.preImgSrcList[0].preImgSrc = res.data.response.houseImgUrl;
-          }else{
-            message(_this,res.data.message,'warning')
           }
-        }).catch(function(err){
-          console.log(err)
         })
       },
       //户型初始化上传插件对象
@@ -975,8 +960,8 @@ export default {
               }
             })
           }).catch(() => {
-            message(_this,'已取消删除','info')        
-          });
+            
+          })
         }
       },
       //户型确认修改添加户型图
@@ -1011,8 +996,8 @@ export default {
                 }
               })
             }).catch(() => {
-              message(_this,'已取消','info');       
-            });
+            
+            })
 
           } else {
             message(_this,'有必填项未填写','warning')
@@ -1035,9 +1020,6 @@ export default {
           if(res.data.code == 0){
             _this.sjAllData.sjtableData = res.data.response;
           }
-        }).catch(err => {
-          console.log(err)
-          _this.sjAllData.is_loading_sj_tab = false;
         })
       },
       //实景-获取实景图详情
@@ -1053,8 +1035,6 @@ export default {
             _this.sjAllData.is_show_sj_edit = true;
             _this.sjAllData._preImgSrcList[0].preImgSrc = _this.sjAllData.editNewsjType.imgUrl;
           }
-        }).catch(function(err){
-          console.log(err) 
         })
       },
       //实景-页码切换
@@ -1108,17 +1088,12 @@ export default {
                 if(res.data.response.status == 1){
                   message(_this,'删除成功','success')
                   _this.getsjdata()
-                }else{
-                  message(_this,'删除失败','success')
                 }
               }
-            }).catch(function(err){
-              console.log(err) 
             })
-            
           }).catch(() => {
-            message(_this,'已取消','info');       
-          });
+            
+          })
         }
       },
       //实景-确认更新添加实景图
@@ -1163,8 +1138,6 @@ export default {
             }else{
               message(_this,res.data.message,'warning')
             }
-          }).catch(err => {
-            console.log(err)
           })
 
         }).catch(() => {
@@ -1462,8 +1435,6 @@ export default {
               _this.slAllData.preImgSrcList[index].imgUrl = item.imgUrl;
             })
           }
-        }).catch(err => {
-          console.log(err)
         })
       },
       //缩略图-提交
@@ -1482,12 +1453,10 @@ export default {
             }else{
               message(_this,'提交失败','warning')
             }
-          }).catch(err => {
-            console.log(err)
           })
         }).catch(() => {
-          message(_this,'已取消','info');       
-        });
+            
+        })
       },
 
       //图-提交
@@ -1526,12 +1495,10 @@ export default {
             }else{
               message(_this,'提交失败','warning')
             }
-          }).catch(err => {
-            console.log(err)
           })
         }).catch(() => {
-          message(_this,'已取消','info');       
-        });
+            
+        })
       },
 
      
@@ -1561,7 +1528,7 @@ export default {
       this._initUploaderSj(0);
 
       this.$store.dispatch('mainLoadingAction',true);
-      this.$store.dispatch('defaultIndexAction','/index/estatemanagement');
+      this.$store.dispatch('defaultIndexAction','/estate/estatemanagement');
 
       var that=this
       setTimeout(function(){

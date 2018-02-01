@@ -1,48 +1,39 @@
 <template>
     <div class="accountAdmin">
-      <Subnav :secondLevel="secondLevel" :threeLevel="threeLevel" @refresh="refresh"></Subnav>
+      <Subnav2 :navList="navList" @refresh="refresh"></Subnav2>
       <div class="accountAdminTop">
-        <p>管理员管理</p>
-        <div class="accountAdminInquire">
-          <div class="accountAdminInquireInput">
-            <div>
-              <span>用户名</span>:
-                <el-input v-model="filterForm.user_name" placeholder="请输入内容"></el-input>
-            </div>
-            <div>
-              <span>真实姓名</span>:
-                <el-input v-model="filterForm.real_name" placeholder="请输入内容"></el-input>
-            </div>
-          </div>
-          <div class="accountAdminInquireDate">
-            <span class="demonstration">创建时间</span>
-            <el-date-picker
-              v-model="filterForm.register_begin_time"
-              align="right"
-              type="date"
-              placeholder="开始时间"
-              >
-            </el-date-picker>
-            <span class="demonstration">至</span>
-            <el-date-picker
-              v-model="filterForm.register_end_time"
-              align="right"
-              type="date"
-              placeholder="结束时间"
-              >
-            </el-date-picker>
-          </div>
-          <el-button type="primary" @click="search">查询</el-button>
-        </div>
+
+        <el-row style="border:1px solid #ccc;padding:20px 10px;margin-bottom: 20px">
+          <el-col :span="20">
+            <el-form :inline="true" style="" :model="filterForm" class="demo-form-inline">
+              <el-form-item label="用户名">
+                <el-input  size="small" v-model="filterForm.user_name" style="width:180px" placeholder="用户名"></el-input>
+              </el-form-item>
+              
+              <el-form-item label="创建时间">
+                <el-date-picker
+                  size="small"
+                  style="width:300px"
+                  @change="pickerChange"
+                  v-model="editTime"
+                  type="datetimerange"
+                  align="right"
+                  placeholder="选择日期范围"
+                  >
+                </el-date-picker>
+              </el-form-item> 
+            </el-form>
+          </el-col>
+          <el-col :span="4">
+            <el-button type="primary" @click="search">查询</el-button>
+            <el-button type="primary" @click="create">新建账户</el-button>
+          </el-col>
+        </el-row>
         <div class="accountAdminInquireTable">
-          <div class="accountAdminInquireNum">
-            <router-link to="/index/createnewaccount">
-                <el-button type="primary">新建账户</el-button>
-            </router-link>     
-          </div>
           <el-table
-            v-loading="is_loading_tab"
-            :data="tableData"
+            border
+            v-loading="tabLoading"
+            :data="tableData.list"
             style="width: 100%;font-size:12px!important">
             <el-table-column
               prop="id"
@@ -55,133 +46,167 @@
               width="180">
             </el-table-column>
             <el-table-column
-              prop="real_name"
-              label="真实姓名">
+              label="所在区域">
+              <template scope="scope">
+                <span>{{scope.row.provinceName}}{{scope.row.cityName}}</span>
+              </template>
             </el-table-column>
             <el-table-column
-              prop="created_time"
+              prop="departmentName"
+              label="所在部门">
+            </el-table-column>
+            <el-table-column
+              prop="create_time"
               label="创建时间">
             </el-table-column>
             <el-table-column
-              prop="role"
-              label="角色分配">
+              prop="editTime"
+              label="编辑时间">
             </el-table-column>
             <el-table-column
-              prop="ip"
-              label="登陆IP">
+              prop="roleName"
+              label="角色分配">
             </el-table-column>
             <el-table-column width="180px" label="操作">
               <template scope="scope">
-                <router-link :to="{path:'/index/createnewaccount',query:{type:'edit',id:scope.row.id}}">
                   <el-button
                     size="small"
-                    type="info">
-                    编辑
-                  </el-button>
-                </router-link>
-                <el-button
-                  size="small"
-                  type="danger"
-                  @click="handleDelete(scope.$index, scope.row)">
-                  删除
-                </el-button>
+                    type="danger"
+                    @click="handle(scope.$index, scope.row,1)">删除</el-button>
+                  <el-button
+                    size="small"
+                    @click="handle(scope.$index, scope.row,2)">修改</el-button>
               </template>
             </el-table-column>
           </el-table>
+          <el-pagination
+            v-show="tableData.pageCount>0"
+            style="margin: 0 auto;text-align:center;margin-top:20px"
+            layout="prev, pager, next,jumper"
+            :page-size="10"
+            :currentPage="currentPage"
+            @current-change="currentChange"
+            :total="tableData.pageCount">
+          </el-pagination>
         </div>
       </div>
     </div>
 </template>
-
 <script>
-  import Subnav from '../Subnav/Subnav.vue'
-
+  import Subnav2 from '../Subnav2/Subnav2.vue'
+  import message from '../../common/message';
     export default {
       name:'AccountAdmin',
       components:{
-        Subnav,
+        Subnav2,
       },
       data(){
           return{
-            secondLevel:'账户管理',
-            threeLevel:'账户管理',
+            navList:[
+              {path:this.$route.fullPath,name:'首页'},
+              {path:this.$route.fullPath,name:'账户管理'},
+              {path:this.$route.fullPath,name:'账户列表'}
+            ],
+            currentPage:1,
+            tabLoading:false,
+            editTime:'',
             filterForm:{
+              pageNum:0,
+              pageSize:10,
               user_name:'',
-              real_name:'',
-              register_begin_time:'',
-              register_end_time:''
+              startTime:'',
+              endTime:''
             },
-            is_loading_tab:false,
             tableData: []
           }
       },
       created(){
-        this.getdata()
+        this.getData()
       },
       methods:{
-        getdata(){
-          let _this=this;
-          _this.is_loading_tab=true;
-          this.$http('/accountlist',{},_this.filterForm).then(function(res){
-          console.log(res)
-          if(res.data.code==1000){
-              _this.tableData=res.data.data;
-          }
-          _this.is_loading_tab=false;
-          }).catch(function(err){
-              _this.is_loading_tab=false;
+        getData(){
+            let body = this.filterForm;
+            this.tabLoading = true;
+            this.$http('/backstageUser/queryListInfo',{body},{},{},'post').then(res => {
+              if(res.data.code == 0){
+                this.tableData = res.data.response;
+              }else{
+                message(this,'请求失败','warning');
+              }
+              this.tabLoading = false;
+            }).catch(function(err){
+              this.tabLoading = false;
               console.log(err)
+            })
+        },
+        //查询
+        search(){
+          this.filterForm.pageNum = 0;
+          this.getData();
+        },
+        //改变时间格式
+        pickerChange(val){
+          this.filterForm.startTime=val.slice(0,19);
+          this.filterForm.endTime=val.slice(22);
+        },
+        //页码改变
+        currentChange(page){
+          this.filterForm.pageNum = page-1;
+          this.getData();
+        },
+        //新增
+        create(){
+          this.$router.push({
+            path:'/account/createnewaccount'
           })
         },
-        search(){
-          this.getdata()
+        //删除 编辑
+        handle(index,row,type){
+          if(type==1){
+            this.$confirm('确认删除吗?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              let body = {
+                id:row.id
+              };
+              this.$http('/backstageUser/delInfo',{body},{},{},'post').then(res => {
+                if(res.data.code == 0){
+                  if(res.data.response.res == 1){
+                    this.getData();
+                    message(this,'删除成功','success');
+                  }else{
+                    message(this,'删除失败','warning');
+                  }
+                }
+              })
+            }).catch((err) => {
+              console.log(err)
+            });
+          }else{
+            this.$router.push({
+              path:'/account/createnewaccount',
+              query:{
+                type:'edit',
+                info:JSON.stringify(row)
+              }
+            })
+          }
         },
         refresh(){
-          this.$store.dispatch('mainLoadingAction',true);
-          this.getdata()
-          this.currentPage=1;
-          for(var i in this.filterForm){
-            this.filterForm[i]=''
-          }
-          var that=this
-          setTimeout(function(){
-            that.$store.dispatch('mainLoadingAction',false);
-          },300)
-        },
-        //是否删除
-        handleDelete(index,row){
-          this.$confirm('确认删除吗?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            this.getdata()
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
-            });
-          }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消'
-            });
-          });
-        }
+          this.getData()
+        },      
       },
       mounted(){
-        this.$store.dispatch('mainLoadingAction',true);
-        this.$store.dispatch('defaultIndexAction','/index/accountmanagement');
-        var that=this;
-        setTimeout(function(){
-          that.$store.dispatch('mainLoadingAction',false);
-        },300)
+        this.$store.dispatch('defaultIndexAction','/account/accountmanagement');
       }
     }
 </script>
 
 <style scoped>
     .accountAdminTop{
-      border: 1px solid darkgray;margin:20px;
+      margin:20px;
     }
     .accountAdminTop p{
       padding: 15px;
@@ -192,7 +217,7 @@
     display:-ms-flexbox;
     display: flex;
     justify-content: space-around;
-    padding: 15px;
+   
   }
   .accountAdminInquireInput{
     display:-webkit-box;
@@ -216,7 +241,7 @@
       line-height: 36px;
     }
   .accountAdminInquireTable{
-    padding: 15px;
+    /*padding: 15px;*/
   }
   .accountAdminInquireTable .accountAdminInquireNum{
     width: 100px;

@@ -1,6 +1,6 @@
 <template>
   <div class="debuor">
-    <Subnav :secondLevel="secondLevel" :threeLevel="threeLevel" @refresh="refresh"></Subnav>
+    <Subnav2 :navList="navList" @refresh="refresh"></Subnav2>
 
     <div style="padding:20px">
       
@@ -73,19 +73,22 @@
 
 <script>
 
-import Subnav from '../Subnav/Subnav'
+import Subnav2 from '../Subnav2/Subnav2'
 import message from '../../common/message'
 
 export default {
     name:'debuor',
     components:{
-      Subnav
+      Subnav2
     },
     data() {
       return {
+        navList:[
+          {path:'/subscribe/bulletinorder',name:'首页'},
+          {path:'/subscribe/bulletinorder',name:'预约管理'},
+          {path:this.$route.fullPath,name:'预约用户详情'}
+        ],
         currentPage:1,
-        secondLevel:'预约管理',
-        threeLevel:'预约用户详情',
         filterForm: {
           pageNum:0,
           pageSize:10,
@@ -116,15 +119,7 @@ export default {
           _this.$store.dispatch('mainLoadingAction',false);
           if(res.data.code == 0){
             _this.tableData = res.data.response;
-          }else if(res.data.code == 300){
-            _this.$router.push('/login')
-          }else{
-            message(_this,res.data.message,'warning')
           }
-        }).catch(function(err){
-          console.log(err)
-          _this.is_loading_tab=false;
-          _this.$store.dispatch('mainLoadingAction',false);
         })
       },
       //触发搜索
@@ -147,8 +142,7 @@ export default {
       },
     },
     mounted(){
-      this.$store.dispatch('mainLoadingAction',true);
-      this.$store.dispatch('defaultIndexAction','/index/bulletinorder');
+      this.$store.dispatch('defaultIndexAction','/subscribe/bulletinorder');
     }
   }
 </script>

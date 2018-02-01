@@ -1,460 +1,260 @@
 <template>
   <div class="createAdmin">
-    <Subnav :secondLevel="secondLevel" :threeLevel="threeLevel" @refresh="refresh"></Subnav>
+    <Subnav2 :navList="navList" @refresh="refresh"></Subnav2>
     <div class="createAdminTop">
-      <p>新建角色</p>
-      <div style="padding:0px 40px">
-        <div class="adminName">
-          <span>角色名称：</span><el-input v-model="updataForm.name" style="width:240px"></el-input>
-        </div>
-        <p>角色权限：</p>
-        <div class="adminJurisdiction">
-          <div class="houseAdmin">
-            <el-checkbox @change="estatemanagement_select_all" v-model="is_estatemanagement_select_all">
-              楼盘管理
+      <el-form ref="form" :model="form" label-width="120px" style="font-size: 12px">
+        <el-form-item label="角色名称：" required>
+          <el-input size="small" v-model="form.roleName" style="width:200px"></el-input>
+        </el-form-item>
+        <el-form-item label="角色权限：">
+          <el-row v-for="(item,index) in souList" :key="index">
+            <el-row style="background:#eee;padding-left: 10px">
+              <el-checkbox @change="selectItemAll(index)" v-model="form.itemCheckAll[index].isCheck">
+                {{item.name}}
+              </el-checkbox>
+            </el-row>
+            <el-row style="padding-left: 10px;margin: 10px 0px;">
+              <el-checkbox-group style="margin-left:0px" type="small" v-model="form.itemCheckList[index].checkList" @change="selectItem(index)">
+                <el-checkbox :label="item2.id" v-for="(item2,index2) in item.subList" :key="index" class="checkedAdmin">{{item2.name}}</el-checkbox>
+              </el-checkbox-group>
+            </el-row>
+          </el-row>
+
+          <el-row style="background:#eee;padding-left: 10px">
+            <el-checkbox @change="selectAll(form.selectAll)" v-model="form.selectAll">
+              全选
             </el-checkbox>
-          </div>
-          <div class="houseAdminText">
-            <el-checkbox-group v-model="updataForm.estatemanagement">
-              <el-checkbox label="1" class="checkedAdmin">新增楼盘</el-checkbox>
-              <el-checkbox label="2" class="checkedAdmin">楼盘管理</el-checkbox>
-              <el-checkbox label="3" class="checkedAdmin">楼盘详情查看</el-checkbox>
-              <el-checkbox label="4" class="checkedAdmin">楼盘详情查看,编辑</el-checkbox>
-              <el-checkbox label="5" class="checkedAdmin">楼盘排行榜管理</el-checkbox>
-              <el-checkbox label="6" class="checkedAdmin">楼盘排行榜查看</el-checkbox>
-              <el-checkbox label="7" class="checkedAdmin">楼盘排行榜查看,编辑</el-checkbox>
-              <el-checkbox label="8" class="checkedAdmin">用户期待楼盘管理</el-checkbox>
-            </el-checkbox-group>
-          </div>
-        </div>
-        <div class="adminJurisdiction">
-          <div class="houseAdmin">
-            <el-checkbox @change="ordermanagement_select_all" v-model="is_ordermanagement_select_all">
-              订单管理
-            </el-checkbox>
-          </div>
-          <div class="houseAdminText">
-          <el-checkbox-group v-model="updataForm.ordermanagement">
-            <el-checkbox label="1" class="checkedAdmin">合作买房</el-checkbox>
-          </el-checkbox-group>
-          </div>
-        </div>
-        <div class="adminJurisdiction">
-          <div class="houseAdmin">
-            <el-checkbox @change="articlemanagement_select_all" v-model="is_articlemanagement_select_all">
-              文章管理
-            </el-checkbox>
-          </div>
-          <div class="houseAdminText">
-            <el-checkbox-group v-model="updataForm.articlemanagement">
-              <el-checkbox label="1" class="checkedAdmin">文章管理</el-checkbox>
-              <el-checkbox label="2" class="checkedAdmin">文章查看</el-checkbox>
-              <el-checkbox label="3" class="checkedAdmin">文章查看,编辑</el-checkbox>
-            </el-checkbox-group>
-          </div>
-        </div>
-        <div class="adminJurisdiction">
-          <div class="houseAdmin">
-            <el-checkbox @change="activitymanagement_select_all" v-model="is_activitymanagement_select_all">活动管理</el-checkbox>
-          </div>
-          <div class="houseAdminText">
-            <el-checkbox-group v-model="updataForm.activitymanagement">
-              <el-checkbox label="1" class="checkedAdmin">活动管理</el-checkbox>
-              <el-checkbox label="2" class="checkedAdmin">添加管理</el-checkbox>
-            </el-checkbox-group>
-          </div>
-        </div>
-        <div class="adminJurisdiction">
-          <div class="houseAdmin">
-            <el-checkbox @change="consultmanagement_select_all" v-model="is_consultmanagement_select_all">咨询管理</el-checkbox>
-          </div>
-          <div class="houseAdminText">
-            <el-checkbox-group v-model="updataForm.consultmanagement">
-              <el-checkbox label="1" class="checkedAdmin">咨询管理</el-checkbox>
-              <el-checkbox label="2" class="checkedAdmin">咨询详情查看</el-checkbox>
-              <el-checkbox label="3" class="checkedAdmin">咨询详情查看,编辑</el-checkbox>
-            </el-checkbox-group>
-          </div>
-        </div>
-        <div class="adminJurisdiction">
-          <div class="houseAdmin">
-            <el-checkbox @change="usermanagement_select_all" v-model="is_usermanagement_select_all">用户管理</el-checkbox>
-          </div>
-          <div class="houseAdminText">
-            <el-checkbox-group v-model="updataForm.usermanagement">
-              <el-checkbox label="1" class="checkedAdmin">用户管理</el-checkbox>
-              <el-checkbox label="2" class="checkedAdmin">用户详情查看</el-checkbox>
-              <el-checkbox label="3" class="checkedAdmin">用户详情查看,编辑</el-checkbox>
-              <el-checkbox label="4" class="checkedAdmin">买房意向</el-checkbox>
-              <el-checkbox label="5" class="checkedAdmin">消息管理</el-checkbox>
-              <el-checkbox label="6" class="checkedAdmin">新建消息,删除消息</el-checkbox>
-            </el-checkbox-group>
-          </div>
-        </div>
-        <div class="adminJurisdiction">
-          <div class="houseAdmin">
-            <el-checkbox @change="accountmanagement_select_all" v-model="is_accountmanagement_select_all">账户管理</el-checkbox>
-          </div>
-          <div class="houseAdminText">
-            <el-checkbox-group v-model="updataForm.accountmanagement">
-              <el-checkbox label="1" class="checkedAdmin">账户管理</el-checkbox>
-            </el-checkbox-group>
-          </div>
-        </div>
-        <div class="houseAdmin">
-          <el-checkbox @change="select_all" v-model="is_select_all">全选</el-checkbox>
-        </div>
-        <div class="houseAdminEare">
-            <span>角色备注</span><span>:</span>
-            <el-input
-              type="textarea"
-              :rows="2"
-              placeholder="请输入内容"
-              v-model="updataForm.con">
-            </el-input>
-        </div>
-        <div class="houseAdminEareBtn">
-          <el-button @click="updata" type="primary">提交</el-button>
-          <el-button @click="give_up" type="danger">取消</el-button>
-        </div>
-      </div>
+          </el-row>
+        </el-form-item>
+
+        <el-form-item label="备注：">
+          <el-input size="small" v-model="form.roleDesc" type="textarea" style="width:600px"></el-input>
+        </el-form-item>
+
+        <el-form-item label="">
+          <el-button style="margin-left: 120px;" type="primary" @click="submitBtn">
+            提交
+          </el-button>
+          <el-button @click="back">
+            取消
+          </el-button>
+        </el-form-item>
+      </el-form>
     </div>
   </div>
 </template>
 
 <script>
-  import Subnav from '../Subnav/Subnav.vue'
-
+  import Subnav2 from '../Subnav2/Subnav2';
+  import message from '../../common/message';
   export default {
     name:'CreateAdmin',
     components:{
-      Subnav,
+      Subnav2,
     },
     data(){
       return{
-        secondLevel:'角色管理',
-        threeLevel:'新建角色',
-        is_estatemanagement_select_all:false,
-        is_ordermanagement_select_all:false,
-        is_articlemanagement_select_all:false,
-        is_activitymanagement_select_all:false,
-        is_consultmanagement_select_all:false,
-        is_usermanagement_select_all:false,
-        is_accountmanagement_select_all:false,
-        is_select_all:false,
-       
-        updataForm:{
-          name:'',
-          estatemanagement:[],
-          ordermanagement:[],
-          articlemanagement:[],
-          activitymanagement:[],
-          consultmanagement:[],
-          usermanagement:[],
-          accountmanagement:[],
-          con:''
-        }
+        navList:[
+          {path:'/account/rolemanagement',name:'首页'},
+          {path:'/account/rolemanagement',name:'账户管理'},
+          {path:this.$route.fullPath,name:''}
+        ],
+        
+        souList:[],
+        idsData:[],
+
+        form:{
+          roleName:'',
+          roleDesc:'',
+          itemCheckAll:[
+          
+          ],
+          itemCheckList:[
+             
+          ],
+          selectAll:false,
+        },
       }
     },
     watch:{
-      'updataForm.estatemanagement':{
-        handler(val){
-          console.log(val)
-          if(val.length==8){
-            this.is_estatemanagement_select_all=true
-          }else{
-            this.is_estatemanagement_select_all=false
-          }
-          if(this.updataForm.estatemanagement.length==8 && 
-            this.updataForm.ordermanagement.length==1 && 
-            this.updataForm.articlemanagement.length==3 && 
-            this.updataForm.activitymanagement.length==2 && 
-            this.updataForm.consultmanagement.length==3 && 
-            this.updataForm.usermanagement.length==6 && 
-            this.updataForm.accountmanagement.length==1 
-          ){
-            this.is_select_all=true
-          }else{
-            this.is_select_all=false
-          }
-        },
-        deep:true
-      },
-      'updataForm.ordermanagement':{
-        handler(val){
-          console.log(val)
-          if(val.length==1){
-            this.is_ordermanagement_select_all=true
-          }else{
-            this.is_ordermanagement_select_all=false
-          }
-          if(this.updataForm.estatemanagement.length==8 && 
-            this.updataForm.ordermanagement.length==1 && 
-            this.updataForm.articlemanagement.length==3 && 
-            this.updataForm.activitymanagement.length==2 && 
-            this.updataForm.consultmanagement.length==3 && 
-            this.updataForm.usermanagement.length==6 && 
-            this.updataForm.accountmanagement.length==1 
-          ){
-            this.is_select_all=true
-          }else{
-            this.is_select_all=false
-          }
-        },
-        deep:true
-      },
-      'updataForm.articlemanagement':{
-        handler(val){
-          console.log(val)
-          if(val.length==3){
-            this.is_articlemanagement_select_all=true
-          }else{
-            this.is_articlemanagement_select_all=false
-          }
-          if(this.updataForm.estatemanagement.length==8 && 
-            this.updataForm.ordermanagement.length==1 && 
-            this.updataForm.articlemanagement.length==3 && 
-            this.updataForm.activitymanagement.length==2 && 
-            this.updataForm.consultmanagement.length==3 && 
-            this.updataForm.usermanagement.length==6 && 
-            this.updataForm.accountmanagement.length==1 
-          ){
-            this.is_select_all=true
-          }else{
-            this.is_select_all=false
-          }
-        },
-        deep:true
-      },
-      'updataForm.activitymanagement':{
-        handler(val){
-          console.log(val)
-          if(val.length==2){
-            this.is_activitymanagement_select_all=true
-          }else{
-            this.is_activitymanagement_select_all=false
-          }
-          if(this.updataForm.estatemanagement.length==8 && 
-            this.updataForm.ordermanagement.length==1 && 
-            this.updataForm.articlemanagement.length==3 && 
-            this.updataForm.activitymanagement.length==2 && 
-            this.updataForm.consultmanagement.length==3 && 
-            this.updataForm.usermanagement.length==6 && 
-            this.updataForm.accountmanagement.length==1 
-          ){
-            this.is_select_all=true
-          }else{
-            this.is_select_all=false
-          }
-        },
-        deep:true
-      },
-      'updataForm.consultmanagement':{
-        handler(val){
-          console.log(val)
-          if(val.length==3){
-            this.is_consultmanagement_select_all=true
-          }else{
-            this.is_consultmanagement_select_all=false
-          }
-          if(this.updataForm.estatemanagement.length==8 && 
-            this.updataForm.ordermanagement.length==1 && 
-            this.updataForm.articlemanagement.length==3 && 
-            this.updataForm.activitymanagement.length==2 && 
-            this.updataForm.consultmanagement.length==3 && 
-            this.updataForm.usermanagement.length==6 && 
-            this.updataForm.accountmanagement.length==1 
-          ){
-            this.is_select_all=true
-          }else{
-            this.is_select_all=false
-          }
-        },
-        deep:true
-      },
-      'updataForm.usermanagement':{
-        handler(val){
-          console.log(val)
-          if(val.length==6){
-            this.is_usermanagement_select_all=true
-          }else{
-            this.is_usermanagement_select_all=false
-          }
-          if(this.updataForm.estatemanagement.length==8 && 
-            this.updataForm.ordermanagement.length==1 && 
-            this.updataForm.articlemanagement.length==3 && 
-            this.updataForm.activitymanagement.length==2 && 
-            this.updataForm.consultmanagement.length==3 && 
-            this.updataForm.usermanagement.length==6 && 
-            this.updataForm.accountmanagement.length==1 
-          ){
-            this.is_select_all=true
-          }else{
-            this.is_select_all=false
-          }
-        },
-        deep:true
-      },
-      'updataForm.accountmanagement':{
-        handler(val){
-          console.log(val)
-          if(val.length==1){
-            this.is_accountmanagement_select_all=true
-          }else{
-            this.is_accountmanagement_select_all=false
-          }
-          if(this.updataForm.estatemanagement.length==8 && 
-            this.updataForm.ordermanagement.length==1 && 
-            this.updataForm.articlemanagement.length==3 && 
-            this.updataForm.activitymanagement.length==2 && 
-            this.updataForm.consultmanagement.length==3 && 
-            this.updataForm.usermanagement.length==6 && 
-            this.updataForm.accountmanagement.length==1 
-          ){
-            this.is_select_all=true
-          }else{
-            this.is_select_all=false
-          }
-        },
-        deep:true
-      }
+      
     },
     created(){
-      if(this.$route.query.type=='edit'){
-        this.getdata();
+      this.getSouData();
+      if(this.$route.query.type == 'edit'){
+        this.navList[2].name = '修改角色'
+      }else{
+        this.navList[2].name = '创建角色'
       }
     },
-    methods:{  
-      getdata(){
-        let _this=this;
-        this.$http('/roledetail',{},{id:_this.$route.query.id}).then(function(res){
-          console.log(res)
-          if(res.data.code==1000){
-              _this.updataForm=res.data.data;
+    methods:{
+      //初始化数据
+      initUser(){
+        let info = JSON.parse(this.$route.query.info);
+        this.form.roleName = info.roleName;
+        this.form.roleDesc = info.roleDesc;
+        info.sourceInfos = eval(info.sourceInfos);
+        this.idsData.forEach((item,index) => {
+          info.sourceInfos.forEach((item2,index2) => {
+            if(item2.indexOf(item.id) >= 0){
+              let set = new Set(item2);
+              set.delete(item.id);
+              if(set.size == item.ids.length){
+                this.form.itemCheckAll[index].isCheck = true;  
+              }
+              this.form.itemCheckList[index].checkList = Array.from(set);
+            }
+          })
+        })
+        this.checkIsAll();
+      },
+      //获取权限
+      getSouData(){
+          this.$http('/backstageRole/querySourceListInfo',{},{},{},'post').then(res => {
+            if(res.data.code == 0){
+              this.souList = res.data.response.list;
+              this.souList.forEach((item,index) => {
+                this.form.itemCheckAll.push({
+                  isCheck:false
+                });
+                this.form.itemCheckList.push({
+                  checkList:[]
+                });
+                this.idsData.push({
+                  id:item.id,
+                  ids:[]
+                });
+                item.subList.forEach(item2 => {
+                  this.idsData[index].ids.push(item2.id);
+                })
+              })
+              if(this.$route.query.type == 'edit'){
+                this.initUser();
+              }
+            }
+          })
+      },
+      //单选全部
+      selectItemAll(index){
+        if(this.form.itemCheckAll[index].isCheck){
+          this.form.itemCheckList[index].checkList = this.idsData[index].ids;
+        }else{
+          this.form.itemCheckList[index].checkList = [];
+        }
+        this.checkIsAll()
+      },
+      //单选
+      selectItem(index){
+        let len1 = this.form.itemCheckList[index].checkList.length,
+        len2 = this.idsData[index].ids.length;
+        this.form.itemCheckAll[index].isCheck = len1 === len2;
+        this.checkIsAll()
+      },
+      //全选
+      selectAll(val){
+        this.form.itemCheckAll.forEach(item => {
+          item.isCheck = val;
+        })
+        this.form.itemCheckList.forEach((item,index) => {
+          if(val){
+            item.checkList = this.idsData[index].ids;
+          }else{
+            item.checkList = []
           }
-        }).catch(function(err){
-          console.log(err)
         })
       },
-      estatemanagement_select_all(e){
-        if(e.target.checked){
-          this.updataForm.estatemanagement=['1','2','3','4','5','6','7','8']
-        }else{
-          this.updataForm.estatemanagement=[]
-        }
-      },
-      ordermanagement_select_all(e){
-        if(e.target.checked){
-          this.updataForm.ordermanagement=['1']
-        }else{
-          this.updataForm.ordermanagement=[]
-        }
-      },   
-      articlemanagement_select_all(e){
-        if(e.target.checked){
-          this.updataForm.articlemanagement=['1','2','3']
-        }else{
-          this.updataForm.articlemanagement=[]
-        }
-      },
-      activitymanagement_select_all(e){
-        if(e.target.checked){
-          this.updataForm.activitymanagement=['1','2']
-        }else{
-          this.updataForm.activitymanagement=[]
-        }
-      },
-      consultmanagement_select_all(e){
-        if(e.target.checked){
-          this.updataForm.consultmanagement=['1','2','3']
-        }else{
-          this.updataForm.consultmanagement=[]
-        }    
-      },   
-      usermanagement_select_all(e){
-        if(e.target.checked){
-          this.updataForm.usermanagement=['1','2','3','4','5','6']
-        }else{
-          this.updataForm.usermanagement=[]
-        }    
-      },   
-      accountmanagement_select_all(e){
-        if(e.target.checked){
-          this.updataForm.accountmanagement=['1']
-        }else{
-          this.updataForm.accountmanagement=[]
-        }    
-      },
-      select_all(e){
-        if(e.target.checked){
-          this.updataForm.estatemanagement=['1','2','3','4','5','6','7','8']
-          this.updataForm.ordermanagement=['1']
-          this.updataForm.articlemanagement=['1','2','3']
-          this.updataForm.activitymanagement=['1','2']
-          this.updataForm.consultmanagement=['1','2','3']
-          this.updataForm.usermanagement=['1','2','3','4','5','6']
-          this.updataForm.accountmanagement=['1']
-        }else{
-          for(let i in this.updataForm){
-            if(typeof this.updataForm[i]=='object' && this.updataForm[i].constructor==Array){
-              this.updataForm[i]=[]
-            }
+      //检测是否全选
+      checkIsAll(){
+        let count = 0;
+        this.form.itemCheckAll.forEach(item => {
+          if(item.isCheck){
+            count++
           }
-        }  
+        })
+        this.form.selectAll = count == this.form.itemCheckAll.length;
       },
-      updata(){
-        if(this.updataForm.name==''){
-          this.$message({
-            type: 'warning',
-            message: '请输入名称!'
-          });
+      //提交
+      submitBtn(){
+        if(this.form.roleName == ''){
+          message(this,'请输入角色名称','warning')
           return;
         }
+        
+        let res = this.form.itemCheckList.every(item => {
+          return item.checkList.length <= 0
+        })
+
+        if(res){
+          message(this,'请选择权限','warning')
+          return;
+        }
+
         this.$confirm('确认提交吗?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$router.push({path:'/index/rolemanagement'})
-          this.$message({
-            type: 'success',
-            message: '提交成功!'
+          let 
+          body = {
+            roleName:this.form.roleName,
+            roleDesc:this.form.roleDesc,
+            sourceInfos:[]
+          },
+          arr = _.cloneDeep(this.form.itemCheckList),
+          url;
+          arr.forEach((item,index,self) => {
+            if(item.checkList.length > 0){
+              self[index].checkList.push(this.idsData[index].id);
+              body.sourceInfos.push(item.checkList);
+            };
           });
+
+          if(this.$route.query.type == 'edit'){
+            url = '/backstageRole/updateInfo';
+            body.id = JSON.parse(this.$route.query.info).id;
+          }else{
+            url = '/backstageRole/insertInfo';
+          }
+          
+          this.$http(url,{body},{},{},'post').then(res => {
+            if(res.data.code == 0){
+              if(this.$route.query.type == 'edit'){
+                if(res.data.response.res == 1){
+                  message(this,'提交成功','success')
+                  this.$router.push({path:'/account/rolemanagement'})
+                }else{
+                  message(this,'请求失败','warning');
+                }
+              }else{
+                message(this,'提交成功','success')
+                this.$router.push({path:'/account/rolemanagement'})
+              }
+            }
+          })
+          
         }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消'
-          });
         });
 
       },
-      give_up(){
-        this.$router.push({path:'/index/rolemanagement'})
+      back(){
+        this.$router.push({path:'/account/rolemanagement'})
       },
       refresh(){
-        this.$store.dispatch('mainLoadingAction',true);
-        // this.getdata()
-        var that=this
-        setTimeout(function(){
-          that.$store.dispatch('mainLoadingAction',false);
-        },300)
       },
     },
     mounted(){
-      this.$store.dispatch('mainLoadingAction',true);
-      this.$store.dispatch('defaultIndexAction','/index/rolemanagement');
-      var that=this;
-      setTimeout(function(){
-        that.$store.dispatch('mainLoadingAction',false);
-      },300)
+      this.$store.dispatch('defaultIndexAction','/account/rolemanagement');
     }
   }
 </script>
 
 <style scoped>
   .createAdminTop{
-    border: 1px solid darkgray;margin:20px;
+    border: 1px solid darkgray;
+    padding:20px 10px;
+    margin: 20px
   }
+
   .createAdminTop p {
     padding: 10px;
   }
@@ -502,5 +302,12 @@
   }
   .houseAdminEareBtn button{
     width: 150px;
+  }
+</style>
+
+
+<style type="text/css">
+  .createAdminTop .el-form-item__label{
+    font-size: 13px;
   }
 </style>

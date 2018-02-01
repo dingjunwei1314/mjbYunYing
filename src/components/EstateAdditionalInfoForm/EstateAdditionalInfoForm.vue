@@ -4,31 +4,31 @@
         <p class="tit">
           楼盘-其他属性
         </p>
-        <el-form :model="additionalInformationForm" :inline="true"  label-width="100px" class="demo-dynamic" style="width:60%;margin-left:15%;margin-top:40px">
-          <el-form-item label="得房率" style="width:300px">
+        <el-form :model="additionalInformationForm" :inline="true"  label-width="150px" class="demo-dynamic" style="width:80%;margin-left:15%;margin-top:40px">
+          <el-form-item label="得房率" style="width:400px">
             <el-input size="small" style="width:100px" type="number"  v-model="additionalInformationForm.acquireBuilding"></el-input>
             <span style="color:#999;font-size:12px">单位：%</span>
           </el-form-item>
-          <el-form-item label="绿化率" style="width:300px">
+          <el-form-item label="绿化率" style="width:400px">
             <el-input size="small" style="width:100px" type="number" v-model="additionalInformationForm.greeningRate"></el-input>
             <span style="color:#999;font-size:12px">单位：%</span>
           </el-form-item>
-          <el-form-item label="容积率" style="width:300px">
+          <el-form-item label="容积率" style="width:400px">
             <el-input size="small" style="width:100px" type="number" v-model="additionalInformationForm.plotRatio"></el-input>
             <span style="color:#999;font-size:12px">例：2</span>
           </el-form-item>
-          <el-form-item label="建筑面积" style="width:300px">
+          <el-form-item label="建筑面积" style="width:400px">
             <el-input size="small" style="width:100px" type="number" v-model="additionalInformationForm.buildingArea"></el-input>
             <span style="color:#999;font-size:12px">单位：M2</span>
           </el-form-item>
-          <el-form-item label="占地面积" style="width:300px">
+          <el-form-item label="占地面积" style="width:400px">
             <el-input size="small" style="width:100px" type="number" v-model="additionalInformationForm.areaCovered"></el-input>
             <span style="color:#999;font-size:12px">单位：M2</span>
           </el-form-item>
-          <el-form-item label="停车位" style="width:300px">
+          <el-form-item label="停车位" style="width:400px">
             <el-input size="small" style="width:100px" v-model="additionalInformationForm.parkingCount"></el-input>
           </el-form-item>
-          <el-form-item label="学区所属" style="width:300px">
+          <el-form-item label="学区所属" style="width:400px">
             <el-input size="small" style="width:100px" v-model="additionalInformationForm.schoolDistrict"></el-input>
           </el-form-item>
         </el-form>
@@ -37,7 +37,7 @@
         <p class="tit">
           楼盘-相关视频
         </p>
-        <el-form :model="additionalInformationForm"  label-width="100px" class="demo-dynamic" style="width:60%;margin-left:15%;margin-top:40px">
+        <el-form :model="additionalInformationForm"  label-width="150px" class="demo-dynamic" style="width:80%;margin-left:15%;margin-top:40px">
           <el-form-item label="楼盘视频">
             <el-input size="small" style="width:430px" v-model="additionalInformationForm.videoUrl">
               <template slot="prepend">Http://</template>
@@ -50,24 +50,24 @@
         <p class="tit">
           楼盘-销售及规划
         </p>
-        <el-form :model="additionalInformationForm" :inline="true" label-width="100px" class="demo-dynamic" style="width:60%;margin-left:15%;margin-top:40px">
-          <el-form-item label="规划户数" style="width:300px">
+        <el-form :model="additionalInformationForm" :inline="true" label-width="150px" class="demo-dynamic" style="width:80%;margin-left:15%;margin-top:40px">
+          <el-form-item label="规划户数" style="width:400px">
             <el-input size="small" style="width:100px" type="number" v-model="additionalInformationForm.livingCount"></el-input>
             <span>户</span>
           </el-form-item>
-          <el-form-item label="可售套数" style="width:300px">
+          <el-form-item label="可售套数" style="width:400px">
             <el-input size="small" style="width:100px" type="number" v-model="additionalInformationForm.salableNumber"></el-input>
             <span>套</span>
           </el-form-item>
-          <el-form-item label="楼幢总量" style="width:300px">
+          <el-form-item label="楼幢总量" style="width:400px">
             <el-input size="small" style="width:100px" type="number" v-model="additionalInformationForm.buildingCount"></el-input>
             <span>栋</span>
           </el-form-item>
-          <el-form-item label="开发期数" style="width:300px">
+          <el-form-item label="开发期数" style="width:400px">
             <el-input size="small" style="width:100px" type="number" v-model="additionalInformationForm.developNumber"></el-input>
             <span>期</span>
           </el-form-item>
-          <el-form-item label="面积区间" style="width:300px">
+          <el-form-item label="面积区间" style="width:400px">
             <el-input size="small" style="width:100px" v-model="additionalInformationForm.areaRegion"></el-input>
           </el-form-item>
         </el-form>
@@ -76,7 +76,7 @@
         <p class="tit">
           楼盘-配套设施
         </p>
-        <el-form :model="additionalInformationForm" :inline="true" label-width="100px" class="demo-dynamic" style="width:60%;margin-left:15%;margin-top:40px">
+        <el-form :model="additionalInformationForm" :inline="true" label-width="150px" class="demo-dynamic" style="width:80%;margin-left:15%;margin-top:40px">
           <el-form-item label="供水" style="width:600px">
             <el-radio-group 
               v-model="additionalInformationForm.waterSupplyTypeRadio"
@@ -127,12 +127,12 @@
         <p class="tit">
           楼盘-施工进度信息
         </p>
-        <el-form :model="additionalInformationForm" :inline="true" label-width="100px" class="demo-dynamic" style="width:60%;margin-left:15%;margin-top:40px">
-          <el-form-item label="楼体进度" style="width:300px">
+        <el-form :model="additionalInformationForm" :inline="true" label-width="150px" class="demo-dynamic" style="width:80%;margin-left:15%;margin-top:40px">
+          <el-form-item label="楼体进度" style="width:400px">
             <el-input size="small" style="width:100px" v-model="additionalInformationForm.buildingSchedule"></el-input>
             <span>%</span>
           </el-form-item>
-          <el-form-item label="公共区域进度" style="width:300px">
+          <el-form-item label="公共区域进度" style="width:400px">
             <el-input size="small" style="width:100px" v-model="additionalInformationForm.publicAreaSchedule"></el-input>
             <span>%</span>
           </el-form-item>
@@ -145,7 +145,7 @@
         <p class="tit">
           楼盘-往期楼盘
         </p>
-        <el-form :model="additionalInformationForm"  label-width="150px" class="demo-dynamic" style="width:60%;margin-left:15%;margin-top:40px">
+        <el-form :model="additionalInformationForm"  label-width="150px" class="demo-dynamic" style="width:80%;margin-left:15%;margin-top:40px">
           <el-form-item v-for="(item,index) in additionalInformationForm.id_arr" :key="index" label="添加往期楼盘id">
             <el-input size="small" style="width:200px" v-model="item.historyBuilding"></el-input>
           </el-form-item>
@@ -286,11 +286,7 @@
                 
                 _this.additionalInformationForm = _.cloneDeep(_this.additionalInformationForm)
                
-            }else{
-                message(_this,res.data.message,'warning')
             }
-          }).catch(function(err){
-            console.log(err)
           })
         },
 		    //楼盘附加信息提交
@@ -324,20 +320,12 @@
 	        }).then(() => {
 	          _this.$http(url,{body},{},{},'post').then( res => {
 	            if(res.data.code == 0){
-                
                 message(_this,'提交成功','success')
-            
-	            }else if(res.data.code == 300){
-	              _this.$router.push('/login')
-	            }else{
-	              message(_this,'提交失败','warning')
-	            }  
-	          }).catch( err => {
-	            console.log(err)
+	            }
 	          })
 	        }).catch(() => {
-            message(_this,'已取消提交','info')         
-	        });
+            
+          })
 	      },
 	      
 	      //添加一组往期楼盘ID
