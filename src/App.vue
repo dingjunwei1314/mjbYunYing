@@ -35,7 +35,7 @@ html::-webkit-scrollbar-thumb{background: #324157;width: 3px}
 html::-webkit-scrollbar-track{background: #ccc;width: 3px}
 html::-webkit-scrollbar{width: 5px}
 
-
+.tabletopbar{height:40px;background:#eef1f6;border-left:1px solid #dfe6ec;border-right:1px solid #dfe6ec;border-top:1px solid #dfe6ec;line-height:40px;font-size:12px;color:#555;padding:0px 15px;}
 body{
 
 -moz-user-select: none; /*火狐*/

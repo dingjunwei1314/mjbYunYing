@@ -1,19 +1,15 @@
 import axios from 'axios'
 import qs from 'qs'
+import baseURL from './url'
+import router from '../router'
+import ElementUI from 'element-ui'
 
 export default function(url='',data={},params={},headers,method='get'){
    
-    // let baseURL='http://192.168.1.193:8088/',
-    // let baseURL='http://192.168.1.64:8088/',
-    // let baseURL='http://192.168.1.240:8088',
-    let baseURL='http://192.168.1.243:8088/',
-    // let baseURL='http://47.93.185.205:8081/maijiabangbackstate-1.0-SNAPSHOT',
-    // let baseURL='http://47.95.233.255:8081/maijiabangbackstate-1.0-SNAPSHOT',
-    // let baseURL='http://47.95.233.255:8082/maijiabangReport-1.0-SNAPSHOT',
-        pa = {},
+    let pa = {},
         da = {},
-        token = localStorage.token;
-    
+        token = localStorage._Mjb_token;
+        
     if(method == 'post'){
         data.platform = 3
         data.requestTime = new Date().getTime()
@@ -42,7 +38,7 @@ export default function(url='',data={},params={},headers,method='get'){
         responseType:'json',
         data:da,
         params:pa,
-        timeout:15000,
+        timeout:60000,
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
         },
@@ -51,3 +47,19 @@ export default function(url='',data={},params={},headers,method='get'){
     })
 
 }
+
+axios.interceptors.response.use(response => {
+    let d = response.data;
+    if(d.code == 300){
+        router.push('/login');
+    }else if(d.code == 1 && !d.response.qiNiuToken){
+        ElementUI.Message({
+            message: '请求异常',
+            type: 'warning'
+        })
+    }
+    return response
+},error => {
+    console.log(error)
+    return Promise.reject(error)
+})

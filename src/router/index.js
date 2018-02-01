@@ -2,7 +2,11 @@ import Vue from 'vue'
 import Router from 'vue-router'
 Vue.use(Router)
 
-
+const NotFoundComponent = function (resolve) {
+  require.ensure([],function () {
+    resolve(require('../components/NotFoundComponent/NotFoundComponent'))
+  })
+}
 
 const Login=function(resolve){
     require.ensure([],function(){
@@ -165,7 +169,45 @@ const EstateProcessMonitoringUserDetail=function(resolve){
     require.ensure([],function(){
         resolve(require('../components/EstateProcessMonitoringUserDetail/EstateProcessMonitoringUserDetail'))
     })
+}   
+
+const EstateParkReportListDetailUn=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/EstateParkReportListDetailUn/EstateParkReportListDetailUn'))
+    })
+}  
+
+const EstateBanReportListDetailUn=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/EstateBanReportListDetailUn/EstateBanReportListDetailUn'))
+    })
+}  
+
+const EstateIndoorReportListDetailUn=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/EstateIndoorReportListDetailUn/EstateIndoorReportListDetailUn'))
+    })
 }
+
+const EstatePMSExamine=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/EstatePMSExamine/EstatePMSExamine'))
+    })
+}  
+
+const EstatePMSDetail=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/EstatePMSDetail/EstatePMSDetail'))
+    })
+}  
+
+const EstateConstructionReportTab=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/EstateConstructionReportTab/EstateConstructionReportTab'))
+    })
+}
+
+
 
 //文章管理
 const ArticleManagement=function(resolve){
@@ -216,7 +258,14 @@ const UserList=function(resolve){
     require.ensure([],function(){
         resolve(require('../components/UserList/UserList'))
     })
+}  
+
+const UserDetail=function(resolve){
+    require.ensure([],function(){
+        resolve(require('../components/UserDetail/UserDetail'))
+    })
 }
+
 const IntentUserList=function(resolve){
     require.ensure([],function(){
         resolve(require('../components/IntentUserList/IntentUserList'))
@@ -261,180 +310,428 @@ const CreateNewRole = function (resolve) {
     resolve(require('../components/AccountManagement/CreateNewRole'))
   })
 }  
+
+
+//任务管理
+
+const CollectionManagement = function (resolve) {
+  require.ensure([],function () {
+    resolve(require('../components/CollectionManagement/CollectionManagement'))
+  })
+}  
+
+const AuditManagement = function (resolve) {
+  require.ensure([],function () {
+    resolve(require('../components/AuditManagement/AuditManagement'))
+  })
+}
+
+const AuditDetail = function (resolve) {
+  require.ensure([],function () {
+    resolve(require('../components/AuditDetail/AuditDetail'))
+  })
+}
+  
+const CollectionDetail = function (resolve) {
+  require.ensure([],function () {
+    resolve(require('../components/CollectionDetail/CollectionDetail'))
+  })
+}
+
+//审核管理
+const EstateOpenExamine = function (resolve) {
+  require.ensure([],function () {
+    resolve(require('../components/EstateOpenExamine/EstateOpenExamine'))
+  })
+}  
+
+const EstateUnopenedExamine = function (resolve) {
+  require.ensure([],function () {
+    resolve(require('../components/EstateUnopenedExamine/EstateUnopenedExamine'))
+  })
+}
+
+const UnopenedExamineList = function (resolve) {
+  require.ensure([],function () {
+    resolve(require('../components/UnopenedExamineList/UnopenedExamineList'))
+  })
+}  
+
+const IntegralManagement = function (resolve) {
+  require.ensure([],function () {
+    resolve(require('../components/IntegralManagement/IntegralManagement'))
+  })
+}  
+
+const IntegralChange = function (resolve) {
+  require.ensure([],function () {
+    resolve(require('../components/IntegralChange/IntegralChange'))
+  })
+}  
+
+const IntegralDetail = function (resolve) {
+  require.ensure([],function () {
+    resolve(require('../components/IntegralDetail/IntegralDetail'))
+  })
+}
+
+const IntegralRewardManagement = function (resolve) {
+  require.ensure([],function () {
+    resolve(require('../components/IntegralRewardManagement/IntegralRewardManagement'))
+  })
+}  
+
+const IntegralRewardDetail = function (resolve) {
+  require.ensure([],function () {
+    resolve(require('../components/IntegralRewardDetail/IntegralRewardDetail'))
+  })
+} 
+
+const EstateUnopenedManagement = function (resolve) {
+  require.ensure([],function () {
+    resolve(require('../components/EstateUnopenedManagement/EstateUnopenedManagement'))
+  })
+}  
+
+const EstateUnopenedDetail = function (resolve) {
+  require.ensure([],function () {
+    resolve(require('../components/EstateUnopenedDetail/EstateUnopenedDetail'))
+  })
+} 
+
+const UnopenedExamineEdit = function (resolve) {
+  require.ensure([],function () {
+    resolve(require('../components/UnopenedExamineEdit/UnopenedExamineEdit'))
+  })
+}  
+
+
+
 export default new Router({
     mode: 'hash',
     base: __dirname,
     routes: [
-        { path: '/', redirect: '/login' },
         {
-            path: '/login',
-            component: Login,
+          path:'*',
+          component:NotFoundComponent
+        },
+        { 
+          path: '/', 
+          redirect: '/login' 
         },
         {
-            path:'/index',
-            component:Index,
-            children:[
-                {
-                  path:'/index/estatemanagement',
-                  component:EstateManagement
-                },
-                {  
-                  path:'/index/estateadd',
-                  component:EstateAdd
-                },  
-                {
-                  path:'/index/estateedit',
-                  component:EstateEdit
-                },
-                {
-                  path:'/index/estatedetail',
-                  component:EstateDetail
-                },
-                {
-                  path:'/index/rankinglist',
-                  component:RankingList
-                },  
-                {
-                  path:'/index/rankinglistadd',
-                  component:RankingListAdd
-                },  
-                {
-                  path:'/index/rankinglistedit',
-                  component:RankingListEdit
-                },
-                {
-                  path:'/index/cityhousescore',
-                  component:CityHouseScore
-                },  
-                {
-                  path:'/index/rankingdetail',
-                  component:RankingDetail
-                },
-                {
-                  path:'/index/bulletinsubscription',
-                  component:BulletinSubscription
-                },
-                {
-                  path:'/index/bulletinorder',
-                  component:BulletinOrder
-                },
-                {
-                  path:'/index/detailbulletinOrder',
-                  component:DetailBulletinOrder
-                },
-                {
-                  path:'/index/detailbulletinsubscription',
-                  component:DetailBulletinSubscription
-                },
-                {
-                  path:'/index/expectingbuildings',
-                  component:ExpectingBuildings
-                },
-                {
-                  path:'/index/cooperorders',
-                  component:CooperOrders
-                },
-                {
-                  path:'/index/activitymanagement',
-                  component:ActivityManagement
-                },
-                {
-                  path:'/index/userlist',
-                  component:UserList
-                },
-                {
-                path:'/index/intentuserlist',
-                component:IntentUserList
-                },
-                {
-                path:'/index/messagemanagement',
-                component:MessageManagement
-                },
-                {
-                  path:'/index/articlemanagement',
-                  component:ArticleManagement
-                },  
-                {
-                  path:'/index/articledetail',
-                  component:ArticleDetail
-                },
-                {
-                  path:'/index/newarticle',
-                  component:NewArticle
-                },
-                {
-                  path:'/index/accountmanagement',
-                  component:AccountManagement,
-                },
-                {
-                  path:'/index/rolemanagement',
-                  component:RoleManagement
-                },
-                {
-                  path:'/index/consultAdmin',
-                  component:ConsultAdmin
-                },
-                {
-                  path:'/index/counsultParticulars',
-                  component:CounsultParticulars
-                },
-                {
-                  path:'/index/createnewrole',
-                  component:CreateNewRole
-                },
-                {
-                  path:'/index/createnewaccount',
-                  component:CreateNewAccount
-                },
-                {
-                  path: '/index/changePassword',
-                  component: ChangePassword,
-                },
-                {
-                  path:'/index/estateprocessmonitoringmanagement',
-                  component:EstateProcessMonitoringManagement
-                },
-                {
-                  path:'/index/estateprocessmonitoringdetail',
-                  component:EstateProcessMonitoringDetail
-                },
-                {
-                  path:'/index/estateprocessmonitoringservice',
-                  component:EstateProcessMonitoringService
-                },
-                {
-                  path:'/index/estateprocessmonitoringuser',
-                  component:EstateProcessMonitoringUser
-                },
-                {
-                  path:'/index/estateparkreportList',
-                  component:EstateParkReportList
-                },
-                {
-                  path:'/index/estatebanreportlist',
-                  component:EstateBanReportList
-                },
-                {
-                  path:'/index/estateindoorreportlist',
-                  component:EstateIndoorReportList
-                },
-                {
-                  path:'/index/estateparkreportlistdetail',
-                  component:EstateParkReportListDetail
-                },
-                {
-                  path:'/index/estatebanreportlistdetail',
-                  component:EstateBanReportListDetail
-                },
-                {
-                  path:'/index/estateindoorreportlistdetail',
-                  component:EstateIndoorReportListDetail
-                },
-                {
-                  path:'/index/estateprocessmonitoringuserdetail',
-                  component:EstateProcessMonitoringUserDetail
-                }
-            ]
+          path: '/login',
+          component: Login,
+        },
+        {
+          path:'/estate',
+          component:Index,
+          children:[
+            {
+              path:'estatemanagement',
+              component:EstateManagement
+            },
+            {  
+              path:'estateadd',
+              component:EstateAdd
+            },  
+            {
+              path:'estateedit',
+              component:EstateEdit
+            },
+            {
+              path:'estatedetail',
+              component:EstateDetail
+            },
+            {
+              path:'rankinglist',
+              component:RankingList
+            },  
+            {
+              path:'rankinglistadd',
+              component:RankingListAdd
+            },  
+            {
+              path:'rankinglistedit',
+              component:RankingListEdit
+            },
+            {
+              path:'rankingdetail',
+              component:RankingDetail
+            },
+          ]
+        },
+        {
+          path:'/index',
+          component:Index,
+          children:[
+            {
+              path:'estateprocessmonitoringmanagement',
+              component:EstateProcessMonitoringManagement
+            },
+            {
+              path:'estateprocessmonitoringdetail',
+              component:EstateProcessMonitoringDetail
+            },
+            {
+              path:'estateprocessmonitoringservice',
+              component:EstateProcessMonitoringService
+            },
+            {
+              path:'estateprocessmonitoringuser',
+              component:EstateProcessMonitoringUser
+            },
+            {
+              path:'estateparkreportList',
+              component:EstateParkReportList
+            },
+            {
+              path:'estatebanreportlist',
+              component:EstateBanReportList
+            },
+            {
+              path:'estateindoorreportlist',
+              component:EstateIndoorReportList
+            },
+            {
+              path:'estateparkreportlistdetail',
+              component:EstateParkReportListDetail
+            },
+            {
+              path:'estatebanreportlistdetail',
+              component:EstateBanReportListDetail
+            },
+            {
+              path:'estateindoorreportlistdetail',
+              component:EstateIndoorReportListDetail
+            },
+            {
+              path:'estateprocessmonitoringuserdetail',
+              component:EstateProcessMonitoringUserDetail
+            },
+            {
+              path:'estateparkreportlistdetailun',
+              component:EstateParkReportListDetailUn
+            },
+            {
+              path:'estatebanreportlistdetailun',
+              component:EstateBanReportListDetailUn
+            },
+            {
+              path:'estateindoorreportlistdetailun',
+              component:EstateIndoorReportListDetailUn
+            },
+            {
+              path:'estatepmsexamine',
+              component:EstatePMSExamine
+            },
+            {
+              path:'estatepmsdetail',
+              component:EstatePMSDetail
+            },
+            {
+              path:'estateconstructionreporttab',
+              component:EstateConstructionReportTab
+            }
+          ]
+        },
+        {
+          path:'/article',
+          component:Index,
+          children:[
+            {
+              path:'articlemanagement',
+              component:ArticleManagement
+            },  
+            {
+              path:'articledetail',
+              component:ArticleDetail
+            },
+            {
+              path:'newarticle',
+              component:NewArticle
+            },
+          ]
+        },
+        {
+          path:'/subscribe',
+          component:Index,
+          children:[
+            {
+              path:'bulletinsubscription',
+              component:BulletinSubscription
+            },
+            {
+              path:'bulletinorder',
+              component:BulletinOrder
+            },
+            {
+              path:'detailbulletinOrder',
+              component:DetailBulletinOrder
+            },
+            {
+              path:'detailbulletinsubscription',
+              component:DetailBulletinSubscription
+            },
+          ]
+        },
+        {
+          path:'/task',
+          component:Index,
+          children:[
+            {
+              path:'collectionmanagement',
+              component:CollectionManagement
+            },
+            {
+              path:'auditmanagement',
+              component:AuditManagement
+            },
+            {
+              path:'auditdetail',
+              component:AuditDetail
+            },
+            {
+              path:'collectiondetail',
+              component:CollectionDetail
+            },
+            {
+              path:'estateopenexamine',
+              component:EstateOpenExamine
+            },
+            {
+              path:'estateunopenedmanagement',
+              component:EstateUnopenedManagement
+            },
+            {
+              path:'estateunopeneddetail',
+              component:EstateUnopenedDetail
+            },
+          ]
+        },
+        {
+          path:'/unopened',
+          component:Index,
+          children:[
+            {
+              path:'estateunopenedexamine',
+              component:EstateUnopenedExamine
+            },
+            {
+              path:'unopenedexaminelist',
+              component:UnopenedExamineList
+            },
+            {
+              path:'integralmanagement',
+              component:IntegralManagement
+            },
+            {
+              path:'integralchange',
+              component:IntegralChange
+            },
+            {
+              path:'integraldetail',
+              component:IntegralDetail
+            },
+            {
+              path:'integralrewardmanagement',
+              component:IntegralRewardManagement
+            },
+            {
+              path:'integralrewarddetail',
+              component:IntegralRewardDetail
+            },
+            {
+              path:'unopenedexamineedit',
+              component:UnopenedExamineEdit
+            }
+          ]
+        },
+        {
+          path:'/order',
+          component:Index,
+          children:[
+            {
+              path:'cooperorders',
+              component:CooperOrders
+            },
+          ]
+        },
+        {
+          path:'/activity',
+          component:Index,
+          children:[
+            {
+              path:'activitymanagement',
+              component:ActivityManagement
+            },
+          ]
+        },
+        {
+          path:'/consult',
+          component:Index,
+          children:[
+            {
+              path:'consultAdmin',
+              component:ConsultAdmin
+            },
+          ]
+        },
+        {
+          path:'/user',
+          component:Index,
+          children:[
+            {
+              path:'list',
+              component:UserList
+            },
+            {
+              path:'detail',
+              component:UserDetail
+            },
+            {
+              path:'intentuserlist',
+              component:IntentUserList
+            },
+            {
+              path:'messagemanagement',
+              component:MessageManagement
+            },
+            {
+              path:'expectingbuildings',
+              component:ExpectingBuildings
+            },
+          ]
+        },
+        {
+          path:'/account',
+          component:Index,
+          children:[
+            {
+              path:'rolemanagement',
+              component:RoleManagement
+            },
+            {
+              path:'accountmanagement',
+              component:AccountManagement,
+            },
+            {
+              path:'counsultParticulars',
+              component:CounsultParticulars
+            },
+            {
+              path:'createnewrole',
+              component:CreateNewRole
+            },
+            {
+              path:'createnewaccount',
+              component:CreateNewAccount
+            },
+            {
+              path: 'changePassword',
+              component: ChangePassword,
+            },
+          ]
         }
     ]
 })

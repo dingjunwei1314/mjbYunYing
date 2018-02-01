@@ -8,47 +8,48 @@ Vue.use(Vuex)
 // 这里定义初始值
 let state = {
     navStyle:{
-        width:'200px',
-        flex:' 0 0 200px'
+        width:'220px',
+        flex:' 0 0 220px'
     },
+    roleName:'未定义',
     mainLoading:false,
     defaultIndex:''
 };
 
 const mutations = {
-    changeNavStyle:function(state,n){
+    changeNavStyle(state,n){
         state.navStyle=n
     },
-    changeMainLoading:function(state,n){
+    changeMainLoading(state,n){
         state.mainLoading=n
     },
-    changedefaultIndex:function(state,n){
+    changedefaultIndex(state,n){
         state.defaultIndex=n
+    },
+    changeRole(state,n){
+        state.roleName = n;
     }
 };
 
 //事件触发后的逻辑操作
 const actions = {
-    navStyleAction:function({commit},n){
+    navStyleAction({commit},n){
         commit('changeNavStyle',n)
     },
-    mainLoadingAction:function({commit},n){
+    mainLoadingAction({commit},n){
         commit('changeMainLoading',n)
     },
-    defaultIndexAction:function({commit},n){
+    defaultIndexAction({commit},n){
         commit('changedefaultIndex',n)
+    },
+    roleAction({commit},n){
+        commit('changeRole',n)
     }
 };
 
 const getters = {
-    GetNavStyle:function(state){
-        return state.navStyle
-    },
-    GetMainLoading:function(state){
+    GetMainLoading(state){
         return state.mainLoading
-    },
-    GetDefaultIndex:function(){
-        return state.defaultIndex
     }
 };
 

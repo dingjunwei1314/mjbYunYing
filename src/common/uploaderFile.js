@@ -1,16 +1,11 @@
 import axios from 'axios'
 
-export default function uploader(successfunc,successfunc2,errfunc,func,btnName,multi_selection = true,suffix_name = '.docx'){
+export default function uploader(successfunc,successfunc2,errfunc,func,btnName,multi_selection = true,suffix_name = '.pdf'){
   let _this=this;
   var uptoken='';
   var uploader='';
-  var extensions='';
-  if(suffix_name === '.docx'){
-  	extensions='docx,doc'
-  }else{
-	extensions='xlsx'
-  }
-  axios.get('http://47.93.185.205:8081/maijiabangbackstate-1.0-SNAPSHOT/backstageUser/qiniuToken').then(function(res){
+  var extensions='pdf';
+  axios.get('http://47.95.233.255:8081/maijiabangbackstate-1.0-SNAPSHOT/backstageUser/qiniuReportToken').then(function(res){
 	uptoken=res.data.response.qiNiuToken;
 	// var Qiniu = new QiniuJsSDK();
 	uploader = Qiniu.uploader({
