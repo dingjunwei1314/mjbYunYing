@@ -9,25 +9,30 @@
 			    <el-tab-pane label="楼盘全景图" name="second">
 			   		<EstatePanoramaTab :buildingId="buildingId"/>
 			    </el-tab-pane>
-			    <el-tab-pane label="楼盘报告" name="third">
+			    <el-tab-pane label="建设中报告" name="third">
+			   		<EstateConstructionReport  :buildingId="buildingId"/>
+			    </el-tab-pane>
+			    <el-tab-pane label="交房后报告" name="four">
 			   		<EstateMonitoringReport :buildingId="buildingId"/>
 			    </el-tab-pane>
 			</el-tabs>
 		</div>
 	</div>
-</template>
+</template> 
 <script>
 	import Subnav2 from '../Subnav2/Subnav2';
 	import EstatePlanDetail from '../EstatePlanDetail/EstatePlanDetail';  
 	import EstatePanoramaTab from '../EstatePanoramaTab/EstatePanoramaTab';  
+	import EstateConstructionReport from '../EstateConstructionReport/EstateConstructionReport';
 	import EstateMonitoringReport from '../EstateMonitoringReport/EstateMonitoringReport';
 	import message from '../../common/message';
 	export default{
-		name:'EstateProcessMonitoringManagement',
+		name:'EstateProcessMonitoringDetail',
 		components:{
 			Subnav2,
 			EstatePlanDetail,
 			EstatePanoramaTab,
+			EstateConstructionReport,
 			EstateMonitoringReport
 		},
 		data(){
@@ -58,16 +63,23 @@
 				}else if(tab.name == 'second'){
 					if(this.navList.length == 3){
 						this.navList.pop();
-						this.navList.push({path:'/index/estateprocessmonitoringmanagement',name:'楼盘全景'})
+						this.navList.push({path:this.$route.fullPath,name:'楼盘全景'})
 					}else{
-						this.navList.push({path:'/index/estateprocessmonitoringmanagement',name:'楼盘全景'})
+						this.navList.push({path:this.$route.fullPath,name:'楼盘全景'})
+					}
+				}else if(tab.name == 'third'){
+					if(this.navList.length == 3){
+						this.navList.pop();
+						this.navList.push({path:this.$route.fullPath,name:'建设中报告'})
+					}else{
+						this.navList.push({path:this.$route.fullPath,name:'建设中报告'})
 					}
 				}else{
 					if(this.navList.length == 3){
 						this.navList.pop();
-						this.navList.push({path:'/index/estateprocessmonitoringmanagement',name:'楼盘报告'})
+						this.navList.push({path:this.$route.fullPath,name:'交房后报告报告'})
 					}else{
-						this.navList.push({path:'/index/estateprocessmonitoringmanagement',name:'楼盘全景'})
+						this.navList.push({path:this.$route.fullPath,name:'交房后报告报告'})
 					}
 				}
 			},

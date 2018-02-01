@@ -1,10 +1,10 @@
 <template>
 	<div>
-		<Subnav :secondLevel="secondLevel" :threeLevel="threeLevel" @refresh="refresh"></Subnav>
+		<Subnav2 :navList="navList" @refresh="refresh"></Subnav2>
 		<div style="padding:20px">
 			<el-row style="border:1px solid #ccc;padding:20px 10px 0px">
 				<el-col :span="20">
-					<el-form :model="form" inline label-width="60px" class="demo-form-inline">
+					<el-form :model="form" inline label-width="60px" class="demo-form-inline" v-if="!$route.query.buildingId">
 						<el-form-item label="楼盘名">
 			            	<el-select size="small" clearable v-model="form.buildingId" style="width:240px;" placeholder="楼盘名称">
 						      <el-option v-for="(item,index) in buildingList" :key="index"  :label="item.buildingName" :value="item.buildingId"></el-option>
@@ -55,8 +55,7 @@
 			</el-row>
 			<el-row style="margin-top:20px">
 				<div class="tabletopbar">
-			        <span>所有数据：共</span> <span style="color:#111">{{tableData.userCount}}</span> <span>条</span>
-			        <span style="margin-left:20px">查询结果：共</span> 
+			        <span>查询结果：共</span> 
 			        <span style="color:#111">{{tableData.userCount}}</span> <span>条</span>
 			    </div>
 			    <el-table
@@ -130,7 +129,7 @@
 				<el-pagination
 					v-show="tableData.userCount>0"
 					style="margin: 0 auto;text-align:center;margin-top:20px"
-					layout="prev, pager, next"
+					layout="prev, pager, next,jumper"
 					:page-size="10"
 					:currentPage="currentPage"
 					@current-change="currentChange"
@@ -142,17 +141,21 @@
 </template>
 
 <script>
-	import Subnav from '../Subnav/Subnav'
+	import Subnav2 from '../Subnav2/Subnav2';
 	import BuildingLinkage from '../Common/BuildingLinkage2/BuildingLinkage2';
 	import message from '../../common/message';
 	export default{
 		name:'EstateProcessMonitoringService',
 		components:{
-			Subnav,
+			Subnav2,
 			BuildingLinkage
 		},
 		data(){
 			return{
+				navList:[
+					{path:'/index/estateprocessmonitoringservice',name:'首页'},
+					{path:'/index/estateprocessmonitoringservice',name:'服务管理'},
+				],
 				tabLoading:false,
 				secondLevel:'服务管理',
         		threeLevel:'服务管理',
@@ -196,7 +199,13 @@
 			this.getBuildListData();
 			this.getData();
       		this.$store.dispatch('defaultIndexAction','/index/estateprocessmonitoringservice');
+      		
 		},
+		watch:{ 
+		    '$route': function(){
+		    	this.getData()
+		    }
+	    },
 		methods:{
 			//获取数据
 		    getBuildListData(){
@@ -216,8 +225,6 @@
 						})
 		            })
 
-		          }else if(res.data.code == 300){
-					_this.$router.push('/login')
 		          }else{
 		          	message(_this,'请求失败','warning')
 		          }
@@ -260,14 +267,16 @@
 		    },
 		    //获取数据
 		    getData(){
+		    	if(this.$route.query.buildingId){
+	      			this.form.buildingId = this.$route.query.buildingId
+	      		}
+	      		
 		        let _this = this,
 		        body = _.cloneDeep(this.form)
 		        _this.tabLoading = true;
 		        this.$http('/buildingMonitor/getMonitorUserInfo',{body},{},{},'post').then(res => {
 		          if(res.data.code == 0){
 		            _this.tableData = res.data.response;
-		          }else if(res.data.code == 300){
-					_this.$router.push('/login')
 		          }
 		          _this.tabLoading = false;
 		        }).catch(err => {

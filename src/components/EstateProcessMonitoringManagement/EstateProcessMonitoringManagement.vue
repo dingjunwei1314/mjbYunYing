@@ -3,8 +3,7 @@
 		<Subnav2 :navList="navList" @refresh="refresh"></Subnav2>
 		<div style="padding:20px;">
 			<div class="tabletopbar">
-		        <span>所有数据：共</span> <span style="color:#111">{{tableData.totalCount}}</span> <span>条</span>
-		        <span style="margin-left:20px">查询结果：共</span> 
+		        <span>查询结果：共</span> 
 		        <span style="color:#111">{{tableData.totalCount}}</span> <span>条</span>
 		    </div>
 		    <el-table
@@ -107,8 +106,6 @@
 		        this.$http('/buildingMonitor/getBuildingMonitorList',{},{body}).then(res => {
 		          if(res.data.code == 0){
 		            _this.tableData = res.data.response;
-		          }else if(res.data.code == 300){
-					_this.$router.push('/login')
 		          }
 		          _this.tabLoading = false;
 		        }).catch(err => {
@@ -143,7 +140,10 @@
 					})
 				}else{
 					this.$router.push({
-						path:'/index/estateprocessmonitoringservice'
+						path:'/index/estateprocessmonitoringservice',
+						query:{
+							buildingId:row.buildingId
+						}
 					})
 				}
 		    },

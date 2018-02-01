@@ -1,10 +1,10 @@
 <template>
 	<div>
-		<Subnav :secondLevel="secondLevel" :threeLevel="threeLevel" @refresh="refresh"></Subnav>
+		<Subnav2 :navList="navList" @refresh="refresh"></Subnav2>
 		<div style="padding:20px">
 			<el-form label-width="100px" :model="form" class="demo-form-inline">
 				<el-form-item label="用户名" required>
-					<el-input  size="small" v-model="form.userPhone" style="width:200px" placeholder="用户名"></el-input>
+					<el-input  size="small" v-model="form.userPhone" style="width:200px" placeholder="手机号"></el-input>
 				</el-form-item>
 				<el-form-item label="楼盘名称" required>
 	            	<el-select size="small" v-model="form.buildingId" style="width:200px;">
@@ -38,17 +38,22 @@
 </template>
 
 <script>
-	import Subnav from '../Subnav/Subnav';
+	import Subnav2 from '../Subnav2/Subnav2';
 	import message from '../../common/message';
 	import BuildingLinkage from '../Common/BuildingLinkage2/BuildingLinkage2';
 	export default{
 		name:'EstateProcessMonitoringUser',
 		components:{
-			Subnav,
+			Subnav2,
 			BuildingLinkage
 		},
 		data(){
 			return{
+				navList:[
+					{path:'/index/estateprocessmonitoringservice',name:'首页'},
+					{path:'/index/estateprocessmonitoringservice',name:'服务管理'},
+					{path:this.$route.fullPath,name:'用户管理'},
+				],
 				tabLoading:false,
 				secondLevel:'服务管理',
         		threeLevel:'',
@@ -101,8 +106,6 @@
 		            	_this.getData();
 		            }
 					
-		          }else if(res.data.code == 300){
-					_this.$router.push('/login')
 		          }else{
 		          	message(_this,'请求失败','warning')
 		          }
@@ -138,8 +141,6 @@
 		          	_this.form.buildingId = (_this.$route.query.buildingId).toString();
 		          	_this.form.userId = (_this.$route.query.userId).toString();
 		          	
-		          }else if(res.data.code == 300){
-					_this.$router.push('/login')
 		          }else{
 		          	message(_this,'请求失败','warning')
 		          }
@@ -148,12 +149,26 @@
 		          console.log(err)
 		        })
 		    },
+		    //验证手机号
+		    checkMobile(sMobile){ 
+			 if(!(/^1[3|4|5|7|8]\d{9}$/.test(sMobile))){ 
+			  return false; 
+			 }
+			 return true; 
+			}, 
 			//提交
 			onSubmit(){
 				let _this = this,
 				body = _.cloneDeep(this.form),
-				url;
+				url,
+				_userId = body.userId;
 				delete body.userId;
+				
+				if(!this.checkMobile(body.userPhone)){
+					message(_this,'手机号格式有误','warning');
+					return;
+				}
+
 				let vals = Object.values(body),
 				result = vals.every(item => {
 					return item !== ''
@@ -164,8 +179,10 @@
 				};
 				if(this.$route.query.type == 'create'){
 					url = "/buildingMonitor/addMonitorUser";
+
 				}else{
 					url = "/buildingMonitor/editUserInfo";
+					body.userId = _userId;
 				};
 				this.$confirm('确定提交吗?', '提示', {
                     confirmButtonText: '确定',
@@ -175,12 +192,11 @@
 					_this.$http(url,{body},{},{},'post').then(res => {
 					  if(res.data.code == 0){
 					    if(res.data.response.status == 1){
-						  message(_this,'提交成功','success');	
+						  message(_this,'提交成功','success');
+						  _this.$router.go('-1')	
 					    }else{
 						  message(_this,'提交失败','warning');
 					    }
-					  }else if(res.data.code == 300){
-						_this.$router.push('/login');
 					  }else{
 						message(_this,'提交失败','warning');
 					  }

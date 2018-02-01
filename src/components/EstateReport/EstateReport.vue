@@ -84,7 +84,7 @@
 </template>
 
 <script>
-	import message from '../../common/message'
+	import message from '../../common/message';
 	export default{
 		name:'',
 		components:{

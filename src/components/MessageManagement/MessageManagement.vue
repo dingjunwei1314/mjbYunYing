@@ -373,7 +373,7 @@ export default {
     },
     mounted(){
       this.$store.dispatch('mainLoadingAction',true);
-      this.$store.dispatch('defaultIndexAction','/index/messagemanagement');
+      this.$store.dispatch('defaultIndexAction','/user/messagemanagement');
       var that=this
       setTimeout(function(){
         that.$store.dispatch('mainLoadingAction',false);

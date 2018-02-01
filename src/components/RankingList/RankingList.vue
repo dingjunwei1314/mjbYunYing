@@ -11,7 +11,7 @@
               <el-input size="small" v-model="filterForm.rankName" placeholder="排行榜列表"></el-input>
             </el-form-item>
             
-            <el-form-item label="所在地区" required>
+            <el-form-item label="所在地区">
               <el-select 
                 size="small"
                 v-model="filterForm.province" 
@@ -361,7 +361,7 @@ export default {
       },
       addNew(){
         this.$router.push({
-          path:'/index/rankinglistadd'
+          path:'/estate/rankinglistadd'
         })
       },
       //上下线
@@ -444,7 +444,7 @@ export default {
       //查看详情
       handleView(index,row){
         this.$router.push({
-          path:'/index/rankingdetail',
+          path:'/estate/rankingdetail',
           query:{
             rankId:row.rankId
           }
@@ -453,7 +453,7 @@ export default {
       //编辑排行榜
       handleEdit(index,row){
         this.$router.push({
-          path:'/index/rankinglistedit',
+          path:'/estate/rankinglistedit',
           query:{
             rankId:row.rankId
           }
@@ -463,7 +463,7 @@ export default {
     mounted(){
       
       this.$store.dispatch('mainLoadingAction',true);
-      this.$store.dispatch('defaultIndexAction','/index/rankinglist');
+      this.$store.dispatch('defaultIndexAction','/estate/rankinglist');
       var that=this
       setTimeout(function(){
         that.$store.dispatch('mainLoadingAction',false);

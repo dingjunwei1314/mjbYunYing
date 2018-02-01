@@ -267,8 +267,6 @@ export default {
             _this.tableData=res.data.data;
           }
           _this.is_loading_tab=false;
-        }).catch(function(err){
-          console.log(err)
         })
       },
       onSearchSubmit(){
@@ -287,12 +285,10 @@ export default {
             data={id:row.id};
         this.$http('/intentuserlistdetail',{},data).then(function(res){
           console.log(res)
-          if(res.data.code==1000){
+          if(res.data.code == 0){
             _this.dia_data=res.data.data;
             _this.dialogFormVisible=true;
           }
-        }).catch(function(err){
-          console.log(err)
         })
         
       },
@@ -317,7 +313,7 @@ export default {
     },
     mounted(){
       this.$store.dispatch('mainLoadingAction',true);
-      this.$store.dispatch('defaultIndexAction','/index/intentuserlist');
+      this.$store.dispatch('defaultIndexAction','/user/intentuserlist');
       var that=this
       setTimeout(function(){
         that.$store.dispatch('mainLoadingAction',false);

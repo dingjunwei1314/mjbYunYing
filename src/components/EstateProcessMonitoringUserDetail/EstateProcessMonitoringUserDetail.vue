@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<Subnav :secondLevel="secondLevel" :threeLevel="threeLevel" @refresh="refresh"></Subnav>
+		<Subnav2 :navList="navList" @refresh="refresh"></Subnav2>
 		<div style="padding:20px">
 			<el-form label-width="100px" :model="form" class="demo-form-inline">
 				<el-form-item label="用户名" required>
@@ -34,16 +34,21 @@
 </template>
 
 <script>
-	import Subnav from '../Subnav/Subnav';
+	import Subnav2 from '../Subnav2/Subnav2';
 	import message from '../../common/message';
 	
 	export default{
 		name:'EstateProcessMonitoringUser',
 		components:{
-			Subnav,
+			Subnav2,
 		},
 		data(){
 			return{
+				navList:[
+					{path:'/index/estateprocessmonitoringservice',name:'首页'},
+					{path:'/index/estateprocessmonitoringservice',name:'服务管理'},
+					{path:this.$route.fullPath,name:'用户详情'},
+				],
 				tabLoading:false,
 				secondLevel:'服务管理',
         		threeLevel:'用户详情',
@@ -77,8 +82,6 @@
 		        this.$http('/buildingMonitor/getUserInfo',{body},{},{},'post').then(res => {
 		          if(res.data.code == 0){
 		          	_this.form = res.data.response.MonitorUserInfoList[0];
-		          }else if(res.data.code == 300){
-					_this.$router.push('/login')
 		          }else{
 		          	message(_this,'请求失败','warning')
 		          }

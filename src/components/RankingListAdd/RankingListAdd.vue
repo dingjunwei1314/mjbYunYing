@@ -366,7 +366,7 @@ export default {
     },
     mounted(){
       this.$store.dispatch('mainLoadingAction',true);
-      this.$store.dispatch('defaultIndexAction','/index/rankinglist');
+      this.$store.dispatch('defaultIndexAction','/estate/rankinglist');
       var that=this
       setTimeout(function(){
         that.$store.dispatch('mainLoadingAction',false);

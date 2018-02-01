@@ -28,21 +28,18 @@
 </template>
 
 <script>
+import message from '../../common/message';
 export default {
     name:'login',
     data() {
       var checkAccout = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('账号不能为空'));
+        }else{
+
         }
         setTimeout(() => {
-         
-            if (value.length < 6 || value.length>18) {
-              callback(new Error('账号必须是6到16位字母或者数字'));
-            } else {
               callback();
-            }
-          
         }, 1000);
       };
       var validatePass = (rule, value, callback) => {
@@ -69,7 +66,6 @@ export default {
             }
         }, 1000); 
       };
-      
       return {
         code:'',
         ruleForm2: {
@@ -87,7 +83,6 @@ export default {
           code : [
             { validator: validateCode, trigger: 'blur' }
           ],
-          
         }
       };
     },
@@ -95,31 +90,37 @@ export default {
       this.changeCode()
     },
     methods: {
+      getData(id){
+        let body = {id};
+        this.$http('/backstageUser/querySourceListInfo',{body},{},{},'post').then(res => {
+          if(res.data.code == 0){
+            localStorage._Mjb_navList = '';
+            localStorage._Mjb_navList = JSON.stringify(res.data.response.list);
+            let path = res.data.response.list[0].subList[0].sourceUrl;
+            if(path != null){
+              this.$router.push(path);
+            }else{
+              message(this,'响应异常','warning');
+            }
+          }
+        })
+      },
       submitForm(formName) {
-        let _this=this,
-            body=this.ruleForm2;
+        let body=this.ruleForm2;
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.$http('/backstageUser/login',{body},{},{},'post').then(function(res){
+            this.$http('/backstageUser/login',{body},{},{},'post').then(res => {
               if(res.data.code==0){
-                _this.$router.push('/index/estatemanagement')
-                localStorage.token=res.data.response.token;
-                
+                localStorage._Mjb_token = res.data.response.token;
+                localStorage._Mjb_roleName = this.ruleForm2.userName;
+                let id = res.data.response.id;
+                this.getData(id);
               }else{
-                _this.$message({
-                  message: res.data.message,
-                  type: 'warning'
-                });
                 if(res.data.message == '验证码已过期'){
-                  _this.changeCode()
+                  this.changeCode()
+                  message(this,'验证码已过期','warning')
                 }
               }
-            }).catch(function(err){
-              console.log(err)
-              _this.$message({
-                message: '请求失败，请稍后重试',
-                type: 'warning'
-              });
             })
           } else {
             console.log('error submit!!');
@@ -133,22 +134,11 @@ export default {
         this.ruleForm2.code='';
       },
       changeCode(){
-        let _this=this;
-        this.$http('/backstageUser/verifyCode',{},{},{},'get').then(function(res){
+        this.$http('/backstageUser/verifyCode',{},{},{},'get').then(res => {
+          console.log(res)
           if(res.data.code==0){
-              _this.code=res.data.response.code
-          }else{
-            _this.$message({
-              message: res.data.message,
-              type: 'warning'
-            });
+            this.code=res.data.response.code
           }
-        }).catch(function(err){
-          console.log(err)
-          _this.$message({
-            message: '验证码获取失败，请稍后重试',
-            type: 'warning'
-          });
         })
       }
     }

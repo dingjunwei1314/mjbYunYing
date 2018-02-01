@@ -29,6 +29,13 @@
         </el-radio-group>
         <el-button type="text" class="submitBtn"  @click="submit(3)">保存</el-button>
       </el-form-item>
+      <el-form-item label="监控楼盘">
+        <el-radio-group v-model="form.configList[4].configValue">
+          <el-radio :label="1">启动</el-radio>
+          <el-radio :label="0">停止</el-radio>
+        </el-radio-group>
+        <el-button type="text" class="submitBtn"  @click="submit(4)">保存</el-button>
+      </el-form-item>
     </el-form>
   </div>
 </template>
@@ -49,6 +56,7 @@
 						{configType:1,configValue:''},
 						{configType:2,configValue:''},
 						{configType:3,configValue:''},
+						{configType:4,configValue:''},
 			        ]
 		    	}
 			}
@@ -97,8 +105,6 @@
 			          		message(_this,'保存失败','warning')
 			          	}
 			       		
-			          }else if(res.data.code == 300){
-					    _this.$router.push('/login')
 			          }else{
 			          	message(_this,res.data.message,'warning')
 			          }
