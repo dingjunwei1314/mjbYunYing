@@ -13,17 +13,18 @@
 			    	<EstateConstructionReportCons :buildingId="buildingId" />
 			    </el-tab-pane>
 			    <el-tab-pane label="整改记录" name="four">
-			   		
+			    	<EstateConstructionReportRecti :buildingId="buildingId" />
 			    </el-tab-pane>
 			</el-tabs>
 		</div>
 	</div> 
-</template> 
+</template>  
 <script>
 	import Subnav2 from '../Subnav2/Subnav2';
 	import EstateConstructionReportBasic from '../EstateConstructionReportBasic/EstateConstructionReportBasic'; 
 	import EstateConstructionReportBuild from '../EstateConstructionReportBuild/EstateConstructionReportBuild';
 	import EstateConstructionReportCons from '../EstateConstructionReportCons/EstateConstructionReportCons';
+	import EstateConstructionReportRecti from '../EstateConstructionReportRecti/EstateConstructionReportRecti';
 	import message from '../../common/message';
 	export default{
 		name:'EstateConstructionReportTab',
@@ -31,7 +32,8 @@
 			Subnav2,
 			EstateConstructionReportBasic,
 			EstateConstructionReportBuild,
-			EstateConstructionReportCons
+			EstateConstructionReportCons,
+			EstateConstructionReportRecti
 		},
 		data(){
 			let name = this.$route.query.buildingName;

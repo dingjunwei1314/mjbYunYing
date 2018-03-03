@@ -4,9 +4,9 @@
 			<el-col :span="20">
 				<el-form :inline="true" :model="filterForm" class="demo-form-inline">
 					<el-form-item label="状态：">
-						<el-select size="small" v-model="filterForm.timeType" style="width:150px;">
+						<el-select size="small" clearable v-model="filterForm.isOnline" style="width:150px;">
 					      <el-option  label="在线" value="1"></el-option>
-					      <el-option  label="离线" value="0"></el-option>
+					      <el-option  label="离线" value="2"></el-option>
 					    </el-select>
 					</el-form-item>
 					<el-form-item label="时间：">
@@ -46,32 +46,36 @@
 		        tooltip-effect="dark"
 		        style="font-size:12px!important">
 		        <el-table-column
-		          prop="pName"
+		          prop="reportName"
 		          label="名称"
 		          min-width="100">
 		        </el-table-column>
 		        <el-table-column
-		          prop="httpUrl"
+		          prop="reportVersion"
 		          label="期数"
 		          min-width="100">
 		        </el-table-column>
 		        <el-table-column
-		          prop="buildingPanoramaLableName"
+		          prop="isOnline"
 		          label="状态"
 		          min-width="100">
+		          <template scope="scope">
+		          	<span v-if="scope.row.isOnline==1">在线</span>
+		          	<span v-if="scope.row.isOnline==2">离线</span>
+		          </template>
 		        </el-table-column>       
 		        <el-table-column
-		          prop="submitTime"
+		          prop="createUserName"
 		          min-width="100"
 		          label="创建人">
 		        </el-table-column>
 		        <el-table-column
-		          prop="editTime"
+		          prop="editUserName"
 		          min-width="100"
 		          label="编辑人">
 		        </el-table-column>
 		        <el-table-column
-		          prop="editTime"
+		          prop="createTime"
 		          min-width="100"
 		          label="创建时间">
 		        </el-table-column>
@@ -139,13 +143,14 @@
         			timeType:'1',
         			pageNum:0,
         			pageSize:10,
-        			bId:this.$route.query.buildingId,
+        			isOnline:'',
         			startTime:'',
-        			endTime:''
+        			endTime:'',
+        			buildingId:this.$route.query.buildingId
         		},
         		tableData:{
 					list:[],
-					pageCount:10
+					pageCount:0
         		}
 			}
 		},
@@ -157,28 +162,19 @@
 				return this.$route.query.buildingId;
 			}
 		},
-		created(){
-	        
-		},
-		mounted(){
+		created(){ 
 			this.getData();
 		},
 		methods:{
 			//获取数据
 		    getData(){
-		        let _this = this,
-		        body = _.cloneDeep(this.filterForm);
-		        _this.tabLoading = true;
-		        this.$http('/buildingPanorama/queryListInfo',{body},{},{},'post').then(res => {
+		        let body = _.cloneDeep(this.filterForm);
+		        this.tabLoading = true;
+		        this.$http('/buildingConstructionReport/queryListInfo',{body},{},{},'post').then(res => {
 		          if(res.data.code == 0){
-		            _this.tableData = res.data.response;
-		          }else{
-		          	message(_this,'请求失败','warning')
+		            this.tableData = res.data.response;
 		          }
-		          _this.tabLoading = false;
-		        }).catch(err => {
-		          console.log(err)
-		          _this.tabLoading = false;
+		          this.tabLoading = false;
 		        })
 		    },
 			//页码改变
@@ -189,6 +185,7 @@
 			//搜索
 			onSearchSubmit(){
 				this.filterForm.pageNum = 0;
+				this.currentPage = 1;
 				this.getData();
 			},
 			//新增
@@ -214,9 +211,10 @@
 					
 				}else if(type == 2){
 					
-				}else{
-					let _this = this,
-					body = {
+				}else if(type == 3){
+					
+				}else if(type == 4){
+					let body = {
 						id:row.id
 					};
 	                this.$confirm('是否确定删除该条数据?', '提示', {
@@ -224,19 +222,15 @@
 	                    cancelButtonText: '取消',
 	                    type: 'warning'
 	                }).then(() => {
-	                    _this.$http('/buildingPanorama/delInfo',{body},{},{},'post').then(res =>{
+	                    this.$http('/buildingConstructionReport/delInfo',{body},{},{},'post').then(res =>{
 	                        if(res.data.code==0){
 	                        	if(res.data.response.res == 1){
-	                        		message(_this,'删除成功!','success');
-	                            	_this.getData();
+	                        		message(this,'删除成功!','success');
+	                            	this.getData();
 	                        	}else{
-	                        		message(_this,'删除失败','warning');
+	                        		message(this,'删除失败','warning');
 	                        	}
-	                        }else{
-	                        	message(_this,'删除失败','warning');
 	                        }
-	                    }).catch(function(err){
-	                        console.log(err)
 	                    })
 	                }).catch(() => {
 	                });

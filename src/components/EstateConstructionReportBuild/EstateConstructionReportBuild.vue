@@ -49,6 +49,7 @@
 	</div>
 </template> 
 <script>
+	import { mapState } from 'vuex';
 	import message from '../../common/message';
 	import uploader2 from '../../common/uploader2.js'
 	import ImgPreview from '../Common/ImgPreview/ImgPreview';
@@ -91,7 +92,9 @@
 			}
 		},
 		computed:{
-			
+			...mapState({
+		        reportId:state => state.estate.reportId,
+		    })
 		},
 		methods:{
 			initAddData(){
@@ -179,6 +182,7 @@
 		        this.form.list[index].imgData[num].imgUrl = ''
 		    },
 			onSubmit(){
+				console.log(this.reportId);
 				let swi = true,f = _.cloneDeep(this.form.list);
 				f = f.filter((item) => {
 					return item.isShow == true;
